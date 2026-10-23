@@ -10,11 +10,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "in.openpay.app"
+        applicationId = "openpay.app"
         minSdk = 29
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
     }
 
     signingConfigs {
@@ -62,6 +62,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("net.i2p.crypto:eddsa:0.3.0")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0") {
         isTransitive = false
     }

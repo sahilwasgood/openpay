@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import openpay.app.ui.DetailScreen
 import openpay.app.ui.HistoryScreen
+import openpay.app.ui.NotesScreen
 import openpay.app.ui.OnboardingScreen
 import openpay.app.ui.PayScreen
 import openpay.app.ui.SettingsScreen
@@ -37,8 +38,12 @@ class MainActivity : ComponentActivity() {
                         PayScreen(
                             app = app,
                             onOpenHistory = { nav.navigate("history") },
+                            onOpenNotes = { nav.navigate("notes") },
                             onOpenSettings = { nav.navigate("settings") }
                         )
+                    }
+                    composable("notes") {
+                        NotesScreen(app = app, onBack = { nav.popBackStack() })
                     }
                     composable("history") {
                         HistoryScreen(

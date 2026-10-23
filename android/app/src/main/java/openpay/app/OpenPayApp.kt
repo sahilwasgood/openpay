@@ -2,11 +2,13 @@ package openpay.app
 
 import android.app.Application
 import android.content.Context
+import android.speech.tts.TextToSpeech
 import openpay.app.data.Banks
 import openpay.app.data.Ledger
 import openpay.app.data.PayState
 import openpay.app.data.Payment
 import openpay.app.data.Rail
+import openpay.app.notes.NotesStore
 import openpay.app.rails.SmsParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,9 +22,28 @@ class OpenPayApp : Application() {
     lateinit var store: Store
         private set
 
+    val notesStore: NotesStore by lazy { NotesStore(this) }
+
+    /** Voice readback for merchant verify, the soundbox replacement. */
+    val voice: Voice by lazy { Voice(this) }
+
     override fun onCreate() {
         super.onCreate()
         store = Store(this)
+    }
+}
+
+class Voice(context: Context) {
+
+    private var ready = false
+    private val engine = TextToSpeech(context.applicationContext) { status ->
+        ready = status == TextToSpeech.SUCCESS
+    }
+
+    fun speak(text: String) {
+        if (ready) {
+            engine.speak(text, TextToSpeech.QUEUE_FLUSH, null, "openpay")
+        }
     }
 }
 

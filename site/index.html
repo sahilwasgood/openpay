@@ -11,6 +11,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0D0F0E">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="OpenPay">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -48,7 +54,7 @@
         <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/releases">Download APK</a>
         <a class="btn btn-ghost" href="#ladder">See how it works</a>
       </div>
-      <p class="meta"><span>Apache 2.0</span><span>No ads, no analytics</span><span class="net" id="netchip">Your network: online</span></p>
+      <p class="meta"><span>Apache 2.0</span><span>No ads, no analytics</span><span class="net" id="netchip">Your network: online</span><button class="install-entry" id="installEntry" type="button" hidden>Install web app</button></p>
     </div>
     <div class="phone" aria-hidden="true">
       <div class="phone-notch"></div>
@@ -129,7 +135,7 @@
         <h3>OpenPay Note</h3>
         <p class="needs"><span>Nothing</span></p>
         <p>A voucher signed on your phone and verified on theirs with zero signal. It settles over UPI the moment either phone reconnects.</p>
-        <p class="limit">₹2,000 per Note</p>
+        <p class="limit">₹2,000 per Note · shipped in v0.2</p>
       </article>
     </div>
   </div>
@@ -228,7 +234,7 @@
       </details>
       <details>
         <summary>When can I install it?</summary>
-        <p>v0.1 is out now with the three network rails. Grab the APK from Releases. Notes and merchant mode follow right after.</p>
+        <p>The Android APK is on Releases, and this site installs as an app too: tap Install web app above. v0.2 adds Notes and merchant verify.</p>
       </details>
       <details>
         <summary>Why not iOS?</summary>
@@ -251,6 +257,7 @@
     </div>
     <nav class="footer-links" aria-label="Footer">
       <a href="https://github.com/sahilwasgood/openpay">GitHub</a>
+      <a href="https://sahilwasgood.github.io/openpay/">Web app</a>
       <a href="https://github.com/sahilwasgood/openpay/releases">Releases</a>
       <a href="#faq">FAQ</a>
       <a href="https://github.com/sahilwasgood/openpay/blob/main/LICENSE">License</a>
@@ -260,6 +267,33 @@
     <p>OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank. *99# and UPI 123Pay are NPCI services.</p>
   </div>
 </footer>
+
+<div class="pwaboard" id="pwaboard" hidden>
+  <div class="pwaboard-backdrop" data-close></div>
+  <div class="pwaboard-sheet" role="dialog" aria-modal="true" aria-label="Install OpenPay">
+    <div class="pwb-head">
+      <img src="icons/icon-192.png" width="56" height="56" alt="">
+      <div class="pwb-title">
+        <strong>OpenPay</strong>
+        <span>Free · No ads · No internet permission</span>
+      </div>
+    </div>
+    <div class="pwb-shots">
+      <img src="screenshots/mobile.png" alt="The pay screen with the live rail ladder" loading="lazy">
+      <img src="screenshots/desktop.png" alt="OpenPay on the desktop" loading="lazy">
+    </div>
+    <p class="pwb-desc">UPI that survives zero signal. Works offline once installed, which is rather the point.</p>
+    <div class="pwb-actions" id="pwbActions">
+      <button class="btn btn-primary" id="pwbInstall" type="button">Install</button>
+      <button class="btn btn-ghost pwb-dismiss" id="pwbClose" type="button" data-close>Not now</button>
+    </div>
+    <ol class="pwb-ios" id="pwbIos" hidden>
+      <li>Tap the Share button in Safari</li>
+      <li>Choose Add to Home Screen</li>
+      <li>Open OpenPay from the home screen</li>
+    </ol>
+  </div>
+</div>
 
 <script src="app.js" defer></script>
 </body>

@@ -34,3 +34,64 @@
     window.addEventListener('offline', set);
   }
 })();
+
+/* PWA: service worker plus the Play Store style install sheet */
+
+(function () {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  }
+
+  var deferred = null;
+  var board = document.getElementById('pwaboard');
+  var entry = document.getElementById('installEntry');
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+
+  function openBoard() {
+    if (!board) return;
+    var iosList = document.getElementById('pwbIos');
+    var actions = document.getElementById('pwbActions');
+    if (iosList && actions) {
+      var useIos = isIOS && !deferred;
+      iosList.hidden = !useIos;
+      actions.hidden = useIos;
+    }
+    board.hidden = false;
+  }
+
+  function closeBoard() {
+    if (board) board.hidden = true;
+  }
+
+  if (!standalone && entry) {
+    entry.hidden = false;
+    entry.addEventListener('click', openBoard);
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.closest && e.target.closest('[data-close]')) closeBoard();
+  });
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    if (entry) entry.hidden = standalone;
+  });
+
+  window.addEventListener('appinstalled', function () {
+    deferred = null;
+    if (entry) entry.hidden = true;
+    closeBoard();
+  });
+
+  var install = document.getElementById('pwbInstall');
+  if (install) {
+    install.addEventListener('click', function () {
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; });
+      closeBoard();
+    });
+  }
+})();

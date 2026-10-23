@@ -27,6 +27,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
+import androidx.compose.material.icons.filled.ConfirmationNumber
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -81,7 +82,12 @@ private enum class GuideKind { USSD, IVR }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PayScreen(app: OpenPayApp, onOpenHistory: () -> Unit, onOpenSettings: () -> Unit) {
+fun PayScreen(
+    app: OpenPayApp,
+    onOpenHistory: () -> Unit,
+    onOpenNotes: () -> Unit,
+    onOpenSettings: () -> Unit
+) {
     val context = LocalContext.current
     var payeeName by rememberSaveable { mutableStateOf("") }
     var vpa by rememberSaveable { mutableStateOf("") }
@@ -236,6 +242,9 @@ fun PayScreen(app: OpenPayApp, onOpenHistory: () -> Unit, onOpenSettings: () -> 
                 actions = {
                     IconButton(onClick = onOpenHistory) {
                         Icon(Icons.AutoMirrored.Filled.ReceiptLong, contentDescription = "History")
+                    }
+                    IconButton(onClick = onOpenNotes) {
+                        Icon(Icons.Filled.ConfirmationNumber, contentDescription = "Notes")
                     }
                     IconButton(onClick = onOpenSettings) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
@@ -463,7 +472,7 @@ private fun noneCopy(reason: RailPick.Reason): String = when (reason) {
     RailPick.Reason.OFFLINE_NO_PHONE ->
         "Jio carries no USSD and the 123Pay call needs the payee's phone number. Add it, or wait for data."
     RailPick.Reason.NO_SIGNAL ->
-        "No network at all right now. Offline Notes arrive in the next release. OpenPay cannot move money until some signal returns."
+        "No network at all right now. Create an OpenPay Note instead: it verifies offline and settles over UPI later. The ticket icon opens Notes."
     RailPick.Reason.NO_TELEPHONY -> "No SIM detected on this phone."
 }
 

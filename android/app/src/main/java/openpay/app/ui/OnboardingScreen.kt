@@ -76,7 +76,7 @@ fun OnboardingScreen(app: OpenPayApp, onDone: () -> Unit) {
 
         OnboardCard(
             "One payment, four rails",
-            "With data, OpenPay hands off to your UPI app. With signal only, it dials *99#, or the 123Pay line when you are on Jio. Offline Notes arrive in the next release."
+            "With data, OpenPay hands off to your UPI app. With signal only, it dials *99#, or the 123Pay line when you are on Jio. With nothing at all, issue a signed Note from the ticket tab: it verifies offline and settles over UPI later."
         )
         OnboardCard(
             "Your PIN stays yours",
