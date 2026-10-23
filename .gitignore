@@ -1,0 +1,12 @@
+AGENTS.md
+/*.png
+.gradle/
+build/
+app/build/
+local.properties
+.idea/
+*.iml
+.kotlin/
+.DS_Store
+captures/
+.playwright-mcp/

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenPay · UPI that works with zero signal</title>
+<meta name="description" content="OpenPay picks the strongest rail that still works: UPI intent, USSD, IVR, or a signed offline Note that settles itself. Open source, no internet permission, no accounts.">
+<meta property="og:title" content="OpenPay · UPI that works with zero signal">
+<meta property="og:description" content="One payment, four rails. Works with data, with signal only, or with nothing at all.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="none" stroke="%230E7C46" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="%230E7C46"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="OpenPay home">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="currentColor"/></svg>
+      <span>OpenPay</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#ladder">How it works</a>
+      <a href="#merchant">Merchant</a>
+      <a href="#trust">Trust</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="gh" href="https://github.com/sahilwasgood/openpay" aria-label="GitHub repository">
+        <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+      <a class="btn btn-primary btn-sm" href="https://github.com/sahilwasgood/openpay/releases">Download</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Open source · Android · India</p>
+      <h1>Pay even with zero signal.</h1>
+      <p class="lede">OpenPay hands every payment to the strongest rail that still works. UPI intent when you have data, USSD or IVR when you only have signal, and a signed offline Note when you have nothing. It confirms, or it tells you exactly what happens next.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/releases">Download APK</a>
+        <a class="btn btn-ghost" href="#ladder">See how it works</a>
+      </div>
+      <p class="meta"><span>Apache 2.0</span><span>No ads, no analytics</span><span class="net" id="netchip">Your network: online</span></p>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="p-status"><span>12:47</span><span class="p-sig"><i></i><i></i><i class="off"></i><i class="off"></i><em>LTE</em></span></div>
+        <div class="p-head">
+          <svg class="mark-s" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="currentColor"/></svg>
+          OpenPay
+        </div>
+        <div class="p-payee">
+          <div class="p-ava">M</div>
+          <div><strong>Meera's Chai Stall</strong><span>meera@okhdfcbank</span></div>
+        </div>
+        <div class="p-amount">₹45</div>
+        <div class="p-note">Four cutting chai</div>
+        <div class="p-rail">
+          <span class="p-rail-t">Best rail right now</span>
+          <ul>
+            <li class="on"><b>USSD</b><span>*99#</span><i>active</i></li>
+            <li><b>IVR</b><span>123Pay</span><i>standby</i></li>
+            <li><b>Note</b><span>offline</span><i>standby</i></li>
+            <li class="dim"><b>Intent</b><span>needs data</span><i>off</i></li>
+          </ul>
+        </div>
+        <div class="p-pay">Pay ₹45</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="ladder">
+  <div class="wrap">
+    <p class="eyebrow">The rail ladder</p>
+    <h2>One payment. Four rails.</h2>
+    <p class="sub">You never pick a rail. OpenPay reads your network and your carrier, then starts the payment on the best option that still works. Switch the state to watch it decide.</p>
+
+    <div class="board">
+      <div class="seg" id="netseg" data-state="signal" role="group" aria-label="Network state">
+        <button type="button" data-state="full">Full network</button>
+        <button type="button" data-state="signal" aria-pressed="true">Signal only</button>
+        <button type="button" data-state="offline">Zero signal</button>
+      </div>
+      <p class="board-status" aria-live="polite">Picks: <strong id="raillabel">USSD, or IVR on Jio</strong></p>
+    </div>
+
+    <div class="rails" id="railboard" data-state="signal">
+      <article class="rail rail-intent">
+        <div class="rail-ico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M12 7v6.5m0 0 2.3-2.3M12 13.5 9.7 11.2"/></svg>
+        </div>
+        <h3>UPI Intent</h3>
+        <p class="needs"><span>Data</span></p>
+        <p>Hands off to any UPI app on your phone with the payee and amount filled in. Your bank does the rest.</p>
+        <p class="limit">Your bank's UPI limit</p>
+      </article>
+      <article class="rail rail-ussd">
+        <div class="rail-ico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="1.8"/><circle cx="12" cy="6" r="1.8"/><circle cx="18" cy="6" r="1.8"/><circle cx="6" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="18" cy="12" r="1.8"/><circle cx="8" cy="18.5" r="1.8"/><circle cx="16" cy="18.5" r="1.8"/></svg>
+        </div>
+        <h3>USSD · *99#</h3>
+        <p class="needs"><span>Signal</span><span class="warn">Not on Jio</span></p>
+        <p>NPCI's menu over the SIM signaling channel. No data, no app. Works on Airtel, Vi and BSNL.</p>
+        <p class="limit">₹5,000 per payment</p>
+      </article>
+      <article class="rail rail-ivr">
+        <div class="rail-ico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l1.5 4.5L8 10a12 12 0 0 0 6 6l1.5-2.5L20 15v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2Z"/><path d="M15.5 4.5a5 5 0 0 1 4 4M15.5 8.5a1 1 0 0 1 1 1"/></svg>
+        </div>
+        <h3>IVR · UPI 123Pay</h3>
+        <p class="needs"><span>Signal</span></p>
+        <p>Jio carries no USSD, so OpenPay dials the 123Pay line and keys in the details with tones. No menus to walk.</p>
+        <p class="limit">₹10,000 per payment</p>
+      </article>
+      <article class="rail rail-note">
+        <div class="rail-ico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v14.5L15.5 16 13 17.5 10.5 16 8 17.5 6 16Z"/><path d="m9 8.5 2 2 4-4"/></svg>
+        </div>
+        <h3>OpenPay Note</h3>
+        <p class="needs"><span>Nothing</span></p>
+        <p>A voucher signed on your phone and verified on theirs with zero signal. It settles over UPI the moment either phone reconnects.</p>
+        <p class="limit">₹2,000 per Note</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tint" id="merchant">
+  <div class="wrap two-col">
+    <div>
+      <p class="eyebrow">Merchant mode</p>
+      <h2>For the counter. No soundbox, no fake screenshots.</h2>
+      <p class="sub">A customer with no signal taps Pay and hands you a Note. Your phone checks the signature offline, locks the amount, and reads it back out loud. When your connection returns, everything settles over UPI on its own.</p>
+      <ul class="ticks">
+        <li><strong>Verify offline.</strong> Ed25519 signatures checked on the device. No server, no data.</li>
+        <li><strong>Hear it.</strong> Voice readback replaces the soundbox.</li>
+        <li><strong>Auto settle.</strong> The queue clears itself when the network returns.</li>
+      </ul>
+    </div>
+    <div class="receipt" aria-hidden="true">
+      <div class="r-head">
+        <span>OpenPay Note</span>
+        <span class="r-sig"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="m4.5 12.5 5 5 10-11"/></svg> verified</span>
+      </div>
+      <div class="r-row"><span>Pay to</span><strong>Meera's Chai Stall</strong></div>
+      <div class="r-row"><span>Amount</span><strong class="r-amt">₹45.00</strong></div>
+      <div class="r-row"><span>Serial</span><span class="mono">NB7F-04A1</span></div>
+      <div class="r-row"><span>Nonce</span><span class="mono">9C22E610</span></div>
+      <div class="r-row"><span>Expires</span><span class="mono">18 Oct 2026, 21:04</span></div>
+      <div class="r-row"><span>Signature</span><span class="mono">ed25519 · 64B</span></div>
+      <div class="r-foot">Settles over UPI on reconnect · replay proof by serial</div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-dark" id="trust">
+  <div class="wrap">
+    <p class="eyebrow">Trust</p>
+    <h2>Nothing to hide, by design.</h2>
+    <div class="trust-grid">
+      <div class="trust">
+        <h3>No internet permission</h3>
+        <p class="code">android.permission.INTERNET · absent</p>
+        <p>The app cannot reach a server, so it cannot leak. Settlement rides the UPI apps already on your phone.</p>
+      </div>
+      <div class="trust">
+        <h3>No accounts</h3>
+        <p class="code">signup flow · none</p>
+        <p>No phone number, no cloud, no profile. Install and pay.</p>
+      </div>
+      <div class="trust">
+        <h3>Encrypted on device</h3>
+        <p class="code">SQLCipher · keys in secure hardware</p>
+        <p>Every record lives in a local vault. Export anytime as CSV or PDF.</p>
+      </div>
+      <div class="trust">
+        <h3>Signed, not screenshotted</h3>
+        <p class="code">Ed25519 · every note, every receipt</p>
+        <p>Merchants hold proof, not pictures. The fake screenshot economy dies at the counter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="limits">
+  <div class="wrap">
+    <p class="eyebrow">The honest numbers</p>
+    <h2>Limits, in the open.</h2>
+    <div class="limits">
+      <div class="limit-row"><span>UPI Intent</span><span>Your bank's limit, typically ₹1,00,000 a day. ₹5,00,000 for hospitals and taxes.</span></div>
+      <div class="limit-row"><span>USSD · *99#</span><span>₹5,000 per payment. NPCI's cap on the channel.</span></div>
+      <div class="limit-row"><span>IVR · 123Pay</span><span>₹10,000 per payment. Raised by RBI in Nov 2024.</span></div>
+      <div class="limit-row"><span>OpenPay Notes</span><span>₹2,000 per Note, ₹10,000 open at once. Small by design, until trust grows.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-pale" id="faq">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow">FAQ</p>
+    <h2>Questions people actually ask.</h2>
+    <div class="faq">
+      <details open>
+        <summary>Does it work on Jio?</summary>
+        <p>Yes. Jio's all IP network carries no USSD, so OpenPay moves to the UPI 123Pay phone line and enters the details with dial tones. Same money, same rails, no menus.</p>
+      </details>
+      <details>
+        <summary>What happens if a Note never settles?</summary>
+        <p>A Note is a signed, timestamped promise for a small amount. The pending tracker counts down NPCI's clocks (T+1 auto reversal, T+5 refund deadline) and writes the escalation for you. The signature is your evidence.</p>
+      </details>
+      <details>
+        <summary>Is OpenPay a wallet?</summary>
+        <p>No. It never holds money and never touches your funds. Online, your bank app pays. Offline, a Note is a promise that settles through your bank app later.</p>
+      </details>
+      <details>
+        <summary>What does it cost?</summary>
+        <p>The app is free and open source. Person to person UPI is free. Shops already pay MDR above ₹2,000 like any UPI payment. OpenPay takes nothing.</p>
+      </details>
+      <details>
+        <summary>When can I install it?</summary>
+        <p>v0.1 ships with the three network rails. Notes and merchant mode follow right after. Watch the repo.</p>
+      </details>
+      <details>
+        <summary>Why not iOS?</summary>
+        <p>Apple does not let an app dial USSD or IVR sessions. A typing companion for iPhone is planned. The full ladder needs Android.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div class="footer-brand">
+      <a class="brand" href="#top">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="currentColor"/></svg>
+        <span>OpenPay</span>
+      </a>
+      <p>Made for India's dead zones.</p>
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="https://github.com/sahilwasgood/openpay">GitHub</a>
+      <a href="https://github.com/sahilwasgood/openpay/releases">Releases</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/sahilwasgood/openpay/blob/main/LICENSE">License</a>
+    </nav>
+  </div>
+  <div class="wrap footer-note">
+    <p>OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank. *99# and UPI 123Pay are NPCI services.</p>
+  </div>
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>
