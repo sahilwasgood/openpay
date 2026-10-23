@@ -1,0 +1,64 @@
+package openpay.app
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import openpay.app.ui.DetailScreen
+import openpay.app.ui.HistoryScreen
+import openpay.app.ui.OnboardingScreen
+import openpay.app.ui.PayScreen
+import openpay.app.ui.SettingsScreen
+import openpay.app.ui.theme.OpenPayTheme
+
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val app = application as OpenPayApp
+        setContent {
+            OpenPayTheme {
+                val onboarded by app.store.onboarded.collectAsState()
+                val nav = rememberNavController()
+                NavHost(
+                    navController = nav,
+                    startDestination = if (onboarded) "pay" else "onboard"
+                ) {
+                    composable("onboard") {
+                        OnboardingScreen(app = app, onDone = {
+                            nav.navigate("pay") { popUpTo("onboard") { inclusive = true } }
+                        })
+                    }
+                    composable("pay") {
+                        PayScreen(
+                            app = app,
+                            onOpenHistory = { nav.navigate("history") },
+                            onOpenSettings = { nav.navigate("settings") }
+                        )
+                    }
+                    composable("history") {
+                        HistoryScreen(
+                            app = app,
+                            onBack = { nav.popBackStack() },
+                            onOpen = { id -> nav.navigate("detail/$id") }
+                        )
+                    }
+                    composable("detail/{id}") { entry ->
+                        DetailScreen(
+                            app = app,
+                            id = entry.arguments?.getString("id").orEmpty(),
+                            onBack = { nav.popBackStack() }
+                        )
+                    }
+                    composable("settings") {
+                        SettingsScreen(app = app, onBack = { nav.popBackStack() })
+                    }
+                }
+            }
+        }
+    }
+}

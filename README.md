@@ -22,9 +22,9 @@ Every payment is written to an encrypted local ledger before the call goes out, 
 
 ## Status
 
-v0.1 (in progress): the three network rails, encrypted ledger, pending tracker with NPCI clocks, QR scan.
+v0.1.0 is out: the three network rails (intent, USSD, IVR with DTMF), QR scan, encrypted ledger, bank SMS confirmation, and the pending tracker with NPCI clocks and escalation actions. 16 unit tests cover the rail decider, the DTMF builder, and the SMS parser.
 
-Next: OpenPay Notes (signed offline vouchers, Ed25519), merchant verify mode with voice readback, Hindi and more languages, reproducible release builds.
+Next: OpenPay Notes (signed offline vouchers, Ed25519), merchant verify mode with voice readback, Hindi and more languages, reproducible signed release builds.
 
 ## Repo layout
 
