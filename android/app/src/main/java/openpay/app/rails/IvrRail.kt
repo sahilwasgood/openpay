@@ -30,9 +30,9 @@ object IvrRail {
             Uri.parse("tel:$NUMBER,,$suffix")
         }
 
-    /** The user still has work to do while the call runs. */
-    fun guideSteps(amountRupees: String): List<String> = listOf(
-        "The call starts itself and keys in the menu, recipient and Rs $amountRupees",
+    /** Guide templates with {placeholders}, localized by the screen. */
+    fun guideSteps(): List<String> = listOf(
+        "The call starts itself and keys in the menu, recipient and Rs {amt}",
         "Listen for the UPI PIN prompt and dial your PIN on the call keypad",
         "Hang on the line until the IVR reads out the reference number",
         "Your bank's SMS will close this payment here automatically"

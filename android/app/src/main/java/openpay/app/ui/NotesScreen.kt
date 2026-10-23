@@ -1,5 +1,8 @@
 package openpay.app.ui
 
+import android.content.Intent
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -72,7 +75,7 @@ fun NotesScreen(app: OpenPayApp, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (tab == 0) "Notes · issue" else "Notes · verify") },
+                title = { Text(if (tab == 0) s("Notes · issue") else s("Notes · verify")) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -90,8 +93,8 @@ fun NotesScreen(app: OpenPayApp, onBack: () -> Unit) {
                 .padding(padding)
         ) {
             TabRow(selectedTabIndex = tab) {
-                Tab(selected = tab == 0, onClick = { tab = 0 }, text = { Text("Issue") })
-                Tab(selected = tab == 1, onClick = { tab = 1 }, text = { Text("Verify") })
+                Tab(selected = tab == 0, onClick = { tab = 0 }, text = { Text(s("Issue")) })
+                Tab(selected = tab == 1, onClick = { tab = 1 }, text = { Text(s("Verify")) })
             }
             if (tab == 0) IssueTab(app) else VerifyTab(app)
         }
@@ -125,7 +128,7 @@ private fun IssueTab(app: OpenPayApp) {
             )
             if (normalized == "SUCCESS") {
                 app.notesStore.markSettled(serial)
-                Toast.makeText(context, "Note settled", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ts("Note settled"), Toast.LENGTH_SHORT).show()
             }
         }
         settleSerial = null
@@ -141,12 +144,12 @@ private fun IssueTab(app: OpenPayApp) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    "A Note is a signed promise. The payee verifies it offline, it settles over UPI later.",
+                    s("A Note is a signed promise. The payee verifies it offline, it settles over UPI later."),
                     style = MaterialTheme.typography.bodySmall,
                     color = FaintInk
                 )
                 Text(
-                    "Rs ${RupeeFormat.format(openPaise)} of Rs 10,000 open",
+                    s("Rs {a} of Rs 10,000 open", "a" to RupeeFormat.format(openPaise)),
                     style = MaterialTheme.typography.labelSmall,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.primary
@@ -154,28 +157,28 @@ private fun IssueTab(app: OpenPayApp) {
                 OutlinedTextField(
                     value = from,
                     onValueChange = { from = it.take(30); app.notesStore.setPayerName(it.take(30)) },
-                    label = { Text("Your name, shown to the payee") },
+                    label = { Text(s("Your name, shown to the payee")) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = to,
                     onValueChange = { to = it.take(30) },
-                    label = { Text("Payee name") },
+                    label = { Text(s("Payee name")) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = vpa,
                     onValueChange = { vpa = it },
-                    label = { Text("Payee UPI ID, for settling") },
+                    label = { Text(s("Payee UPI ID, for settling")) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = phone,
                     onValueChange = { phone = it.filter(Char::isDigit).take(10) },
-                    label = { Text("Or payee phone") },
+                    label = { Text(s("Or payee phone")) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.fillMaxWidth()
@@ -183,7 +186,7 @@ private fun IssueTab(app: OpenPayApp) {
                 OutlinedTextField(
                     value = amount,
                     onValueChange = { amount = it.filter(Char::isDigit).take(4) },
-                    label = { Text("Amount in rupees, max 2000") },
+                    label = { Text(s("Amount in rupees, max 2000")) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
@@ -191,7 +194,7 @@ private fun IssueTab(app: OpenPayApp) {
                 OutlinedTextField(
                     value = memo,
                     onValueChange = { memo = it.take(60) },
-                    label = { Text("Memo, optional") },
+                    label = { Text(s("Memo, optional")) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -200,7 +203,7 @@ private fun IssueTab(app: OpenPayApp) {
                         FilterChip(
                             selected = minutes == m,
                             onClick = { minutes = m },
-                            label = { Text(label) }
+                            label = { Text(s(label)) }
                         )
                     }
                 }
@@ -224,7 +227,7 @@ private fun IssueTab(app: OpenPayApp) {
                         .fillMaxWidth()
                         .height(52.dp)
                 ) {
-                    Text("Create Note", style = MaterialTheme.typography.labelLarge)
+                    Text(s("Create Note"), style = MaterialTheme.typography.labelLarge)
                 }
             }
         }
@@ -263,13 +266,13 @@ private fun IssueTab(app: OpenPayApp) {
                                         )
                                     )
                                 }) {
-                                    Text("Settle over UPI")
+                                    Text(s("Settle over UPI"))
                                 }
                             }
                             TextButton(onClick = {
                                 app.notesStore.markSettled(note.payload.serial)
                             }) {
-                                Text("Mark settled", color = FaintInk)
+                                Text(s("Mark settled"), color = FaintInk)
                             }
                         }
                     }
@@ -283,9 +286,9 @@ private fun IssueTab(app: OpenPayApp) {
         AlertDialog(
             onDismissRequest = { envelope = null },
             confirmButton = {
-                TextButton(onClick = { envelope = null }) { Text("Done") }
+                TextButton(onClick = { envelope = null }) { Text(s("Done")) }
             },
-            title = { Text("Note ${current.d.serial}") },
+            title = { Text(s("Note {serial}", "serial" to current.d.serial)) },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(
@@ -295,10 +298,35 @@ private fun IssueTab(app: OpenPayApp) {
                         modifier = Modifier.fillMaxWidth()
                     )
                     Text(
-                        "The payee scans this in Verify mode. No signal needed on either phone.",
+                        s("The payee scans this in Verify mode. No signal needed on either phone."),
                         style = MaterialTheme.typography.bodySmall,
                         color = FaintInk
                     )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val clipboard = LocalClipboardManager.current
+                        OutlinedButton(onClick = {
+                            clipboard.setText(AnnotatedString(Notes.encode(current)))
+                            Toast.makeText(context, ts("Note text copied"), Toast.LENGTH_SHORT).show()
+                        }, modifier = Modifier.weight(1f)) {
+                            Text(s("Copy note text"))
+                        }
+                        OutlinedButton(onClick = {
+                            runCatching {
+                                context.startActivity(
+                                    Intent.createChooser(
+                                        Intent(Intent.ACTION_SEND).setType("text/plain")
+                                            .putExtra(Intent.EXTRA_TEXT, Notes.encode(current)),
+                                        ts("Share note")
+                                    )
+                                )
+                            }
+                        }, modifier = Modifier.weight(1f)) {
+                            Text(s("Share note"))
+                        }
+                    }
                 }
             }
         )
@@ -318,13 +346,16 @@ private fun VerifyTab(app: OpenPayApp) {
         when (v) {
             is Notes.Verdict.Valid -> {
                 app.voice.speak(
-                    "Note verified. Rupees ${RupeeFormat.format(v.payload.amountPaise)} " +
-                        "from ${v.payload.from}."
+                    ts(
+                        "Note verified. Rupees {a} from {f}.",
+                        "a" to RupeeFormat.format(v.payload.amountPaise),
+                        "f" to v.payload.from
+                    )
                 )
                 app.notesStore.acceptVerified(v.payload, v.knownPayer)
             }
             is Notes.Verdict.Bad ->
-                app.voice.speak("Note rejected. ${v.reason}.")
+                app.voice.speak(ts("Note rejected.") + " " + v.reason)
         }
     }
 
@@ -338,7 +369,7 @@ private fun VerifyTab(app: OpenPayApp) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    "Merchant mode. Scan a customer's Note with zero signal: the signature, expiry, cap and serial are all checked on this phone.",
+                    s("Merchant mode. Scan a customer's Note with zero signal: the signature, expiry, cap and serial are all checked on this phone."),
                     style = MaterialTheme.typography.bodySmall,
                     color = FaintInk
                 )
@@ -346,7 +377,7 @@ private fun VerifyTab(app: OpenPayApp) {
                     onClick = {
                         val options = ScanOptions().apply {
                             setDesiredBarcodeFormats(ScanOptions.QR_CODE)
-                            setPrompt("Scan an OpenPay Note")
+                            setPrompt(ts("Scan an OpenPay Note"))
                             setBeepEnabled(false)
                             setOrientationLocked(true)
                         }
@@ -356,7 +387,7 @@ private fun VerifyTab(app: OpenPayApp) {
                         .fillMaxWidth()
                         .height(52.dp)
                 ) {
-                    Text("Scan a Note", style = MaterialTheme.typography.labelLarge)
+                    Text(s("Scan a Note"), style = MaterialTheme.typography.labelLarge)
                 }
 
                 when (val v = verdict) {
@@ -368,8 +399,8 @@ private fun VerifyTab(app: OpenPayApp) {
                         ) {
                             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Text(
-                                    if (v.duplicateSerial) "Duplicate serial, already seen."
-                                    else "Verified. Signature checks out.",
+                                    if (v.duplicateSerial) s("Duplicate serial, already seen.")
+                                    else s("Verified. Signature checks out."),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = if (v.duplicateSerial) {
                                         openpay.app.ui.theme.WarnAmber
@@ -382,17 +413,17 @@ private fun VerifyTab(app: OpenPayApp) {
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                                 Text(
-                                    if (v.knownPayer) "Known payer."
-                                    else "New payer key. Save it to trust this key next time.",
+                                    if (v.knownPayer) s("Known payer.")
+                                    else s("New payer key. Save it to trust this key next time."),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = FaintInk
                                 )
                                 if (!v.knownPayer && !v.duplicateSerial) {
                                     TextButton(onClick = {
                                         app.notesStore.pinPayer(v.payload.payerKey, v.payload.from)
-                                        Toast.makeText(context, "Payer saved", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, ts("Payer saved"), Toast.LENGTH_SHORT).show()
                                     }) {
-                                        Text("Save this payer")
+                                        Text(s("Save this payer"))
                                     }
                                 }
                             }
@@ -404,7 +435,7 @@ private fun VerifyTab(app: OpenPayApp) {
                         )
                     ) {
                         Text(
-                            "Rejected: ${v.reason}",
+                            s("Rejected: {r}", "r" to v.reason),
                             style = MaterialTheme.typography.bodyMedium,
                             color = openpay.app.ui.theme.WarnAmber,
                             modifier = Modifier.padding(16.dp)
@@ -428,7 +459,7 @@ private fun VerifyTab(app: OpenPayApp) {
                         )
                         Text(
                             "${fullLabel(r.receivedAtEpoch)} · ${r.payload.serial} · " +
-                                if (r.knownPayer) "known payer" else "new key",
+                                if (r.knownPayer) s("known payer") else s("new key"),
                             style = MaterialTheme.typography.bodySmall,
                             fontFamily = FontFamily.Monospace,
                             color = FaintInk

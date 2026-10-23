@@ -70,21 +70,21 @@ fun OnboardingScreen(app: OpenPayApp, onDone: () -> Unit) {
             )
         }
         Text(
-            "Pay even with zero signal.",
+            s("Pay even with zero signal."),
             style = MaterialTheme.typography.headlineMedium
         )
 
         OnboardCard(
-            "One payment, four rails",
-            "With data, OpenPay hands off to your UPI app. With signal only, it dials *99#, or the 123Pay line when you are on Jio. With nothing at all, issue a signed Note from the ticket tab: it verifies offline and settles over UPI later."
+            s("One payment, four rails"),
+            s("With data, OpenPay hands off to your UPI app. With signal only, it dials *99#, or the 123Pay line when you are on Jio. With nothing at all, issue a signed Note from the ticket tab: it verifies offline and settles over UPI later.")
         )
         OnboardCard(
-            "Your PIN stays yours",
-            "Your UPI PIN is typed on the carrier menu or the call keypad. OpenPay never sees it and never asks for it."
+            s("Your PIN stays yours"),
+            s("Your UPI PIN is typed on the carrier menu or the call keypad. OpenPay never sees it and never asks for it.")
         )
         OnboardCard(
-            "No internet, actually",
-            "The app ships without the internet permission. It cannot reach any server. Every record is encrypted on this phone."
+            s("No internet, actually"),
+            s("The app ships without the internet permission. It cannot reach any server. Every record is encrypted on this phone.")
         )
 
         Card(
@@ -93,9 +93,9 @@ fun OnboardingScreen(app: OpenPayApp, onDone: () -> Unit) {
                 .padding(top = 6.dp)
         ) {
             Column(Modifier.padding(16.dp)) {
-                Eyebrow("Pick your bank")
+                Eyebrow(s("Pick your bank"))
                 Text(
-                    "Confirmation SMS are only trusted from your bank's sender ID.",
+                    s("Confirmation SMS are only trusted from your bank's sender ID."),
                     style = MaterialTheme.typography.bodySmall,
                     color = FaintInk,
                     modifier = Modifier.padding(top = 2.dp, bottom = 8.dp)
@@ -117,7 +117,7 @@ fun OnboardingScreen(app: OpenPayApp, onDone: () -> Unit) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Allow calling and SMS", style = MaterialTheme.typography.labelLarge)
+                Text(s("Allow calling and SMS"), style = MaterialTheme.typography.labelLarge)
             }
         }
 
@@ -130,10 +130,10 @@ fun OnboardingScreen(app: OpenPayApp, onDone: () -> Unit) {
                 .fillMaxWidth()
                 .height(54.dp)
         ) {
-            Text("Start using OpenPay", style = MaterialTheme.typography.labelLarge)
+            Text(s("Start using OpenPay"), style = MaterialTheme.typography.labelLarge)
         }
         Text(
-            "OpenPay is not a bank. Payments settle on UPI rails through your bank. *99# and UPI 123Pay are NPCI services.",
+            s("OpenPay is not a bank. Payments settle on UPI rails through your bank. *99# and UPI 123Pay are NPCI services."),
             style = MaterialTheme.typography.bodySmall,
             color = FaintInk,
             modifier = Modifier.padding(bottom = 28.dp)

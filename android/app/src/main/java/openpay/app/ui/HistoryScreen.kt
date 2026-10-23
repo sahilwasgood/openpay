@@ -39,7 +39,7 @@ fun HistoryScreen(app: OpenPayApp, onBack: () -> Unit, onOpen: (String) -> Unit)
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("History") },
+                title = { Text(s("History")) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -61,7 +61,7 @@ fun HistoryScreen(app: OpenPayApp, onBack: () -> Unit, onOpen: (String) -> Unit)
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Nothing yet. Payments appear here the moment they start.",
+                    s("Nothing yet. Payments appear here the moment they start."),
                     style = MaterialTheme.typography.bodyMedium,
                     color = FaintInk
                 )

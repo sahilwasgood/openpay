@@ -24,9 +24,9 @@ fun BankPickerDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Done") }
+            TextButton(onClick = onDismiss) { Text(s("Done")) }
         },
-        title = { Text("Your bank") },
+        title = { Text(s("Your bank")) },
         text = {
             Column {
                 Banks.all.forEachIndexed { index, bank ->

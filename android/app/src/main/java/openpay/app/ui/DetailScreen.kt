@@ -61,7 +61,7 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Payment") },
+                title = { Text(s("Payment")) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -82,7 +82,7 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("This payment is gone from the ledger.", color = FaintInk)
+                Text(s("This payment is gone from the ledger."), color = FaintInk)
             }
             return@Scaffold
         }
@@ -119,21 +119,21 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
 
             Card {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    DetailRow("When", fullLabel(payment.createdAtEpoch))
+                    DetailRow(s("When"), fullLabel(payment.createdAtEpoch))
                     payment.payee.vpa?.let { DetailRow("UPI ID", it) }
-                    payment.payee.phone?.let { DetailRow("Phone", it) }
-                    if (payment.note.isNotBlank()) DetailRow("Note", payment.note)
-                    DetailRow("Rail", railName(payment))
-                    payment.bankRef?.let { DetailRow("Bank ref", it) }
+                    payment.payee.phone?.let { DetailRow(s("Phone"), it) }
+                    if (payment.note.isNotBlank()) DetailRow(s("Note"), payment.note)
+                    DetailRow(s("Rail"), railName(payment))
+                    payment.bankRef?.let { DetailRow(s("Bank ref"), it) }
                     DetailRow(
-                        "Confirmed by",
+                        s("Confirmed by"),
                         when {
-                            payment.smsConfirmed -> "your bank's SMS"
-                            payment.intentResult != null -> "the UPI app's response"
-                            else -> "nothing yet"
+                            payment.smsConfirmed -> s("your bank's SMS")
+                            payment.intentResult != null -> s("the UPI app's response")
+                            else -> s("nothing yet")
                         }
                     )
-                    DetailRow("Record", payment.id.take(8).uppercase())
+                    DetailRow(s("Record"), payment.id.take(8).uppercase())
                 }
             }
 
@@ -144,8 +144,8 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                     )
                 ) {
                     Text(
-                        payment.bankRef?.let { "Confirmed. Bank reference $it." }
-                            ?: "Confirmed by the UPI app response.",
+                        payment.bankRef?.let { s("Confirmed. Bank reference {r}.", "r" to it) }
+                            ?: s("Confirmed by the UPI app response."),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.padding(16.dp)
@@ -162,14 +162,12 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                             verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
-                                "Pending past the SMS window.",
+                                s("Pending past the SMS window."),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = WarnAmber
                             )
                             Text(
-                                "If the money left your account, banks must auto reverse failed payments by T+1, " +
-                                    "and refunds must land within T+5 working days. " +
-                                    "After that the bank owes Rs 100 per day (RBI turn around time rules).",
+                                s("If the money left your account, banks must auto reverse failed payments by T+1, and refunds must land within T+5 working days. After that the bank owes Rs 100 per day (RBI turn around time rules)."),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = FaintInk
                             )
@@ -177,7 +175,7 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                     }
                 } else {
                     Text(
-                        "Waiting for your bank's SMS. Usually under a minute.",
+                        s("Waiting for your bank's SMS. Usually under a minute."),
                         style = MaterialTheme.typography.bodySmall,
                         color = FaintInk
                     )
@@ -188,7 +186,7 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                     )
                 ) {
                     Text(
-                        "Marked failed. Nothing left this phone.",
+                        s("Marked failed. Nothing left this phone."),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(16.dp)
                     )
@@ -207,18 +205,18 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Open NPCI help", style = MaterialTheme.typography.labelLarge)
+                Text(s("Open NPCI help"), style = MaterialTheme.typography.labelLarge)
             }
             OutlinedButton(
                 onClick = {
                     clipboard.setText(AnnotatedString(escalationEmail(payment)))
-                    Toast.makeText(context, "Escalation email copied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, ts("Escalation email copied"), Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Copy escalation email", style = MaterialTheme.typography.labelLarge)
+                Text(s("Copy escalation email"), style = MaterialTheme.typography.labelLarge)
             }
             OutlinedButton(
                 onClick = {
@@ -228,7 +226,7 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                                 Intent(Intent.ACTION_SEND)
                                     .setType("text/plain")
                                     .putExtra(Intent.EXTRA_TEXT, shareText(payment)),
-                                "Share payment record"
+                                ts("Share payment record")
                             )
                         )
                     }
@@ -237,11 +235,11 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Share record", style = MaterialTheme.typography.labelLarge)
+                Text(s("Share record"), style = MaterialTheme.typography.labelLarge)
             }
             if (payment.state == PayState.PENDING) {
                 TextButton(onClick = { confirmFail = true }, modifier = Modifier.fillMaxWidth()) {
-                    Text("This payment never happened", color = FaintInk)
+                    Text(s("This payment never happened"), color = FaintInk)
                 }
             }
             Spacer(Modifier.height(20.dp))
@@ -251,8 +249,8 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
     if (confirmFail && payment != null) {
         AlertDialog(
             onDismissRequest = { confirmFail = false },
-            title = { Text("Mark as never paid?") },
-            text = { Text("This only changes your local record. It cannot reverse a real debit.") },
+            title = { Text(s("Mark as never paid?")) },
+            text = { Text(s("This only changes your local record. It cannot reverse a real debit.")) },
             confirmButton = {
                 TextButton(onClick = {
                     app.store.update(payment.id) {
@@ -262,10 +260,10 @@ fun DetailScreen(app: OpenPayApp, id: String, onBack: () -> Unit) {
                         )
                     }
                     confirmFail = false
-                }) { Text("Mark failed") }
+                }) { Text(s("Mark failed")) }
             },
             dismissButton = {
-                TextButton(onClick = { confirmFail = false }) { Text("Keep pending") }
+                TextButton(onClick = { confirmFail = false }) { Text(s("Keep pending")) }
             }
         )
     }

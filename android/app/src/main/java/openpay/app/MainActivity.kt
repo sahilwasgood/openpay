@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import openpay.app.ui.DetailScreen
 import openpay.app.ui.HistoryScreen
+import openpay.app.ui.Lang
 import openpay.app.ui.NotesScreen
 import openpay.app.ui.OnboardingScreen
 import openpay.app.ui.PayScreen
@@ -21,8 +22,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val app = application as OpenPayApp
+        Lang.set(app.store.language.value)
         setContent {
-            OpenPayTheme {
+            OpenPayTheme(elderly = app.store.elderly.collectAsState().value) {
                 val onboarded by app.store.onboarded.collectAsState()
                 val nav = rememberNavController()
                 NavHost(

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import openpay.app.R
 
@@ -52,18 +53,23 @@ private val Inter = FontFamily(
     variableFont(R.font.inter, FontWeight.SemiBold)
 )
 
-private val OpenPayTypography = Typography(
-    displayLarge = TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.SemiBold, fontSize = 52.sp, letterSpacing = (-0.5).sp),
-    headlineMedium = TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.SemiBold, fontSize = 26.sp, letterSpacing = 0.sp),
-    headlineSmall = TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.SemiBold, fontSize = 21.sp, letterSpacing = 0.sp),
-    titleMedium = TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.Medium, fontSize = 17.sp),
-    titleSmall = TextStyle(fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 14.sp),
-    bodyLarge = TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 23.sp),
-    bodyMedium = TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 14.5.sp, lineHeight = 21.sp),
-    bodySmall = TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 12.5.sp, lineHeight = 17.sp),
-    labelLarge = TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.Medium, fontSize = 15.sp),
-    labelMedium = TextStyle(fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 13.sp),
-    labelSmall = TextStyle(fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 11.sp, letterSpacing = 0.4.sp)
+private fun scaled(style: TextStyle, m: Float): TextStyle = style.copy(
+    fontSize = style.fontSize * m,
+    lineHeight = if (style.lineHeight.isSpecified) style.lineHeight * m else style.lineHeight
+)
+
+private fun typography(m: Float): Typography = Typography(
+    displayLarge = scaled(TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.SemiBold, fontSize = 52.sp, letterSpacing = (-0.5).sp), m),
+    headlineMedium = scaled(TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.SemiBold, fontSize = 26.sp, letterSpacing = 0.sp), m),
+    headlineSmall = scaled(TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.SemiBold, fontSize = 21.sp, letterSpacing = 0.sp), m),
+    titleMedium = scaled(TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.Medium, fontSize = 17.sp), m),
+    titleSmall = scaled(TextStyle(fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 14.sp), m),
+    bodyLarge = scaled(TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 23.sp), m),
+    bodyMedium = scaled(TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 14.5.sp, lineHeight = 21.sp), m),
+    bodySmall = scaled(TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 12.5.sp, lineHeight = 17.sp), m),
+    labelLarge = scaled(TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.Medium, fontSize = 15.sp), m),
+    labelMedium = scaled(TextStyle(fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 13.sp), m),
+    labelSmall = scaled(TextStyle(fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 11.sp, letterSpacing = 0.4.sp), m)
 )
 
 private val LightColors = lightColorScheme(
@@ -101,7 +107,11 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
-fun OpenPayTheme(content: @Composable () -> Unit) {
+fun OpenPayTheme(elderly: Boolean = false, content: @Composable () -> Unit) {
     val colors = if (isSystemInDarkTheme()) DarkColors else LightColors
-    MaterialTheme(colorScheme = colors, typography = OpenPayTypography, content = content)
+    MaterialTheme(
+        colorScheme = colors,
+        typography = typography(if (elderly) 1.28f else 1f),
+        content = content
+    )
 }

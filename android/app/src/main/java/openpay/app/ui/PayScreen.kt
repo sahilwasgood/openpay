@@ -129,7 +129,7 @@ fun PayScreen(
             q.amountPaise?.let { amountText = RupeeFormat.format(it) }
             if (!q.note.isNullOrBlank()) noteText = q.note
         } ?: run {
-            Toast.makeText(context, "Not a UPI QR code", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ts("Not a UPI QR code"), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -177,7 +177,7 @@ fun PayScreen(
                 ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
             }
         if (missing.isNotEmpty()) {
-            Toast.makeText(context, "Grant call and SMS, then tap Pay again", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, ts("Grant call and SMS, then tap Pay again"), Toast.LENGTH_LONG).show()
             permLauncher.launch(missing.toTypedArray())
             return
         }
@@ -202,14 +202,14 @@ fun PayScreen(
                     pendingIntentPaymentId = payment.id
                     upiLauncher.launch(intent)
                 } else {
-                    Toast.makeText(context, "No UPI app installed", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, ts("No UPI app installed"), Toast.LENGTH_LONG).show()
                 }
             }
             is RailPick.Ussd -> {
                 runCatching {
                     context.startActivity(Intent(Intent.ACTION_CALL, UssdRail.dialUri()))
                 }.onFailure {
-                    Toast.makeText(context, "The dialer refused the call", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, ts("The dialer refused the call"), Toast.LENGTH_SHORT).show()
                 }
                 guide = GuideKind.USSD
             }
@@ -265,7 +265,7 @@ fun PayScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Text(
-                "Net: ${netLabel(net)} · Carrier: ${carrier ?: "unknown"}",
+                s("Net: {a} · Carrier: {b}", "a" to netLabel(net), "b" to (carrier ?: s("unknown"))),
                 style = MaterialTheme.typography.bodySmall,
                 fontFamily = FontFamily.Monospace,
                 color = FaintInk
@@ -274,14 +274,14 @@ fun PayScreen(
             OutlinedTextField(
                 value = payeeName,
                 onValueChange = { payeeName = it },
-                label = { Text("Payee name") },
+                label = { Text(s("Payee name")) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = vpa,
                 onValueChange = { vpa = it },
-                label = { Text("UPI ID, like name@bank") },
+                label = { Text(s("UPI ID, like name@bank")) },
                 singleLine = true,
                 trailingIcon = {
                     IconButton(onClick = {
@@ -301,7 +301,7 @@ fun PayScreen(
             OutlinedTextField(
                 value = phone,
                 onValueChange = { phone = it.filter(Char::isDigit).take(10) },
-                label = { Text("Or payee phone (for 123Pay)") },
+                label = { Text(s("Or payee phone (for 123Pay)")) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 modifier = Modifier.fillMaxWidth()
@@ -310,7 +310,7 @@ fun PayScreen(
             OutlinedTextField(
                 value = amountText,
                 onValueChange = { amountText = it.filter(Char::isDigit).take(7) },
-                label = { Text("Amount in rupees") },
+                label = { Text(s("Amount in rupees")) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 textStyle = MaterialTheme.typography.displayLarge.copy(fontSize = 44.sp),
@@ -320,7 +320,7 @@ fun PayScreen(
             OutlinedTextField(
                 value = noteText,
                 onValueChange = { noteText = it.take(50) },
-                label = { Text("Note, optional") },
+                label = { Text(s("Note, optional")) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -328,7 +328,7 @@ fun PayScreen(
             RailCard(pick = pick, ivrReady = ivrReady && !hasDecimals)
 
             if (pick is RailPick.Ivr && hasDecimals) {
-                HintCard("The 123Pay call needs whole rupees. Drop the paise or use a UPI ID with data.")
+                HintCard(s("The 123Pay call needs whole rupees. Drop the paise or use a UPI ID with data."))
             }
 
             Button(
@@ -342,13 +342,13 @@ fun PayScreen(
                     .height(54.dp)
             ) {
                 Text(
-                    if (rupeesString.isEmpty()) "Pay" else "Pay ₹$rupeesString",
+                    if (rupeesString.isEmpty()) s("Pay") else s("Pay ₹{amt}", "amt" to rupeesString),
                     style = MaterialTheme.typography.labelLarge
                 )
             }
 
             Text(
-                "Your UPI PIN is typed on the carrier menu or the call keypad. OpenPay never sees it.",
+                s("Your UPI PIN is typed on the carrier menu or the call keypad. OpenPay never sees it."),
                 style = MaterialTheme.typography.bodySmall,
                 color = FaintInk
             )
@@ -359,10 +359,12 @@ fun PayScreen(
     val currentGuide = guide
     if (currentGuide != null) {
         val (title, steps) = when (currentGuide) {
-            GuideKind.USSD -> "Finish it on the USSD menu" to
-                UssdRail.guideSteps(payee.vpa, rupeesString)
-            GuideKind.IVR -> "Finish it on the call" to
-                IvrRail.guideSteps(RupeeFormat.format(ivrRupees))
+            GuideKind.USSD -> s("Finish it on the USSD menu") to
+                UssdRail.guideSteps(payee.vpa).map {
+                    s(it, "vpa" to (payee.vpa ?: ""), "amt" to rupeesString)
+                }
+            GuideKind.IVR -> s("Finish it on the call") to
+                IvrRail.guideSteps().map { s(it, "amt" to RupeeFormat.format(ivrRupees)) }
         }
         ModalBottomSheet(onDismissRequest = { guide = null }) {
             Column(Modifier.padding(horizontal = 20.dp)) {
@@ -397,7 +399,7 @@ fun PayScreen(
                 }
                 Spacer(Modifier.height(10.dp))
                 Text(
-                    "Recorded as pending. Your bank's SMS closes it automatically, usually within a minute.",
+                    s("Recorded as pending. Your bank's SMS closes it automatically, usually within a minute."),
                     style = MaterialTheme.typography.bodySmall,
                     color = FaintInk
                 )
@@ -419,16 +421,16 @@ private fun RailCard(pick: RailPick, ivrReady: Boolean) {
         )
     ) {
         Column(Modifier.padding(16.dp)) {
-            Eyebrow("Best rail right now")
+            Eyebrow(s("Best rail right now"))
             Spacer(Modifier.height(6.dp))
             when (pick) {
-                is RailPick.Intent -> RailLine("UPI Intent", "Data available. Handed to your UPI app.")
-                is RailPick.Ussd -> RailLine("USSD · *99#", "Signal only. Carrier menu, no data needed.")
+                is RailPick.Intent -> RailLine(s("UPI Intent"), s("Data available. Handed to your UPI app."))
+                is RailPick.Ussd -> RailLine(s("USSD · *99#"), s("Signal only. Carrier menu, no data needed."))
                 is RailPick.Ivr ->
                     if (ivrReady) {
-                        RailLine("IVR · UPI 123Pay", "Signal only. Works on Jio.")
+                        RailLine(s("IVR · UPI 123Pay"), s("Signal only. Works on Jio."))
                     } else {
-                        RailLine("IVR · UPI 123Pay", "Needs a valid 10 digit phone number.")
+                        RailLine(s("IVR · UPI 123Pay"), s("Needs a valid 10 digit phone number."))
                     }
                 is RailPick.None -> Text(
                     noneCopy(pick.reason),
@@ -467,19 +469,21 @@ private fun HintCard(text: String) {
     }
 }
 
+@Composable
 private fun noneCopy(reason: RailPick.Reason): String = when (reason) {
-    RailPick.Reason.NO_PAYEE -> "Add a UPI ID or a phone number first."
+    RailPick.Reason.NO_PAYEE -> s("Add a UPI ID or a phone number first.")
     RailPick.Reason.OFFLINE_NO_PHONE ->
-        "Jio carries no USSD and the 123Pay call needs the payee's phone number. Add it, or wait for data."
+        s("Jio carries no USSD and the 123Pay call needs the payee's phone number. Add it, or wait for data.")
     RailPick.Reason.NO_SIGNAL ->
-        "No network at all right now. Create an OpenPay Note instead: it verifies offline and settles over UPI later. The ticket icon opens Notes."
-    RailPick.Reason.NO_TELEPHONY -> "No SIM detected on this phone."
+        s("No network at all right now. Create an OpenPay Note instead: it verifies offline and settles over UPI later. The ticket icon opens Notes.")
+    RailPick.Reason.NO_TELEPHONY -> s("No SIM detected on this phone.")
 }
 
+@Composable
 private fun netLabel(net: NetKind): String = when (net) {
-    NetKind.ONLINE -> "online"
-    NetKind.SIGNAL -> "signal only"
-    NetKind.NONE -> "none"
+    NetKind.ONLINE -> s("online")
+    NetKind.SIGNAL -> s("signal only")
+    NetKind.NONE -> s("none")
 }
 
 private fun parsePaise(text: String): Long {

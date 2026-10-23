@@ -9,7 +9,8 @@ import openpay.app.data.PayState
 import openpay.app.data.Payment
 import openpay.app.data.Rail
 import openpay.app.notes.NotesStore
-import openpay.app.rails.SmsParser
+import openpay.app.rails.SmsConfirmations
+import openpay.app.ui.Lang
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -66,6 +67,19 @@ class Store(context: Context) {
     val payments = MutableStateFlow(ledger.readAll())
     val bankIndex = MutableStateFlow(prefs.getInt("bank", Banks.all.lastIndex))
     val onboarded = MutableStateFlow(prefs.getBoolean("onboarded", false))
+    val language = MutableStateFlow(prefs.getString("lang", "en") ?: "en")
+    val elderly = MutableStateFlow(prefs.getBoolean("elderly", false))
+
+    fun setLanguage(code: String) {
+        prefs.edit().putString("lang", code).apply()
+        language.value = code
+        Lang.set(code)
+    }
+
+    fun setElderly(on: Boolean) {
+        prefs.edit().putBoolean("elderly", on).apply()
+        elderly.value = on
+    }
 
     fun setBank(index: Int) {
         prefs.edit().putInt("bank", index).apply()
@@ -96,25 +110,9 @@ class Store(context: Context) {
      */
     fun onSms(sender: String?, body: String) {
         val bank = Banks.all.getOrNull(bankIndex.value) ?: return
-        if (bank.senders.isNotEmpty() && !SmsParser.senderMatchesBank(sender, bank.senders)) return
-        val candidate = payments.value
-            .filter {
-                it.state == PayState.PENDING && it.rail != Rail.INTENT &&
-                    System.currentTimeMillis() - it.createdAtEpoch < WINDOW_MS
-            }
-            .maxByOrNull { it.createdAtEpoch }
-            ?: return
-        if (!SmsParser.isDebitConfirmation(body, candidate.amountPaise)) return
         val now = System.currentTimeMillis()
-        val ref = SmsParser.extractRef(body) ?: candidate.bankRef
-        update(candidate.id) {
-            it.copy(
-                state = PayState.SUCCESS,
-                smsConfirmed = true,
-                bankRef = ref,
-                updatedAtEpoch = now,
-                settledAtEpoch = now
-            )
-        }
+        val candidate = SmsConfirmations.findCandidate(payments.value, now, WINDOW_MS) ?: return
+        val updated = SmsConfirmations.confirm(candidate, sender, bank.senders, body, now) ?: return
+        update(updated.id) { updated }
     }
 }

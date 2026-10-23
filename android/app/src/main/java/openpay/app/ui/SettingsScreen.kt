@@ -1,6 +1,7 @@
 package openpay.app.ui
 
 import openpay.app.ui.theme.FaintInk
+import android.content.Context
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,6 +9,11 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
+import androidx.core.content.FileProvider
+import openpay.app.data.Payment
+import java.io.File
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -72,7 +78,7 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text(s("Settings")) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -100,13 +106,13 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
                     .clickable { showBankPicker = true }
             ) {
                 Column(Modifier.padding(16.dp)) {
-                    Eyebrow("Bank SMS matching")
+                    Eyebrow(s("Bank SMS matching"))
                     Text(bank.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 4.dp))
                     Text(
                         if (bank.senders.isEmpty()) {
-                            "Other bank: sender matching is off, only amount plus debit wording counts."
+                            s("Other bank: sender matching is off, only amount plus debit wording counts.")
                         } else {
-                            "Only SMS from ${bank.senders.joinToString(" or ")} close a payment."
+                            s("Only SMS from {s} close a payment.", "s" to bank.senders.joinToString(" or "))
                         },
                         style = MaterialTheme.typography.bodySmall,
                         color = FaintInk,
@@ -117,31 +123,74 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
 
             Card(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Eyebrow("This phone")
-                    SettingRow("Carrier", carrier ?: "unknown")
-                    SettingRow("Network", when (net) {
-                        NetKind.ONLINE -> "online"
-                        NetKind.SIGNAL -> "signal only"
-                        NetKind.NONE -> "none"
+                    Eyebrow(s("This phone"))
+                    SettingRow(s("Carrier"), carrier ?: s("unknown"))
+                    SettingRow(s("Network"), when (net) {
+                        NetKind.ONLINE -> s("online")
+                        NetKind.SIGNAL -> s("signal only")
+                        NetKind.NONE -> s("none")
                     })
-                    SettingRow("Jio detected", if (RailDecider.isJio(carrier)) "yes, IVR rail" else "no, USSD rail first")
+                    SettingRow(s("Jio detected"), if (RailDecider.isJio(carrier)) s("yes, IVR rail") else s("no, USSD rail first"))
                 }
             }
 
             Card(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Eyebrow("Trust")
-                    SettingRow("Internet permission", "absent, by design")
-                    SettingRow("Accounts", "none")
-                    SettingRow("Analytics", "none")
-                    SettingRow("Ledger", "encrypted on device")
+                    Eyebrow(s("Trust"))
+                    SettingRow(s("Internet permission"), s("absent, by design"))
+                    SettingRow(s("Accounts"), s("none"))
+                    SettingRow(s("Analytics"), s("none"))
+                    SettingRow(s("Ledger"), s("encrypted on device"))
                     SettingRow(
-                        "Version",
+                        s("Version"),
                         runCatching {
                             context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "?"
                         }.getOrDefault("?")
                     )
                 }
+            }
+
+            val language by app.store.language.collectAsState()
+            val elderly by app.store.elderly.collectAsState()
+
+            Card(Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Eyebrow(s("Language"))
+                    Lang.names.forEach { (code, name) ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { app.store.setLanguage(code) }
+                                .padding(vertical = 2.dp)
+                        ) {
+                            RadioButton(selected = language == code, onClick = null)
+                            Text(name, modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+                }
+            }
+
+            Card(Modifier.fillMaxWidth()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Eyebrow(s("Accessibility"))
+                        Text(s("Elder mode, large text"), style = MaterialTheme.typography.titleMedium)
+                    }
+                    Switch(checked = elderly, onCheckedChange = { app.store.setElderly(it) })
+                }
+            }
+
+            Button(
+                onClick = { runCatching { exportCsv(context, payments) } },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text(s("Export CSV"), style = MaterialTheme.typography.labelLarge)
             }
 
             Button(
@@ -156,7 +205,7 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Source code", style = MaterialTheme.typography.labelLarge)
+                Text(s("Source code"), style = MaterialTheme.typography.labelLarge)
             }
             Button(
                 onClick = {
@@ -171,8 +220,8 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
                         context.startActivity(
                             Intent.createChooser(
                                 Intent(Intent.ACTION_SEND).setType("text/plain")
-                                    .putExtra(Intent.EXTRA_TEXT, text.ifBlank { "No payments yet." }),
-                                "Share ledger"
+                                    .putExtra(Intent.EXTRA_TEXT, text.ifBlank { ts("No payments yet.") }),
+                                ts("Share ledger")
                             )
                         )
                     }
@@ -181,7 +230,7 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Share ledger", style = MaterialTheme.typography.labelLarge)
+                Text(s("Share ledger"), style = MaterialTheme.typography.labelLarge)
             }
             Spacer(Modifier.height(20.dp))
         }
@@ -210,4 +259,41 @@ private fun SettingRow(label: String, value: String) {
             fontFamily = FontFamily.Monospace
         )
     }
+}
+
+private fun exportCsv(context: Context, payments: List<Payment>) {
+    val csv = buildString {
+        appendLine("date,payee,upi,phone,amount_rupees,rail,state,bank_ref")
+        payments.sortedBy { it.createdAtEpoch }.forEach { p ->
+            fun esc(v: String?) = (v ?: "").replace(",", " ").replace("\n", " ")
+            appendLine(
+                listOf(
+                    fullLabel(p.createdAtEpoch),
+                    esc(p.payee.displayName),
+                    esc(p.payee.vpa),
+                    esc(p.payee.phone),
+                    p.amountRupeesString,
+                    p.rail.name,
+                    p.state.name,
+                    esc(p.bankRef)
+                ).joinToString(",")
+            )
+        }
+    }
+    val dir = File(context.cacheDir, "exports").apply { mkdirs() }
+    val out = File(dir, "openpay-ledger.csv")
+    out.writeText(csv)
+    val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", out)
+    runCatching {
+        context.startActivity(
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND)
+                    .setType("text/csv")
+                    .putExtra(Intent.EXTRA_STREAM, uri)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                "OpenPay ledger"
+            )
+        )
+    }
+    Toast.makeText(context, ts("Ledger exported"), Toast.LENGTH_SHORT).show()
 }
