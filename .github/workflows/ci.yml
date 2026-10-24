@@ -44,8 +44,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         working-directory: android
         run: |
+          cp app/build/outputs/apk/release/app-release.apk "OpenPay-$GITHUB_REF_NAME.apk"
           gh release create "$GITHUB_REF_NAME" \
-            app/build/outputs/apk/release/app-release.apk \
+            "OpenPay-$GITHUB_REF_NAME.apk" \
             --repo "$GITHUB_REPOSITORY" \
             --title "$GITHUB_REF_NAME" \
             --generate-notes

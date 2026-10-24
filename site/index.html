@@ -143,15 +143,35 @@
   </div>
 </section>
 
+
+<section class="section" id="devs">
+  <div class="wrap dev-cta">
+    <p class="eyebrow">For developers</p>
+    <h2>Fork it. Your agent can ship a build tonight.</h2>
+    <p class="sub">Kotlin and Compose, one static site, 48 tests, CI that signs and releases on every tag. The <a href="https://github.com/sahilwasgood/openpay/blob/main/CONTRIBUTING.md">forking guide</a> is the whole map.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/fork">Fork on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/sahilwasgood/openpay/blob/main/docs/ARCHITECTURE.md">Read the map</a>
+    </div>
+  </div>
+</section>
+
 <section class="section section-tint" id="notes">
   <div class="wrap wrap-narrow">
     <p class="eyebrow">The fourth rail</p>
     <h2>A Note is a promissory note.</h2>
-    <p class="sub">You already know this instrument. When a kirana shop lets you take udhaar, the shopkeeper writes your name and the amount in the khata book, and both sides trust that record. A Note is the same slip, digital. Your phone signs "I owe Meera Rs 45" with a key that cannot be forged, and nobody can quietly edit the amount afterwards. No money moves when it is written. It settles over normal UPI later.</p>
+    <p class="sub">You met this instrument in school banking: under the Negotiable Instruments Act, 1881, a promissory note is a written, unconditional promise, signed by the maker, to pay a certain sum to a certain person. India runs on its informal twin every day: udhaar written in the kirana's khata book, trusted on both sides, settled later. An OpenPay Note is both at once, digital.</p>
+    <div class="note-map">
+      <div class="note-map-row"><span>Maker, the signer</span><strong>Your phone's key, never leaves it</strong></div>
+      <div class="note-map-row"><span>Payee</span><strong>Name and UPI ID in the note</strong></div>
+      <div class="note-map-row"><span>Certain sum</span><strong>The amount, locked under the signature</strong></div>
+      <div class="note-map-row"><span>Written and signed</span><strong>Ed25519 signature over every field</strong></div>
+      <div class="note-map-row"><span>Settled later</span><strong>One tap over normal UPI, with your PIN</strong></div>
+    </div>
     <div class="notes-steps">
       <div class="notes-step"><span>1</span><div><strong>Write it, offline.</strong> No signal needed. Your phone signs the payee, the amount, a serial number and an expiry, then shows a QR.</div></div>
       <div class="notes-step"><span>2</span><div><strong>Check it, offline.</strong> The payee scans. Signature, expiry, the Rs 2,000 cap and replay by serial, all verified on their phone. Zero network on either side.</div></div>
-      <div class="notes-step"><span>3</span><div><strong>Honour it, online.</strong> Later, with signal, one tap opens your usual UPI app with payee and amount prefilled. You pay with your PIN, as always.</div></div>
+      <div class="notes-step"><span>3</span><div><strong>Honour it, online.</strong> Later, with signal, one tap opens your usual UPI app with payee and amount prefilled.</div></div>
     </div>
     <p class="sub">Forged screenshots cannot pass, because nothing visual is trusted. The same slip cannot be shown twice, because the serial is remembered. And the receiver does not even need the app: any browser can check a Note on the <a href="verify.html">verify page</a>, loaded once and offline forever after.</p>
   </div>
@@ -313,17 +333,6 @@
   </div>
 </section>
 
-<section class="section" id="devs">
-  <div class="wrap wrap-narrow dev-cta">
-    <p class="eyebrow">For developers</p>
-    <h2>Fork it. Your agent can ship a build tonight.</h2>
-    <p class="sub">Kotlin and Compose, one static site, 48 tests, CI that signs and releases on every tag. The <a href="https://github.com/sahilwasgood/openpay/blob/main/CONTRIBUTING.md">forking guide</a> is the whole map: build, sign, deploy, ship your first change in an evening.</p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/fork">Fork on GitHub</a>
-      <a class="btn btn-ghost" href="https://github.com/sahilwasgood/openpay/blob/main/docs/ARCHITECTURE.md">Read the map</a>
-    </div>
-  </div>
-</section>
 
 </main>
 
@@ -360,11 +369,12 @@
       </div>
     </div>
     <div class="pwb-shots">
-      <img src="screenshots/mobile.png" alt="The pay screen with the live rail ladder" loading="lazy">
-      <img src="screenshots/mobile-ladder.png" alt="Switch network state, watch the rail decision" loading="lazy">
-      <img src="screenshots/mobile-notes.png" alt="What a Note is, in plain words" loading="lazy">
-      <img src="screenshots/mobile-mdr.png" alt="The merchant fee calculator" loading="lazy">
-      <img src="screenshots/mobile-verify.png" alt="Verify a Note in any browser" loading="lazy">
+      <img src="screenshots/mobile.png" alt="The pay screen" loading="lazy">
+      <img src="screenshots/mobile-ladder.png" alt="Zero signal, the Note rail picks itself" loading="lazy">
+      <img src="screenshots/mobile-notes.png" alt="A Note is a promissory note" loading="lazy">
+      <img src="screenshots/mobile-mdr.png" alt="The fee calculator" loading="lazy">
+      <img src="screenshots/mobile-verify.png" alt="Verify in any browser" loading="lazy">
+      <img src="screenshots/desktop.png" alt="OpenPay on the desktop" loading="lazy">
       <img src="screenshots/desktop-verify.png" alt="The browser verifier" loading="lazy">
     </div>
     <p class="pwb-desc">UPI that survives zero signal. Works offline once installed, which is rather the point.</p>
