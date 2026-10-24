@@ -367,6 +367,92 @@
       .catch(function () { toast('Camera refused, paste instead'); $('pasteBtn').click(); });
   }
 
+
+  // ---------- QR autofill, contacts, balance ----------
+
+  function parseUpi(text) {
+    var t = (text || '').trim();
+    var m = t.match(/^upi:\/\/pay\?([^#]*)/i);
+    if (m) {
+      var q = {};
+      m[1].split('&').forEach(function (kv) {
+        var p = kv.split('=');
+        q[decodeURIComponent(p[0]).toLowerCase()] = decodeURIComponent((p[1] || '').replace(/\+/g, ' '));
+      });
+      if (q.pa) {
+        return { vpa: q.pa, name: q.pn || '', amt: q.am ? String(Number(q.am)) : '' };
+      }
+    }
+    var v = t.match(/[a-zA-Z0-9._-]{2,}@[a-zA-Z]{2,}/);
+    if (v) return { vpa: v[0], name: '', amt: '' };
+    return null;
+  }
+
+  function autofill(f) {
+    $('pVpa').value = f.vpa || '';
+    if (f.name) $('pName').value = f.name;
+    if (f.amt) $('pAmt').value = f.amt;
+    switchTab('pay');
+    refreshPay();
+    toast('Filled from QR');
+  }
+
+  $('qrScanBtn').addEventListener('click', function () {
+    if (!('BarcodeDetector' in window)) {
+      $('qrPasteWrap').classList.remove('hidden');
+      $('qrPaste').focus();
+      toast('This browser cannot scan, paste instead');
+      return;
+    }
+    var video = $('payScanVideo');
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      .then(function (stream) {
+        video.srcObject = stream;
+        video.classList.remove('hidden');
+        video.play();
+        var det = new BarcodeDetector({ formats: ['qr_code'] });
+        var timer = setInterval(function () {
+          det.detect(video).then(function (codes) {
+            if (!codes.length) return;
+            var f = parseUpi(codes[0].rawValue);
+            clearInterval(timer);
+            stream.getTracks().forEach(function (t) { t.stop(); });
+            video.classList.add('hidden');
+            if (f) autofill(f);
+            else toast('Not a UPI QR code');
+          }).catch(function () {});
+        }, 400);
+      })
+      .catch(function () {
+        $('qrPasteWrap').classList.remove('hidden');
+        toast('Camera refused, paste instead');
+      });
+  });
+
+  $('qrPasteBtn').addEventListener('click', function () {
+    var f = parseUpi($('qrPaste').value);
+    if (f) { $('qrPasteWrap').classList.add('hidden'); autofill(f); }
+    else toast('No UPI ID found in that text');
+  });
+
+  if ('contacts' in navigator && navigator.contacts && navigator.contacts.select) {
+    $('contactBtn').hidden = false;
+    $('contactBtn').addEventListener('click', function () {
+      navigator.contacts.select(['name', 'tel'], false)
+        .then(function (list) {
+          if (!list.length) return;
+          var c = list[0];
+          $('pName').value = (c.name && c.name[0]) || '';
+          var tel = (c.tel && c.tel[0] || '').replace(/\D/g, '');
+          if (tel.length === 12 && tel.indexOf('91') === 0) tel = tel.slice(2);
+          if (tel.length === 10) { $('pPhone').value = tel; }
+          refreshPay();
+          toast('Contact filled');
+        })
+        .catch(function () {});
+    });
+  }
+
   // ---------- history tab ----------
 
   function renderHistory() {
@@ -392,6 +478,16 @@
       act.onclick = function () {
         p.state = p.state === 'pending' ? 'paid' : 'pending';
         save(); renderHistory();
+      };
+      left.style.cursor = 'pointer';
+      left.onclick = function () {
+        $('pName').value = p.name || '';
+        $('pVpa').value = p.vpa || '';
+        $('pPhone').value = p.phone || '';
+        $('pAmt').value = p.paise ? String(Math.round(p.paise / 100)) : '';
+        switchTab('pay');
+        refreshPay();
+        toast('Filled, pay again');
       };
       row.appendChild(left); row.appendChild(act);
       box.appendChild(row);

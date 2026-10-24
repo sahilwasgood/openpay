@@ -650,3 +650,9 @@ body.webapp { background: var(--paper); }
   padding: 11px 18px; border-radius: 12px; z-index: 200;
   max-width: 86vw; text-align: center;
 }
+
+.row-gap.tight { margin-top: 6px; }
+.first99 { margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; background: var(--card); }
+.first99 summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 14px; }
+.first99 p { font-size: 13.5px; color: var(--ink-2); margin-top: 8px; }
+.first99 a { color: var(--green); }

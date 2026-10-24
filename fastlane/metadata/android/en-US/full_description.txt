@@ -1,0 +1,5 @@
+OpenPay hands every payment to the strongest rail that still works: UPI intent when data exists, USSD *99# when only signal does, the UPI 123Pay IVR line for Jio, and signed promissory notes (Ed25519, verified fully offline) when nothing does. Notes settle over normal UPI later, like udhaar in a digital khata.
+
+No internet permission: the app cannot reach any server. Encrypted local ledger. Bank SMS confirmation inside a strict window matched by sender, debit wording and exact amount. Private spending log from your own bank SMS, on device only. Bill splitting into fair share notes. Double debit guard before same looking retries. QR scan autofill. Contact payments. Balance check. English and Hindi, elder mode with large text, CSV export.
+
+OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank. *99# and UPI 123Pay are NPCI services.

@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0D0F0E">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=10">
+<link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body class="webapp">
 
@@ -43,6 +43,21 @@
     <!-- PAY -->
     <div class="pane" id="pane-pay">
       <p class="app-line mono" id="netline">net: checking · carrier: <button class="linklike" id="carrierBtn" type="button">set</button></p>
+
+      <div class="row-gap tight">
+        <button class="btn btn-ghost btn-sm" id="qrScanBtn" type="button">Scan UPI QR</button>
+        <button class="btn btn-ghost btn-sm" id="contactBtn" type="button" hidden>Pick contact</button>
+        <a class="btn btn-ghost btn-sm" id="balanceBtn" href="tel:*99*3%23">Balance *99*3#</a>
+      </div>
+      <video id="payScanVideo" class="scanvideo hidden" playsinline></video>
+      <div id="qrPasteWrap" class="hidden">
+        <textarea id="qrPaste" rows="2" placeholder="Paste the QR text, upi://pay?pa=..."></textarea>
+        <button class="btn btn-ghost btn-sm" id="qrPasteBtn" type="button">Use this</button>
+      </div>
+      <details class="first99">
+        <summary>First time with *99#?</summary>
+        <p>Dial <a href="tel:*99%23">*99#</a> once. Reply with your bank's short name, for example SBIN for SBI or HDFC for HDFC, or the first four letters of your IFSC. Choose the account to link, then set your UPI PIN with your debit card details when asked. That one setup unlocks every *99# payment after it. Your PIN lives with the carrier menu, never on this page.</p>
+      </details>
 
       <label class="f-label" for="pName">Payee name</label>
       <input id="pName" type="text" autocomplete="off" placeholder="Meera's Chai Stall">
@@ -128,6 +143,6 @@
 </footer>
 
 <script src="vendor/qrcode.js"></script>
-<script src="webapp.js?v=10" defer></script>
+<script src="webapp.js?v=11" defer></script>
 </body>
 </html>
