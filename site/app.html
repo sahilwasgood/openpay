@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenPay</title>
+<meta name="description" content="Pay with the strongest rail that still works: UPI intent, USSD, IVR, or a signed promissory note. In your browser, offline capable.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="none" stroke="%230E7C46" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="%230E7C46"/></svg>'>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0D0F0E">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css?v=10">
+</head>
+<body class="webapp">
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html" aria-label="OpenPay">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="currentColor"/></svg>
+      <span>OpenPay</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="index.html">About</a>
+      <a href="verify.html">Verifier</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="btn btn-primary btn-sm" id="installEntry" type="button" hidden>Install</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<section class="section webapp-body">
+  <div class="wrap wrap-narrow">
+
+    <div class="tabs" role="tablist">
+      <button class="tab on" data-tab="pay" type="button">Pay</button>
+      <button class="tab" data-tab="notes" type="button">Notes</button>
+      <button class="tab" data-tab="verify" type="button">Verify</button>
+      <button class="tab" data-tab="history" type="button">History</button>
+    </div>
+
+    <!-- PAY -->
+    <div class="pane" id="pane-pay">
+      <p class="app-line mono" id="netline">net: checking · carrier: <button class="linklike" id="carrierBtn" type="button">set</button></p>
+
+      <label class="f-label" for="pName">Payee name</label>
+      <input id="pName" type="text" autocomplete="off" placeholder="Meera's Chai Stall">
+      <label class="f-label" for="pVpa">UPI ID</label>
+      <input id="pVpa" type="text" autocapitalize="none" placeholder="meera@okhdfcbank">
+      <label class="f-label" for="pPhone">Or phone, for the 123Pay call</label>
+      <input id="pPhone" type="tel" inputmode="numeric" placeholder="10 digits">
+      <label class="f-label" for="pAmt">Amount, rupees</label>
+      <input id="pAmt" type="number" inputmode="numeric" min="1" placeholder="45">
+
+      <div class="railbox" id="railbox"></div>
+
+      <a class="btn btn-primary btn-block" id="payBtn" href="#">Choose a rail</a>
+      <p class="app-note">Your PIN is typed in the UPI app, on the carrier menu, or on the call keypad. This page never sees it.</p>
+    </div>
+
+    <!-- NOTES -->
+    <div class="pane hidden" id="pane-notes">
+      <p class="app-note">A Note is a promissory note, a digital khata slip: signed by this browser's key, checked offline, honoured over UPI later. Max Rs 2,000 each, Rs 10,000 open.</p>
+
+      <label class="f-label" for="nFrom">Your name, shown to the payee</label>
+      <input id="nFrom" type="text" placeholder="Sahil">
+      <label class="f-label" for="nTo">Payee name</label>
+      <input id="nTo" type="text" placeholder="Meera's Chai Stall">
+      <label class="f-label" for="nVpa">Payee UPI ID, for settling</label>
+      <input id="nVpa" type="text" autocapitalize="none" placeholder="meera@okhdfcbank">
+      <label class="f-label" for="nAmt">Amount, rupees, max 2000</label>
+      <input id="nAmt" type="number" inputmode="numeric" min="1" max="2000" placeholder="45">
+      <div class="chips" id="expChips">
+        <button class="chip on" data-min="30" type="button">30 min</button>
+        <button class="chip" data-min="60" type="button">1 hour</button>
+        <button class="chip" data-min="360" type="button">6 hours</button>
+        <button class="chip" data-min="1440" type="button">24 hours</button>
+      </div>
+      <button class="btn btn-primary btn-block" id="noteBtn" type="button">Create Note</button>
+      <p class="app-line mono" id="noteOpenLine"></p>
+
+      <div class="qrwrap hidden" id="qrwrap">
+        <div id="qrbox" class="qrbox"></div>
+        <p class="app-note" id="qrserial"></p>
+        <div class="row-gap">
+          <button class="btn btn-ghost btn-sm" id="noteCopy" type="button">Copy note text</button>
+          <button class="btn btn-ghost btn-sm" id="noteShare" type="button">Share</button>
+        </div>
+      </div>
+
+      <h3 class="app-h">Open notes</h3>
+      <div id="openNotes"></div>
+    </div>
+
+    <!-- VERIFY -->
+    <div class="pane hidden" id="pane-verify">
+      <p class="app-note">Merchant mode. Scan a customer's Note, or paste the text. Signature, expiry, the Rs 2,000 cap and replay by serial are checked on this device.</p>
+      <div class="row-gap">
+        <button class="btn btn-primary" id="scanBtn" type="button">Scan QR</button>
+        <button class="btn btn-ghost" id="pasteBtn" type="button">Paste instead</button>
+      </div>
+      <video id="scanVideo" class="scanvideo hidden" playsinline></video>
+      <textarea id="notePaste" class="hidden" rows="6" placeholder='Paste the text that starts with {"op":"openpay-note" ...'></textarea>
+      <button class="btn btn-primary btn-block hidden" id="pasteVerify" type="button">Verify</button>
+      <div id="verifyResult"></div>
+      <h3 class="app-h">Received</h3>
+      <div id="receivables"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="pane hidden" id="pane-history">
+      <p class="app-note">Browsers cannot read your bank SMS, so nothing here confirms on its own. Mark payments paid when your bank's SMS arrives. Everything stays in this browser.</p>
+      <div id="histList"></div>
+      <div class="row-gap">
+        <button class="btn btn-ghost btn-sm" id="exportBtn" type="button">Export as text</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-note">
+    <p>OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank. Works offline once installed.</p>
+  </div>
+</footer>
+
+<script src="vendor/qrcode.js"></script>
+<script src="webapp.js?v=10" defer></script>
+</body>
+</html>

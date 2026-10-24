@@ -28,7 +28,7 @@ Person to person UPI is free, and every OpenPay payment is person to person: zer
 ## Install
 
 - Android, the product: F-Droid via [IzzyOnDroid](https://apt.izzysoft.de/fdroid/) is the distribution path being submitted (submission file: `docs/izzyondroid-submission.md`), it installs cleanly on phones where Play Protect blocks sideloads. Until it is listed, the signed APK from [Releases](https://github.com/sahilwasgood/openpay/releases) works where sideloading is allowed: one file per version named `OpenPay-vX.Y.Z.apk`, SHA-256 in the notes. Play Protect either offers More details, Install anyway, or blocks outright depending on device. If an OpenPay from before v0.4.0 is installed, uninstall it first, the signing key changed.
-- Web, a tool not the product: the [verifier](https://sahilwasgood.github.io/openpay/verify.html) checks any Note's signature in any browser and installs from its own page to keep working offline. The Android app is the product, the site is the manual.
+- Web, the product with no download: [sahilwasgood.github.io/openpay/app.html](https://sahilwasgood.github.io/openpay/app.html) pays through the same rails (UPI deep links, `tel:` USSD and 123Pay), writes and verifies Notes with a WebCrypto key, and installs as an app that works offline. Browsers cannot read bank SMS, so payment confirmation there is manual. The Android app adds automatic SMS confirmation and the encrypted keystore.
 
 ## Fork it
 

@@ -559,3 +559,94 @@ h2 { font-size: clamp(1.9rem, 3.4vw, 2.7rem); margin-bottom: 16px; }
 @media (max-width: 720px) {
   .note-map-row { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* ---------- web app ---------- */
+
+body.webapp { background: var(--paper); }
+.webapp-body { padding-top: 24px; padding-bottom: 40px; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 22px; }
+.tab {
+  flex: 1; border: 1px solid var(--line-2); background: var(--card);
+  border-radius: 12px; padding: 11px 4px; font-family: var(--font-display);
+  font-weight: 600; font-size: 14.5px; color: var(--ink-2); cursor: pointer;
+}
+.tab.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.pane.hidden, .hidden { display: none; }
+
+.f-label {
+  display: block; font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-3); margin: 14px 0 6px;
+}
+.pane input, .pane textarea {
+  width: 100%; border: 1px solid var(--line-2); border-radius: 12px;
+  background: var(--card); color: var(--ink); padding: 13px 14px;
+  font-size: 16px; font-family: inherit;
+}
+.pane input:focus, .pane textarea:focus { outline: 2px solid var(--green); outline-offset: -1px; }
+
+.app-note { font-size: 13.5px; color: var(--ink-3); margin: 12px 0; }
+.app-line { font-size: 12.5px; color: var(--ink-3); margin: 4px 0 8px; }
+.app-h { font-family: var(--font-display); font-size: 16px; margin: 26px 0 10px; }
+.mono { font-family: var(--mono); }
+.dim { color: var(--ink-3); }
+
+.railbox {
+  border: 1px solid var(--line-2); border-radius: 14px;
+  background: var(--green-soft); color: var(--green-deep);
+  padding: 12px 14px; font-size: 14px; margin-top: 18px;
+}
+
+.btn-block { display: block; width: 100%; margin-top: 16px; text-align: center; }
+.btn.dead { opacity: 0.45; pointer-events: none; }
+.btn-ghost.light { color: var(--ink); border-color: var(--line-2); }
+.btn-ghost.light:hover { background: var(--paper-2); }
+
+.chips { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.chip {
+  border: 1px solid var(--line-2); background: var(--card); color: var(--ink-2);
+  border-radius: 999px; padding: 7px 14px; font-size: 13px; cursor: pointer;
+}
+.chip.on { background: var(--green-soft); border-color: var(--green); color: var(--green-deep); }
+
+.qrwrap { margin-top: 22px; text-align: center; }
+.qrbox { display: inline-block; background: #fff; border: 1px solid var(--line-2); border-radius: 16px; padding: 10px; }
+.qrbox svg { display: block; }
+
+.row-gap { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+
+.hrow {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--line);
+}
+.hrow strong { display: block; font-size: 14.5px; }
+.hrow span { font-size: 12px; }
+.linklike {
+  border: 0; background: none; color: var(--green); cursor: pointer;
+  font-family: var(--mono); font-size: 12.5px; text-decoration: underline;
+  text-underline-offset: 3px; padding: 0;
+}
+.linklike.warn { color: var(--amber); }
+
+.vres { border: 1px solid var(--line-2); border-radius: 16px; overflow: hidden; margin-top: 16px; background: var(--card); }
+.vres .vhead { padding: 14px 16px; font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+.vres.ok .vhead { background: var(--green-soft); color: var(--green-deep); }
+.vres.bad .vhead { background: var(--amber-soft); color: var(--amber); }
+.vres .vrow {
+  display: flex; justify-content: space-between; gap: 14px;
+  padding: 9px 16px; border-bottom: 1px dashed var(--line); font-size: 14px;
+}
+.vres .vrow span { color: var(--ink-3); }
+.vres .vfoot { padding: 10px 16px 14px; font-size: 13px; color: var(--ink-3); margin: 0; }
+.vres .btn { margin: 0 16px 14px; }
+
+.scanvideo { width: 100%; border-radius: 16px; margin-top: 14px; background: #000; }
+
+.wtoast {
+  position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%);
+  background: var(--ink); color: var(--paper); font-size: 14px;
+  padding: 11px 18px; border-radius: 12px; z-index: 200;
+  max-width: 86vw; text-align: center;
+}
