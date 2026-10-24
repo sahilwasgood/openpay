@@ -226,7 +226,20 @@ private val hi: Map<String, String> = mapOf(
     "You started a payment of Rs {a} to {p} {s} seconds ago and it has not confirmed yet. Retrying can double debit. Wait for the SMS or continue." to
         "आपने {p} को ₹{a} {s} सेकंड पहले भेजा था और वह अभी पुष्ट नहीं हुई। दोबारा भेजने पर दो बार कट सकता है। SMS का इंतज़ार करें या आगे बढ़ें।",
     "Wait" to "रुकें",
-    "Pay anyway" to "फिर भी भेजें"
+    "Pay anyway" to "फिर भी भेजें",
+    "Check balance (*99*3#)" to "बैलेंस देखें (*99*3#)",
+    "Open Notes" to "नोट खोलें",
+    "You have {n} open notes, the oldest is {h} hours old. Notes are promises: settle them or let them expire." to
+        "आपके {n} नोट खुले हैं, सबसे पुराना {h} घंटे का। नोट वादे हैं: चुकता करें या समाप्त होने दें।",
+    "New payer, big note" to "नया प्राप्तकर्ता, बड़ा नोट",
+    "New payer, big note." to "नया प्राप्तकर्ता, बड़ा नोट।",
+    "First note from this key and above Rs 500. Notes are promises, not money. Accept?" to
+        "इस कुंजी का पहला नोट है और ₹500 से बड़ा है। नोट वादे हैं, पैसे नहीं। स्वीकार करें?",
+    "Accept" to "स्वीकार",
+    "Decline" to "अस्वीकार",
+    "declined by you" to "आपने अस्वीकार किया",
+    "MDR structuring warning" to
+        "₹2,000 से बड़े P2M भुगतान पर MDR प्राप्तकर्ता व्यापारी देता है, और NPCI एक ही खरीद को छोटे भुगतानों में बाँटकर बचाने से रोकता है। इससे आपका कुछ नहीं बचता और आयकर कुल रक़म देखता है, लेन-देन का आकार नहीं। सिर्फ़ सचमुच अलग हिस्सों के लिए बाँटें।"
 )
 
 /** Composable lookup, falls back to the English literal. */

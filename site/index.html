@@ -212,6 +212,45 @@
   </div>
 </section>
 
+<section class="section" id="mdr">
+  <div class="wrap two-col">
+    <div>
+      <p class="eyebrow">The new fee</p>
+      <h2>The Rs 2,000 line, explained.</h2>
+      <p class="sub">From Oct 15, 2026, UPI charges large merchants 0.4% on person to merchant payments above Rs 2,000, capped at Rs 300. The customer pays nothing, ever. Person to person transfers stay free. Small merchants are exempt.</p>
+      <ul class="ticks">
+        <li><strong>Will splitting Rs 10,000 into 5-6 parts save tax?</strong> No. MDR is not tax. Income tax looks at total receipts, not transaction size, and hiding turnover is evasion, not planning.</li>
+        <li><strong>Does splitting save the payer money?</strong> No. The payer pays zero MDR either way. The fee comes out of the merchant's proceeds.</li>
+        <li><strong>Does splitting even work?</strong> No. NPCI prohibits splitting one purchase into smaller payments and applies the MDR to the total value received for a single invoice. It monitors for it.</li>
+      </ul>
+      <p class="sub">Genuine personal transfers stay free. For recurring payments, the legitimate automation rail is UPI Autopay mandates.</p>
+    </div>
+    <div class="mdr-calc">
+      <p class="mdr-label">Merchant fee calculator</p>
+      <div class="mdr-row">
+        <input id="mdrAmount" type="number" min="0" step="100" placeholder="10000" inputmode="numeric">
+        <span>Rs</span>
+      </div>
+      <div class="mdr-out">
+        <div class="mdr-line"><span>Merchant fee</span><strong id="mdrFee">Rs 40</strong></div>
+        <div class="mdr-line"><span>You pay</span><strong>Rs 0, always</strong></div>
+      </div>
+      <div class="mdr-split">
+        <label for="mdrParts">If it were cut into</label>
+        <select id="mdrParts">
+          <option value="0">one payment</option>
+          <option value="2">2 parts</option>
+          <option value="3">3 parts</option>
+          <option value="6">6 parts</option>
+        </select>
+      </div>
+      <div class="mdr-warn" id="mdrWarn" hidden>
+        All parts land under Rs 2,000. That is prohibited structuring: NPCI applies the fee to the total received for one invoice and monitors for exactly this. Nothing is saved, by anyone.
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section section-pale" id="faq">
   <div class="wrap wrap-narrow">
     <p class="eyebrow">FAQ</p>
@@ -309,5 +348,30 @@
 </div>
 
 <script src="app.js" defer></script>
+
+<script>
+(function () {
+  var amount = document.getElementById('mdrAmount');
+  var parts = document.getElementById('mdrParts');
+  var fee = document.getElementById('mdrFee');
+  var warn = document.getElementById('mdrWarn');
+  if (!amount) return;
+  function fmt(p) {
+    if (p === 0) return 'Rs 0';
+    return 'Rs ' + (p % 100 === 0 ? String(p / 100) : (p / 100).toFixed(2));
+  }
+  function update() {
+    var paise = Math.round((parseFloat(amount.value) || 0) * 100);
+    var merchantFee = paise > 200000 ? Math.min(paise * 4 / 1000, 30000) : 0;
+    fee.textContent = fmt(Math.round(merchantFee));
+    var n = parseInt(parts.value, 10);
+    var dodging = n > 1 && paise > 200000 && Math.floor(paise / n) <= 200000;
+    warn.hidden = !dodging;
+  }
+  amount.addEventListener('input', update);
+  parts.addEventListener('change', update);
+  update();
+})();
+</script>
 </body>
 </html>

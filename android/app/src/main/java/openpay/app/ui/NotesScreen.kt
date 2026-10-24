@@ -41,6 +41,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +61,7 @@ import openpay.app.OpenPayApp
 import openpay.app.data.PayState
 import openpay.app.data.RupeeFormat
 import openpay.app.notes.NoteQr
+import openpay.app.notes.PayerLimits
 import openpay.app.notes.Split
 import openpay.app.notes.Notes
 import openpay.app.notes.NotesStore.IssueResult
@@ -124,6 +126,8 @@ private fun IssueTab(app: OpenPayApp) {
     var envelope by remember { mutableStateOf<Notes.Envelope?>(null) }
     var envelopeQueue by remember { mutableStateOf<List<Notes.Envelope>>(emptyList()) }
     var settleSerial by remember { mutableStateOf<String?>(null) }
+    var settleQueue by remember { mutableStateOf<List<String>>(emptyList()) }
+    var autoAdvanceSettle by remember { mutableStateOf(false) }
 
     val settleLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -139,6 +143,26 @@ private fun IssueTab(app: OpenPayApp) {
             }
         }
         settleSerial = null
+        autoAdvanceSettle = true
+    }
+
+    LaunchedEffect(autoAdvanceSettle) {
+        if (!autoAdvanceSettle) return@LaunchedEffect
+        autoAdvanceSettle = false
+        val next = settleQueue.firstOrNull() ?: return@LaunchedEffect
+        settleQueue = settleQueue.drop(1)
+        val record = app.notesStore.issued.value.firstOrNull {
+            it.payload.serial == next && it.open
+        } ?: return@LaunchedEffect
+        settleSerial = next
+        settleLauncher.launch(
+            IntentRail.launchIntent(
+                record.payload.vpa!!,
+                record.payload.to,
+                RupeeFormat.format(record.payload.amountPaise),
+                "OpenPay note $next"
+            )
+        )
     }
 
     LazyColumn(
@@ -205,6 +229,24 @@ private fun IssueTab(app: OpenPayApp) {
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
+                OutlinedButton(onClick = {
+                    val perm = android.Manifest.permission.CALL_PHONE
+                    if (androidx.core.content.ContextCompat.checkSelfPermission(context, perm)
+                        != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(context, ts("Grant call and SMS, then tap Pay again"), Toast.LENGTH_LONG).show()
+                        return@OutlinedButton
+                    }
+                    runCatching {
+                        context.startActivity(
+                            android.content.Intent(
+                                android.content.Intent.ACTION_CALL,
+                                openpay.app.rails.UssdRail.dialUri(openpay.app.rails.UssdRail.USSD_BALANCE)
+                            )
+                        )
+                    }
+                }, modifier = Modifier.fillMaxWidth()) {
+                    Text(s("Check balance (*99*3#)"))
+                }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(30 to "30 min", 60 to "1 hour", 360 to "6 hours", 1440 to "24 hours").forEach { (m, label) ->
                         FilterChip(
@@ -235,6 +277,32 @@ private fun IssueTab(app: OpenPayApp) {
                         .height(52.dp)
                 ) {
                     Text(s("Create Note"), style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        }
+
+        if (issued.any { it.open && !it.payload.vpa.isNullOrBlank() }) {
+            item(key = "settleall") {
+                OutlinedButton(
+                    onClick = {
+                        val opens = issued.filter { it.open && !it.payload.vpa.isNullOrBlank() }
+                            .sortedBy { it.issuedAtEpoch }
+                        if (opens.isNotEmpty() && settleSerial == null) {
+                            settleQueue = opens.drop(1).map { it.payload.serial }
+                            settleSerial = opens.first().payload.serial
+                            settleLauncher.launch(
+                                IntentRail.launchIntent(
+                                    opens.first().payload.vpa!!,
+                                    opens.first().payload.to,
+                                    RupeeFormat.format(opens.first().payload.amountPaise),
+                                    "OpenPay note ${opens.first().payload.serial}"
+                                )
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(s("Settle all open notes"))
                 }
             }
         }
@@ -354,22 +422,27 @@ private fun VerifyTab(app: OpenPayApp) {
     val context = LocalContext.current
     val receivables by app.notesStore.receivables.collectAsState()
     var verdict by remember { mutableStateOf<Notes.Verdict?>(null) }
+    var consentPayload by remember { mutableStateOf<Notes.Payload?>(null) }
 
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         val content = result.contents ?: return@rememberLauncherForActivityResult
         val v = app.notesStore.verifyIncoming(content)
         verdict = v
         when (v) {
-            is Notes.Verdict.Valid -> {
-                app.voice.speak(
-                    ts(
-                        "Note verified. Rupees {a} from {f}.",
-                        "a" to RupeeFormat.format(v.payload.amountPaise),
-                        "f" to v.payload.from
+            is Notes.Verdict.Valid ->
+                if (PayerLimits.needsConsent(v.payload.amountPaise, v.knownPayer) && !v.duplicateSerial) {
+                    consentPayload = v.payload
+                    app.voice.speak(ts("New payer, big note."))
+                } else {
+                    app.voice.speak(
+                        ts(
+                            "Note verified. Rupees {a} from {f}.",
+                            "a" to RupeeFormat.format(v.payload.amountPaise),
+                            "f" to v.payload.from
+                        )
                     )
-                )
-                app.notesStore.acceptVerified(v.payload, v.knownPayer)
-            }
+                    app.notesStore.acceptVerified(v.payload, v.knownPayer)
+                }
             is Notes.Verdict.Bad ->
                 app.voice.speak(ts("Note rejected.") + " " + v.reason)
         }
@@ -485,6 +558,39 @@ private fun VerifyTab(app: OpenPayApp) {
             }
         }
     }
+
+    consentPayload?.let { payload ->
+        AlertDialog(
+            onDismissRequest = { consentPayload = null },
+            title = { Text(s("New payer, big note")) },
+            text = {
+                Text(
+                    s("First note from this key and above Rs 500. Notes are promises, not money. Accept?")
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    app.notesStore.acceptVerified(payload, knownPayer = false)
+                    app.voice.speak(
+                        ts(
+                            "Note verified. Rupees {a} from {f}.",
+                            "a" to RupeeFormat.format(payload.amountPaise),
+                            "f" to payload.from
+                        )
+                    )
+                    verdict = Notes.Verdict.Valid(payload, knownPayer = false, duplicateSerial = false)
+                    consentPayload = null
+                }) { Text(s("Accept")) }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    app.voice.speak(ts("Note rejected."))
+                    verdict = Notes.Verdict.Bad("declined by you")
+                    consentPayload = null
+                }) { Text(s("Decline")) }
+            }
+        )
+    }
 }
 
 
@@ -562,6 +668,20 @@ private fun SplitTab(app: OpenPayApp) {
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
+
+        if (shares.isNotEmpty() &&
+            openpay.app.rails.Mdr.looksLikeStructuring(totalPaise, shares) &&
+            (vpa.isNotBlank() || phone.isNotBlank())
+        ) {
+            Card(Modifier.fillMaxWidth()) {
+                Text(
+                    s("MDR structuring warning"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = openpay.app.ui.theme.WarnAmber,
+                    modifier = Modifier.padding(14.dp)
+                )
+            }
+        }
 
         if (shares.isNotEmpty()) {
             Card(Modifier.fillMaxWidth()) {

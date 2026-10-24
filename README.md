@@ -26,9 +26,11 @@ v0.5.0 is out: the three network rails (intent, USSD, IVR with DTMF), OpenPay No
 
 CI runs on every push (tests, debug APK, artifacts) and every tag builds a signed release APK from the encrypted keystore in repo secrets. The site deploys to Pages on every change to site/.
 
-Also in v0.5.0: a private spending log (the app reads your own bank debit SMS on device and builds a monthly expense view, the offline expense tracker people keep asking for), bill splitting into fair-share Notes, a double debit guard that warns before a same-looking retry, Pay again from any payment record, and QRs that can be re-shown.
+v0.5.0 also shipped: a private spending log (the app reads your own bank debit SMS on device and builds a monthly expense view, the offline expense tracker people keep asking for), bill splitting into fair-share Notes, a double debit guard that warns before a same-looking retry, Pay again from any payment record, and QRs that can be re-shown.
 
-Next: more languages, NFC tap for Note exchange.
+v0.6.0: first time payer consent above Rs 500 (bounded exposure for unknown keys, pinned payers earn room), balance check via *99*3# before issuing, a settle all queue that walks every open note through UPI when you are back online, a stale notes banner after 24 hours, and honest MDR awareness: the split flow warns when a would be single payment above Rs 2,000 is being cut into sub threshold pieces, which NPCI prohibits and which saves nobody anything. The [site](https://sahilwasgood.github.io/openpay/) has a merchant fee calculator and the Rs 2,000 line explained, including why splitting saves no tax.
+
+Next: more languages, NFC tap for Note exchange, UPI Autopay for recurring settlements.
 
 ## Repo layout
 

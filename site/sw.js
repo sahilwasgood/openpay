@@ -1,6 +1,6 @@
 /* OpenPay service worker: the site itself survives zero signal. */
 
-const CACHE = 'openpay-v3';
+const CACHE = 'openpay-v4';
 const SHELL = [
   './',
   './index.html',

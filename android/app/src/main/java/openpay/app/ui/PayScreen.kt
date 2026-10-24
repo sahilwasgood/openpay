@@ -39,6 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,6 +47,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -285,6 +287,38 @@ fun PayScreen(
                 fontFamily = FontFamily.Monospace,
                 color = FaintInk
             )
+
+            val openNotes by app.notesStore.issued.collectAsState()
+            val openList = openNotes.filter { it.open }
+            val oldest = openList.minOfOrNull { it.issuedAtEpoch }
+            if (openList.isNotEmpty() && oldest != null &&
+                System.currentTimeMillis() - oldest > 24 * 3600_000L
+            ) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(Modifier.padding(14.dp)) {
+                        Text(
+                            s(
+                                "You have {n} open notes, the oldest is {h} hours old. Notes are promises: settle them or let them expire.",
+                                "n" to openList.size.toString(),
+                                "h" to (((System.currentTimeMillis() - oldest) / 3600_000L)).toString()
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = WarnAmber
+                        )
+                        OutlinedButton(
+                            onClick = onOpenNotes,
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Text(s("Open Notes"))
+                        }
+                    }
+                }
+            }
 
             OutlinedTextField(
                 value = payeeName,
