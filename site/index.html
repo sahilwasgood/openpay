@@ -56,7 +56,7 @@
         <button class="install-entry-btn" id="installEntry" type="button" hidden>Install web app</button>
         <a class="btn btn-ghost" href="#ladder">See how it works</a>
       </div>
-      <p class="meta"><span>Apache 2.0</span><span>No ads, no analytics</span><span class="net" id="netchip">Your network: online</span></p>
+      <p class="meta"><span>Open source</span><span>Apache 2.0</span><span class="net" id="netchip">Your network: online</span></p>
     </div>
     <div class="phone" aria-hidden="true">
       <div class="phone-notch"></div>
@@ -140,6 +140,20 @@
         <p class="limit">₹2,000 per Note · shipped in v0.2</p>
       </article>
     </div>
+  </div>
+</section>
+
+<section class="section section-tint" id="notes">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow">The fourth rail</p>
+    <h2>A Note is a promissory note.</h2>
+    <p class="sub">You already know this instrument. When a kirana shop lets you take udhaar, the shopkeeper writes your name and the amount in the khata book, and both sides trust that record. A Note is the same slip, digital. Your phone signs "I owe Meera Rs 45" with a key that cannot be forged, and nobody can quietly edit the amount afterwards. No money moves when it is written. It settles over normal UPI later.</p>
+    <div class="notes-steps">
+      <div class="notes-step"><span>1</span><div><strong>Write it, offline.</strong> No signal needed. Your phone signs the payee, the amount, a serial number and an expiry, then shows a QR.</div></div>
+      <div class="notes-step"><span>2</span><div><strong>Check it, offline.</strong> The payee scans. Signature, expiry, the Rs 2,000 cap and replay by serial, all verified on their phone. Zero network on either side.</div></div>
+      <div class="notes-step"><span>3</span><div><strong>Honour it, online.</strong> Later, with signal, one tap opens your usual UPI app with payee and amount prefilled. You pay with your PIN, as always.</div></div>
+    </div>
+    <p class="sub">Forged screenshots cannot pass, because nothing visual is trusted. The same slip cannot be shown twice, because the serial is remembered. And the receiver does not even need the app: any browser can check a Note on the <a href="verify.html">verify page</a>, loaded once and offline forever after.</p>
   </div>
 </section>
 
@@ -265,7 +279,11 @@
       </details>
       <details>
         <summary>What if the payee does not have the OpenPay app?</summary>
-        <p>With any signal at all, the USSD and IVR rails pay any UPI user, no app needed on their side. With zero signal, they can verify a Note in any browser: open the verify page, paste the note text. Install the web app once and it keeps verifying offline.</p>
+        <p>With any signal at all, the USSD and IVR rails pay any UPI user, no app needed on their side. With zero signal, they verify in any browser at the <a href="verify.html">verify page</a>: the payer shares the Note as text, the payee pastes it, the signature is checked on their device. Loading the page once is enough, it keeps working offline afterwards. 60 KB over 2G or a shared hotspot is all the setup a shop needs, once.</p>
+      </details>
+      <details>
+        <summary>What if the payer never settles a Note?</summary>
+        <p>Same thing that happens when someone does not pay their khata: the shop holds proof and decides. A verified Note is a signed, timestamped admission of the exact amount, so there is no arguing. The merchant can block that payer's key with one tap and every future Note from them is refused on sight. First notes from strangers are capped at Rs 500 with an explicit accept, known payers go up to Rs 2,000, so the worst case is the same credit a kirana store extends on trust, minus the forgery and the arguing.</p>
       </details>
       <details>
         <summary>Does it track my spending?</summary>
@@ -274,10 +292,6 @@
       <details>
         <summary>Can I split a bill?</summary>
         <p>Yes. The Split tab cuts a total into fair shares down to the paisa and signs one Note per person for the same UPI ID. Show each QR, and they verify offline like any Note.</p>
-      </details>
-      <details>
-        <summary>What if the payer never settles a Note?</summary>
-        <p>A Note is a signed, timestamped promise for a small amount. The pending tracker counts down NPCI's clocks (T+1 auto reversal, T+5 refund deadline) and writes the escalation for you. The signature is your evidence.</p>
       </details>
       <details>
         <summary>Is OpenPay a wallet?</summary>
@@ -295,6 +309,18 @@
         <summary>Why not iOS?</summary>
         <p>Apple does not let an app dial USSD or IVR sessions. A typing companion for iPhone is planned. The full ladder needs Android.</p>
       </details>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="devs">
+  <div class="wrap wrap-narrow dev-cta">
+    <p class="eyebrow">For developers</p>
+    <h2>Fork it. Your agent can ship a build tonight.</h2>
+    <p class="sub">Kotlin and Compose, one static site, 48 tests, CI that signs and releases on every tag. The <a href="https://github.com/sahilwasgood/openpay/blob/main/CONTRIBUTING.md">forking guide</a> is the whole map: build, sign, deploy, ship your first change in an evening.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/fork">Fork on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/sahilwasgood/openpay/blob/main/docs/ARCHITECTURE.md">Read the map</a>
     </div>
   </div>
 </section>
@@ -330,7 +356,7 @@
       <img src="icons/icon-192.png" width="56" height="56" alt="">
       <div class="pwb-title">
         <strong>OpenPay</strong>
-        <span>Free · No ads · No internet permission</span>
+        <span>Open source · Works offline · 60 KB</span>
       </div>
     </div>
     <div class="pwb-shots">

@@ -1,23 +1,29 @@
-/* OpenPay service worker: the site itself survives zero signal. */
+/* OpenPay service worker.
+   Fresh when online, cached when not.
+   Same origin GETs are network first: a visitor with connectivity always
+   gets the current version and the response replaces the cached copy.
+   Offline, the cache answers. Each deploy ships a new CACHE id and the old
+   cache is deleted only after the new one is fully written. */
 
-const CACHE = 'openpay-v5';
+const CACHE = 'openpay-v6';
+
 const SHELL = [
   './',
   './index.html',
+  './verify.html',
   './styles.css',
   './app.js',
   './manifest.webmanifest',
-  './verify.html',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/apple-touch-icon.png',
-  './screenshots/mobile.png',
-  './screenshots/desktop.png'
+  './icons/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then((c) => c.addAll(SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -33,45 +39,19 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  const sameOrigin = url.origin === self.location.origin;
+  if (url.origin !== self.location.origin) return;
 
-  if (req.mode === 'navigate') {
-    e.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put('./index.html', copy));
-          return res;
-        })
-        .catch(() => caches.match('./index.html'))
-    );
-    return;
-  }
-
-  if (sameOrigin) {
-    e.respondWith(
-      caches.match(req).then((hit) => {
-        if (hit) return hit;
-        return fetch(req).then((res) => {
+  e.respondWith(
+    fetch(req)
+      .then((res) => {
+        if (res && res.status === 200) {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
-          return res;
-        });
+        }
+        return res;
       })
-    );
-    return;
-  }
-
-  // fonts: network first, cache fallback, opaque responses are fine
-  if (url.hostname.endsWith('fonts.googleapis.com') || url.hostname.endsWith('fonts.gstatic.com')) {
-    e.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
-          return res;
-        })
-        .catch(() => caches.match(req))
-    );
-  }
+      .catch(() =>
+        caches.match(req).then((hit) => hit || (req.mode === 'navigate' ? caches.match('./index.html') : Response.error()))
+      )
+  );
 });

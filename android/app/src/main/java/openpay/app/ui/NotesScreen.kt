@@ -175,7 +175,7 @@ private fun IssueTab(app: OpenPayApp) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    s("A Note is a signed promise. The payee verifies it offline, it settles over UPI later."),
+                    s("A Note is a promissory note, a digital khata slip. It is verified offline and settles over UPI later."),
                     style = MaterialTheme.typography.bodySmall,
                     color = FaintInk
                 )

@@ -23,7 +23,7 @@ private val hi: Map<String, String> = mapOf(
     // onboarding
     "Pay even with zero signal." to "सिग्नल न होने पर भी भुगतान करें।",
     "One payment, four rails" to "एक भुगतान, चार रास्ते",
-    "With data, OpenPay hands off to your UPI app. With signal only, it dials *99#, or the 123Pay line when you are on Jio. With nothing at all, issue a signed Note from the ticket tab: it verifies offline and settles over UPI later." to
+    "With data, OpenPay hands off to your UPI app. With signal only, it dials *99#, or the 123Pay line when you are on Jio. With nothing at all, write a promissory note from the ticket tab: verified offline, settled over UPI later." to
         "डेटा हो तो OpenPay आपका UPI ऐप खोल देता है। सिर्फ़ सिग्नल हो तो *99# डायल करता है, और Jio पर 123Pay कॉल। कुछ भी न हो तो टिकट टैब से साइन किया नोट बनाएं: वह ऑफ़लाइन जाँचा जाता है और बाद में UPI से चुकता होता है।",
     "Your PIN stays yours" to "आपका PIN आपके पास रहता है",
     "Your UPI PIN is typed on the carrier menu or the call keypad. OpenPay never sees it and never asks for it." to
@@ -156,8 +156,8 @@ private val hi: Map<String, String> = mapOf(
     "Notes · verify" to "नोट · जाँच",
     "Issue" to "बनाएँ",
     "Verify" to "जाँच",
-    "A Note is a signed promise. The payee verifies it offline, it settles over UPI later." to
-        "नोट एक साइन किया वादा है। प्राप्तकर्ता उसे ऑफ़लाइन जाँचता है, बाद में UPI से चुकता होता है।",
+    "A Note is a promissory note, a digital khata slip. It is verified offline and settles over UPI later." to
+        "नोट एक अंतरंग वचनपत्र है, डिजिटल खाता पर्ची। यह ऑफ़लाइन जाँचा जाता है और बाद में UPI से चुकता होता है।",
     "Rs {a} of Rs 10,000 open" to "₹10,000 में से ₹{a} खुले हैं",
     "Your name, shown to the payee" to "आपका नाम, प्राप्तकर्ता को दिखेगा",
     "Payee name" to "प्राप्तकर्ता का नाम",
