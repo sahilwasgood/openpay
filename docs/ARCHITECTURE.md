@@ -64,3 +64,7 @@ Limits: Rs 2,000 per note, Rs 10,000 open at once, notes expire. No money is eve
 - History tab: payments and notes in localStorage. Browsers cannot receive SMS, so confirmation is manual marking.
 
 `manifest.webmanifest` start_url points at `app.html`: installing the PWA installs the product. The marketing site stays the manual. The canonical note string and its rules are shared byte for byte across Kotlin, webapp.js and verify.html, that invariant is what makes all three interoperate.
+
+### Web app additions (v0.9 site)
+
+Settings tab (name persistence, English and Hindi, elder mode zoom 1.22, backup export and restore of all `op_` localStorage keys including the signing key, wipe, key fingerprint), manifest share_target (shared note text lands straight in Verify, shared `upi://` text autofills Pay), home screen shortcuts via `app.html#pay|#notes|#verify`, per open note a settle link built from the note's own VPA with the serial as the transaction note, and recent payee chips. Hindi strings live in `webapp.js` in the `HI` map, English originals are captured from the DOM at boot, `data-i` attributes are the hooks.

@@ -135,6 +135,172 @@
 
   var $ = function (id) { return document.getElementById(id); };
 
+  // ---------- i18n ----------
+
+  var HI = {
+    tab_pay: 'भुगतान', tab_notes: 'नोट', tab_verify: 'जाँच', tab_history: 'इतिहास', tab_settings: 'सेटिंग्स',
+    lbl_payee: 'प्राप्तकर्ता का नाम', lbl_vpa: 'UPI ID', lbl_phone: 'या फ़ोन, 123Pay कॉल के लिए',
+    lbl_amt: 'रुपये में रक़म', lbl_from: 'आपका नाम, प्राप्तकर्ता को दिखेगा', lbl_to: 'प्राप्तकर्ता का नाम',
+    lbl_nvpa: 'प्राप्तकर्ता की UPI ID, चुकता करने के लिए', lbl_namt: 'रक़म (रुपये), अधिकतम 2000',
+    btn_scan: 'UPI QR स्कैन', btn_contact: 'संपर्क चुनें', btn_balance: 'बैलेंस *99*3#',
+    first99_s: '*99# पहली बार?',
+    first99_p: 'एक बार <a href="tel:*99%23">*99#</a> डायल करें। अपने बैंक का शॉर्ट नाम भेजें, जैसे SBI के लिए SBIN या HDFC के लिए HDFC, या IFSC के पहले चार अक्षर। खाता जोड़ें, फिर पूछे जाने पर डेबिट कार्ड से अपना UPI PIN सेट करें। यही एक सेटअप आगे के हर *99# भुगतान को खोल देता है। आपका PIN कैरियर मेन्यू पर रहता है, इस पेज पर कभी नहीं।',
+    btn_create: 'नोट बनाएँ', btn_copy: 'नोट टेक्स्ट कॉपी करें', btn_share: 'साझा करें', h_open: 'खुले नोट',
+    btn_scanqr: 'QR स्कैन करें', btn_paste: 'इसके बजाय पेस्ट करें', btn_verify: 'जाँचें', h_received: 'प्राप्त',
+    btn_export: 'टेक्स्ट में निर्यात', lbl_lang: 'भाषा',
+    lbl_elder: 'बड़ा टेक्स्ट मोड', lbl_elder_sub: 'पढ़ने में आसानी के लिए हर स्क्रीन बड़ी',
+    lbl_backup: 'बैकअप और पुनर्स्थापना', lbl_backup_sub: 'ब्राउज़र स्टोरेज मिट सकता है। एक्सपोर्ट में आपकी कुंजी, नोट और इतिहास सुरक्षित रहते हैं।',
+    btn_export_json: 'बैकअप निर्यात करें', btn_import_json: 'बैकअप पुनर्स्थापित करें',
+    lbl_key: 'इस ब्राउज़र की साइनिंग कुंजी', btn_keycopy: 'पब्लिक की कॉपी करें', btn_wipe: 'सब मिटाएँ',
+    set_foot: 'OpenPay वेब सब कुछ सिर्फ़ इसी ब्राउज़र में रखता है। कोई सर्वर नहीं, कोई खाता नहीं।'
+  };
+
+  var lang = LS.get('lang', 'en');
+  document.querySelectorAll('[data-i]').forEach(function (el) {
+    if (!el.dataset.en) el.dataset.en = el.innerHTML;
+  });
+  function applyLang() {
+    document.querySelectorAll('[data-i]').forEach(function (el) {
+      el.innerHTML = lang === 'hi' ? (HI[el.dataset.i] || el.dataset.en) : el.dataset.en;
+    });
+    $('langEn').classList.toggle('on', lang === 'en');
+    $('langHi').classList.toggle('on', lang === 'hi');
+    LS.set('lang', lang);
+  }
+  $('langEn').onclick = function () { lang = 'en'; applyLang(); };
+  $('langHi').onclick = function () { lang = 'hi'; applyLang(); };
+
+  function t(en, hi) { return lang === 'hi' ? (hi || en) : en; }
+
+  // ---------- settings ----------
+
+  var elder = LS.get('elder', false);
+  function applyElder() {
+    document.body.classList.toggle('elder', elder);
+    $('elderBtn').textContent = elder ? t('On', 'चालू') : t('Off', 'बंद');
+    $('elderBtn').classList.toggle('on', elder);
+    LS.set('elder', elder);
+  }
+  $('elderBtn').onclick = function () { elder = !elder; applyElder(); };
+
+  var payerName = LS.get('name', '');
+  $('setName').value = payerName;
+  $('setName').addEventListener('input', function () {
+    payerName = $('setName').value.trim();
+    LS.set('name', payerName);
+  });
+  if (payerName) $('nFrom').value = payerName;
+  $('nFrom').addEventListener('input', function () {
+    LS.set('name', $('nFrom').value.trim());
+  });
+
+  function refreshKeyFp() {
+    if (!state.key) { $('keyFp').textContent = t('created on first note', 'पहले नोट पर बनेगी'); return; }
+    $('keyFp').textContent = state.key.pub.slice(0, 24) + ' · ed25519';
+  }
+  $('keyCopy').onclick = function () {
+    ensureKey().then(function () {
+      refreshKeyFp();
+      navigator.clipboard.writeText(state.key.pub)
+        .then(function () { toast(t('Public key copied', 'पब्लिक की कॉपी हुई')); });
+    });
+  };
+
+  $('backupBtn').onclick = function () {
+    var dump = {};
+    Object.keys(localStorage).forEach(function (k) {
+      if (k.indexOf('op_') === 0) dump[k] = localStorage.getItem(k);
+    });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(dump, null, 1)], { type: 'application/json' }));
+    a.download = 'openpay-backup.json';
+    a.click();
+    toast(t('Backup downloaded, keep it private', 'बैकअप डाउनलोड हुआ, इसे निजी रखें'));
+  };
+  $('restoreBtn').onclick = function () { $('restoreFile').click(); };
+  $('restoreFile').addEventListener('change', function (e) {
+    var f = e.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var dump = JSON.parse(r.result);
+        var n = 0;
+        Object.keys(dump).forEach(function (k) {
+          if (k.indexOf('op_') === 0) { localStorage.setItem(k, dump[k]); n++; }
+        });
+        toast(t('Restored, reloading', 'पुनर्स्थापित, रीलोड हो रहा है'));
+        setTimeout(function () { location.reload(); }, 800);
+      } catch (err) { toast(t('Not a backup file', 'यह बैकअप फ़ाइल नहीं है')); }
+    };
+    r.readAsText(f);
+  });
+  $('wipeBtn').onclick = function () {
+    if (!confirm(t('Wipe key, notes and history from this browser?', 'इस ब्राउज़र से कुंजी, नोट और इतिहास मिटाएँ?'))) return;
+    Object.keys(localStorage).forEach(function (k) {
+      if (k.indexOf('op_') === 0) localStorage.removeItem(k);
+    });
+    location.reload();
+  };
+
+  // ---------- share target and hash routing ----------
+
+  function routeIncomingSafe() {
+    try { routeIncoming(); } catch (e) {}
+  }
+  function routeIncoming() {
+    var q = new URLSearchParams(location.search);
+    var shared = (q.get('text') || '') + ' ' + (q.get('url') || '') + ' ' + (q.get('title') || '');
+    shared = shared.trim();
+    if (shared) {
+      if (shared.indexOf('openpay-note') !== -1) {
+        switchTab('verify');
+        $('notePaste').classList.remove('hidden');
+        $('pasteVerify').classList.remove('hidden');
+        $('notePaste').value = shared;
+        setTimeout(function () { verifyNoteText(shared); }, 300);
+        return;
+      }
+      var f = parseUpi(shared);
+      if (f) { autofill(f); return; }
+    }
+    var h = (location.hash || '').replace('#', '');
+    if (['pay', 'notes', 'verify', 'history', 'settings'].indexOf(h) !== -1) switchTab(h);
+  }
+
+  // ---------- recent payees ----------
+
+  function renderPayees() {
+    var box = $('payeelist');
+    box.innerHTML = '';
+    (LS.get('payees', []) || []).slice(0, 6).forEach(function (p) {
+      var c = document.createElement('button');
+      c.className = 'payee-chip';
+      c.type = 'button';
+      c.textContent = p.name || p.vpa || p.phone;
+      c.onclick = function () {
+        $('pName').value = p.name || '';
+        $('pVpa').value = p.vpa || '';
+        $('pPhone').value = p.phone || '';
+        refreshPay();
+        toast(t('Filled', 'भर दिया'));
+      };
+      box.appendChild(c);
+    });
+  }
+  function rememberPayee(name, vpa, phone) {
+    var list = LS.get('payees', []) || [];
+    var entry = { name: name || '', vpa: vpa || '', phone: phone || '' };
+    list = list.filter(function (x) {
+      return !((entry.vpa && x.vpa === entry.vpa) || (!entry.vpa && entry.phone && x.phone === entry.phone));
+    });
+    if (entry.name || entry.vpa || entry.phone) list.unshift(entry);
+    LS.set('payees', list.slice(0, 6));
+    renderPayees();
+  }
+
+
+
   function refreshPay() {
     var name = $('pName').value.trim();
     var vpa = $('pVpa').value.trim();
@@ -165,6 +331,7 @@
     });
     state.payments = state.payments.slice(0, 300);
     save();
+    rememberPayee(name, vpa, phone);
   }
 
   // ---------- notes tab ----------
@@ -189,13 +356,25 @@
       sub.className = 'mono dim';
       sub.textContent = n.d.serial;
       left.appendChild(b); left.appendChild(sub);
-      var act = document.createElement('button');
-      act.className = 'linklike';
-      act.textContent = n.settledAt ? 'hide' : 'mark settled';
-      act.onclick = function () {
+      var act = document.createElement('span');
+      if (!n.settledAt && n.d.vpa) {
+        var pay = document.createElement('a');
+        pay.className = 'linklike';
+        pay.textContent = t('settle', 'चुकता');
+        pay.href = 'upi://pay?pa=' + encodeURIComponent(n.d.vpa) +
+          '&pn=' + encodeURIComponent(n.d.to) +
+          '&am=' + (n.d.amountPaise / 100) + '&cu=INR&tn=' + encodeURIComponent('OpenPay ' + n.d.serial);
+        act.appendChild(pay);
+        act.appendChild(document.createTextNode(' · '));
+      }
+      var mk = document.createElement('button');
+      mk.className = 'linklike';
+      mk.textContent = n.settledAt ? t('hide', 'हटाएँ') : t('mark settled', 'चुकता दर्ज करें');
+      mk.onclick = function () {
         if (n.settledAt) { row.remove(); return; }
         n.settledAt = Date.now(); save(); renderOpenNotes();
       };
+      act.appendChild(mk);
       row.appendChild(left); row.appendChild(act);
       box.appendChild(row);
     });
@@ -394,7 +573,7 @@
     if (f.amt) $('pAmt').value = f.amt;
     switchTab('pay');
     refreshPay();
-    toast('Filled from QR');
+    toast(t('Filled from QR', 'QR से भर दिया'));
   }
 
   $('qrScanBtn').addEventListener('click', function () {
@@ -419,7 +598,7 @@
             stream.getTracks().forEach(function (t) { t.stop(); });
             video.classList.add('hidden');
             if (f) autofill(f);
-            else toast('Not a UPI QR code');
+            else toast(t('Not a UPI QR code', 'यह UPI QR नहीं है'));
           }).catch(function () {});
         }, 400);
       })
@@ -452,6 +631,7 @@
         .catch(function () {});
     });
   }
+
 
   // ---------- history tab ----------
 
@@ -575,6 +755,11 @@
     toastTimer = setTimeout(function () { t.remove(); }, 2600);
   }
 
+  routeIncomingSafe();
+  applyLang();
+  applyElder();
+  refreshKeyFp();
+  renderPayees();
   refreshPay();
   renderOpenNotes();
 })();

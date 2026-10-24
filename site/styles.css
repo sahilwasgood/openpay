@@ -656,3 +656,21 @@ body.webapp { background: var(--paper); }
 .first99 summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 14px; }
 .first99 p { font-size: 13.5px; color: var(--ink-2); margin-top: 8px; }
 .first99 a { color: var(--green); }
+
+.setrow {
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--card);
+  padding: 14px 16px; margin-top: 16px;
+}
+.setrow.col { flex-direction: column; align-items: flex-start; gap: 8px; }
+.setrow strong { font-size: 15px; display: block; }
+.setrow span { font-size: 13px; color: var(--ink-3); }
+.setrow .warn { color: var(--amber); border-color: #E8D5B0; }
+.payeelist { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.payeelist:empty { display: none; }
+.payee-chip {
+  border: 1px solid var(--green); background: var(--green-soft); color: var(--green-deep);
+  border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+  font-family: var(--font-display); font-weight: 600;
+}
+body.webapp.elder .webapp-body { zoom: 1.22; }

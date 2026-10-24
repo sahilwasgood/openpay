@@ -87,5 +87,29 @@
       "form_factor": "wide",
       "label": "The browser verifier"
     }
+  ],
+  "lang": "en",
+  "share_target": {
+    "action": "./app.html",
+    "method": "GET",
+    "params": {
+      "title": "t",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "shortcuts": [
+    {
+      "name": "Verify a Note",
+      "url": "./app.html#verify"
+    },
+    {
+      "name": "Write a Note",
+      "url": "./app.html#notes"
+    },
+    {
+      "name": "Pay",
+      "url": "./app.html#pay"
+    }
   ]
 }
