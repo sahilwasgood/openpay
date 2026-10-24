@@ -17,7 +17,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="OpenPay">
-<link rel="stylesheet" href="styles.css?v=8">
+<link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
 
@@ -53,7 +53,6 @@
       <p class="lede">OpenPay hands every payment to the strongest rail that still works. UPI intent when you have data, USSD or IVR when you only have signal, and a signed offline Note when you have nothing. It confirms, or it tells you exactly what happens next.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/releases">Download APK</a>
-        <button class="install-entry-btn" id="installEntry" type="button" hidden>Install web app</button>
         <a class="btn btn-ghost" href="#ladder">See how it works</a>
       </div>
       <p class="meta"><span>Open source</span><span>Apache 2.0</span><span class="net" id="netchip">Your network: online</span></p>
@@ -323,11 +322,11 @@
       </details>
       <details>
         <summary>When can I install it?</summary>
-        <p>The Android APK is on Releases, and this site installs as an app too: tap Install web app above. v0.3 adds Notes, merchant verify, Hindi, elder mode, and CSV export.</p>
+        <p>The Android app is the product: one APK per version on Releases, and F-Droid listing via IzzyOnDroid is being submitted, which installs cleanly on phones where Play Protect blocks sideloaded apps. The web app is a tool, not the product: the <a href="verify.html">verify page</a> installs on its own screen so a shop can verify Notes offline forever after one load.</p>
       </details>
       <details>
         <summary>Play Protect flags the APK. Is something wrong?</summary>
-        <p>No. Play Protect says this about every app installed from outside the Play Store: it cannot vouch for a certificate it has never seen, and ours is the project's own open source signing key, not Google's. Tap More details, then Install anyway. To verify what you installed, check the file's SHA-256 against the checksum printed in each release notes.</p>
+        <p>Play Protect cannot vouch for a certificate it has never seen, and ours is the project's own open source key. Some devices offer More details, Install anyway; some block outright with no continue option. If yours blocks: that device needs a store. F-Droid listing via IzzyOnDroid is the path being submitted, it installs OpenPay without Play Protect in the way, and the SHA-256 in each release note verifies any APK in between.</p>
       </details>
       <details>
         <summary>The APK refuses to install.</summary>
@@ -365,45 +364,7 @@
     <p>OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank. *99# and UPI 123Pay are NPCI services.</p>
   </div>
 </footer>
-
-<div class="pwaboard" id="pwaboard" hidden>
-  <div class="pwaboard-backdrop" data-close></div>
-  <div class="pwaboard-sheet" role="dialog" aria-modal="true" aria-label="Install OpenPay">
-    <div class="pwb-head">
-      <img src="icons/icon-192.png" width="56" height="56" alt="">
-      <div class="pwb-title">
-        <strong>OpenPay</strong>
-        <span>Open source · Works offline · 60 KB</span>
-      </div>
-    </div>
-    <div class="pwb-shots">
-      <img src="screenshots/mobile.png" alt="The pay screen" loading="lazy">
-      <img src="screenshots/mobile-ladder.png" alt="Zero signal, the Note rail picks itself" loading="lazy">
-      <img src="screenshots/mobile-notes.png" alt="A Note is a promissory note" loading="lazy">
-      <img src="screenshots/mobile-mdr.png" alt="The fee calculator" loading="lazy">
-      <img src="screenshots/mobile-verify.png" alt="Verify in any browser" loading="lazy">
-      <img src="screenshots/desktop.png" alt="OpenPay on the desktop" loading="lazy">
-      <img src="screenshots/desktop-verify.png" alt="The browser verifier" loading="lazy">
-    </div>
-    <p class="pwb-desc">UPI that survives zero signal. Works offline once installed, which is rather the point.</p>
-    <div class="pwb-actions" id="pwbActions">
-      <button class="btn btn-primary" id="pwbInstall" type="button">Install</button>
-      <button class="btn btn-ghost pwb-dismiss" id="pwbClose" type="button" data-close>Not now</button>
-    </div>
-    <ol class="pwb-ios" id="pwbIos" hidden>
-      <li>Tap the Share button in Safari</li>
-      <li>Choose Add to Home Screen</li>
-      <li>Open OpenPay from the home screen</li>
-    </ol>
-    <ol class="pwb-ios" id="pwbMenu" hidden>
-      <li>Open the browser menu, the three dots at the top right</li>
-      <li>Tap Install app, or Add to Home screen</li>
-      <li>Confirm. OpenPay appears on your home screen and works offline</li>
-    </ol>
-  </div>
-</div>
-
-<script src="app.js?v=8" defer></script>
+<script src="app.js?v=9" defer></script>
 
 <script>
 (function () {

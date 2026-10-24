@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0D0F0E">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=8">
+<link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
 
@@ -51,6 +51,35 @@
     </div>
 
     <p class="verify-small">A Note is a promissory note, a digital khata slip: a signed "I owe you" that settles over normal UPI later. No money moves here. Verification happens on your device, this page sends nothing anywhere.</p>
+    <button class="btn btn-primary" id="installEntry" type="button" hidden style="margin-top:18px">Install this verifier</button>
+
+    <div class="pwaboard" id="pwaboard" hidden>
+      <div class="pwaboard-backdrop" data-close></div>
+      <div class="pwaboard-sheet" role="dialog" aria-modal="true" aria-label="Install the verifier">
+        <div class="pwb-head">
+          <img src="icons/icon-192.png" width="56" height="56" alt="">
+          <div class="pwb-title">
+            <strong>OpenPay verifier</strong>
+            <span>Open source · Works offline · 60 KB</span>
+          </div>
+        </div>
+        <p class="pwb-desc">Install this page once and it keeps verifying Notes with zero signal, from your home screen.</p>
+        <div class="pwb-actions" id="pwbActions">
+          <button class="btn btn-primary" id="pwbInstall" type="button">Install</button>
+          <button class="btn btn-ghost pwb-dismiss" id="pwbClose" type="button" data-close>Not now</button>
+        </div>
+        <ol class="pwb-ios" id="pwbIos" hidden>
+          <li>Tap the Share button in Safari</li>
+          <li>Choose Add to Home Screen</li>
+          <li>The verifier appears on your home screen and works offline</li>
+        </ol>
+        <ol class="pwb-ios" id="pwbMenu" hidden>
+          <li>Open the browser menu, the three dots at the top right</li>
+          <li>Tap Install app, or Add to Home screen</li>
+          <li>Confirm. The verifier works offline from your home screen</li>
+        </ol>
+      </div>
+    </div>
   </div>
 </section>
 </main>
@@ -158,5 +187,6 @@
   });
 })();
 </script>
+<script src="app.js?v=9" defer></script>
 </body>
 </html>
