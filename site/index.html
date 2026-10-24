@@ -17,7 +17,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="OpenPay">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 
@@ -326,6 +326,14 @@
         <p>The Android APK is on Releases, and this site installs as an app too: tap Install web app above. v0.3 adds Notes, merchant verify, Hindi, elder mode, and CSV export.</p>
       </details>
       <details>
+        <summary>Play Protect flags the APK. Is something wrong?</summary>
+        <p>No. Play Protect says this about every app installed from outside the Play Store: it cannot vouch for a certificate it has never seen, and ours is the project's own open source signing key, not Google's. Tap More details, then Install anyway. To verify what you installed, check the file's SHA-256 against the checksum printed in each release notes.</p>
+      </details>
+      <details>
+        <summary>The APK refuses to install.</summary>
+        <p>If an older OpenPay is already installed, uninstall it first. Releases before v0.4.0 were signed with a different key, and Android correctly refuses to mix signatures for one app. Your ledger stays on the phone only, so uninstalling loses it: settle or export first if that matters to you.</p>
+      </details>
+      <details>
         <summary>Why not iOS?</summary>
         <p>Apple does not let an app dial USSD or IVR sessions. A typing companion for iPhone is planned. The full ladder needs Android.</p>
       </details>
@@ -387,10 +395,15 @@
       <li>Choose Add to Home Screen</li>
       <li>Open OpenPay from the home screen</li>
     </ol>
+    <ol class="pwb-ios" id="pwbMenu" hidden>
+      <li>Open the browser menu, the three dots at the top right</li>
+      <li>Tap Install app, or Add to Home screen</li>
+      <li>Confirm. OpenPay appears on your home screen and works offline</li>
+    </ol>
   </div>
 </div>
 
-<script src="app.js" defer></script>
+<script src="app.js?v=8" defer></script>
 
 <script>
 (function () {

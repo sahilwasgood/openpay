@@ -32,7 +32,7 @@ Local toolchain on this machine: Gradle 8.7 at `~/tools/gradle-8.7`, Android SDK
 6. Ed25519 canonical string for notes is frozen: pipe joined `openpay-note|v|from|payerKey|to|vpa|phone|amountPaise|serial|nonce|expiresEpoch|memo`. The browser verifier in `site/verify.html` must stay byte compatible.
 7. Release signing: keystore in `android/keystore/` (gitignored) or gradle properties `storeFile/storePassword/keyAlias/keyPassword`. Store and key password must be identical (Android rejects split PKCS12 passwords).
 8. Version bumps: `versionCode` and `versionName` in `android/app/build.gradle.kts`, tag `vX.Y.Z` pushes a signed release automatically. The release carries the release APK only.
-9. Service worker cache id in `site/sw.js` must be bumped on every site change so installed PWAs swap caches atomically after one online visit.
+9. Service worker cache id in `site/sw.js` must be bumped on every site change so installed PWAs swap caches atomically after one online visit. Bump the `?v=` suffix on `styles.css` and `app.js` in both HTML files in the same change, HTTP caches can otherwise serve the old assets for up to ten minutes.
 
 ## Useful facts
 

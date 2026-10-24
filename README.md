@@ -27,7 +27,7 @@ Person to person UPI is free, and every OpenPay payment is person to person: zer
 
 ## Install
 
-- Android: the signed APK from [Releases](https://github.com/sahilwasgood/openpay/releases). Android asks to allow installs from unknown sources. The app requests CALL_PHONE to dial, RECEIVE_SMS to hear the bank confirmation, CAMERA to scan QR. Nothing else. Your UPI PIN is typed on the carrier menu or the call keypad, never in this app.
+- Android: the signed APK from [Releases](https://github.com/sahilwasgood/openpay/releases), one file per version named `OpenPay-vX.Y.Z.apk`. Android asks to allow installs from unknown sources. Play Protect will warn because the certificate is the project's own key, not Google's: More details, Install anyway. The SHA-256 of each APK is printed in its release notes. If an OpenPay from before v0.4.0 is installed, uninstall it first, the signing key changed. The app requests CALL_PHONE to dial, RECEIVE_SMS to hear the bank confirmation, CAMERA to scan QR. Nothing else. Your UPI PIN is typed on the carrier menu or the call keypad, never in this app.
 - Web: [sahilwasgood.github.io/openpay](https://sahilwasgood.github.io/openpay/), installs as an app, keeps working offline, and can verify Notes in any browser.
 
 ## Fork it

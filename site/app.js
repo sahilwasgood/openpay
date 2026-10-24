@@ -48,15 +48,19 @@
   var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   var standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
 
+  function refreshBoardMode() {
+    var iosList = document.getElementById('pwbIos');
+    var menuList = document.getElementById('pwbMenu');
+    var actions = document.getElementById('pwbActions');
+    if (!iosList || !menuList || !actions) return;
+    iosList.hidden = !(isIOS && !deferred);
+    menuList.hidden = !(!isIOS && !deferred);
+    actions.hidden = !deferred;
+  }
+
   function openBoard() {
     if (!board) return;
-    var iosList = document.getElementById('pwbIos');
-    var actions = document.getElementById('pwbActions');
-    if (iosList && actions) {
-      var useIos = isIOS && !deferred;
-      iosList.hidden = !useIos;
-      actions.hidden = useIos;
-    }
+    refreshBoardMode();
     board.hidden = false;
   }
 
@@ -96,10 +100,14 @@
   var install = document.getElementById('pwbInstall');
   if (install) {
     install.addEventListener('click', function () {
-      if (!deferred) return;
+      if (!deferred) { refreshBoardMode(); return; }
       deferred.prompt();
       deferred.userChoice.then(function () { deferred = null; });
       closeBoard();
     });
   }
+
+  window.addEventListener('beforeinstallprompt', function () {
+    if (!board.hidden) refreshBoardMode();
+  });
 })();
