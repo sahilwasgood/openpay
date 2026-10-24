@@ -53,7 +53,8 @@ object Notes {
     data class Issued(
         val payload: Payload,
         val issuedAtEpoch: Long,
-        val settledAtEpoch: Long? = null
+        val settledAtEpoch: Long? = null,
+        val envelope: String? = null
     ) {
         val open: Boolean get() = settledAtEpoch == null
     }

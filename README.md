@@ -22,9 +22,11 @@ Every payment is written to an encrypted local ledger before the call goes out, 
 
 ## Status
 
-v0.4.0 is out: the three network rails (intent, USSD, IVR with DTMF), OpenPay Notes (Ed25519 signed offline vouchers, merchant verify with voice readback), QR scan, encrypted ledger, bank SMS confirmation, pending tracker with NPCI clocks, English and Hindi, elder mode, CSV export, properly signed release builds from CI, and a browser based Note verifier: [sahilwasgood.github.io/openpay/verify.html](https://sahilwasgood.github.io/openpay/verify.html) checks a Note's signature with WebCrypto, no Android app needed. 29 unit tests cover the rails, the parsers, and note signing.
+v0.5.0 is out: the three network rails (intent, USSD, IVR with DTMF), OpenPay Notes (Ed25519 signed offline vouchers, merchant verify with voice readback), QR scan, encrypted ledger, bank SMS confirmation, pending tracker with NPCI clocks, English and Hindi, elder mode, CSV export, properly signed release builds from CI, and a browser based Note verifier: [sahilwasgood.github.io/openpay/verify.html](https://sahilwasgood.github.io/openpay/verify.html) checks a Note's signature with WebCrypto, no Android app needed. 29 unit tests cover the rails, the parsers, and note signing.
 
 CI runs on every push (tests, debug APK, artifacts) and every tag builds a signed release APK from the encrypted keystore in repo secrets. The site deploys to Pages on every change to site/.
+
+Also in v0.5.0: a private spending log (the app reads your own bank debit SMS on device and builds a monthly expense view, the offline expense tracker people keep asking for), bill splitting into fair-share Notes, a double debit guard that warns before a same-looking retry, Pay again from any payment record, and QRs that can be re-shown.
 
 Next: more languages, NFC tap for Note exchange.
 

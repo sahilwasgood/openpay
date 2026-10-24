@@ -96,7 +96,8 @@ class NotesStore(context: Context) {
         )
         val record = Notes.Issued(
             payload = payload,
-            issuedAtEpoch = System.currentTimeMillis()
+            issuedAtEpoch = System.currentTimeMillis(),
+            envelope = Notes.encode(envelope)
         )
         issued.value = listOf(record) + issued.value
         seenSerials.value = seenSerials.value + payload.serial
@@ -121,6 +122,9 @@ class NotesStore(context: Context) {
         pinnedKeys.value = pinnedKeys.value + (key to name.ifBlank { "saved payer" })
         persist()
     }
+
+    fun envelopeFor(serial: String): Notes.Envelope? =
+        issued.value.firstOrNull { it.payload.serial == serial }?.envelope?.let { Notes.parse(it) }
 
     fun markSettled(serial: String) {
         issued.value = issued.value.map {

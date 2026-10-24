@@ -17,5 +17,8 @@ class SmsReceiver : BroadcastReceiver() {
         val body = messages.joinToString("") { it.displayMessageBody.orEmpty() }
         if (body.isBlank()) return
         app.store.onSms(sender, body)
+        if (app.store.expensesEnabled.value) {
+            app.expenseStore.ingest(sender, body, System.currentTimeMillis())
+        }
     }
 }

@@ -60,6 +60,7 @@ import openpay.app.OpenPayApp
 import openpay.app.data.PayState
 import openpay.app.data.RupeeFormat
 import openpay.app.notes.NoteQr
+import openpay.app.notes.Split
 import openpay.app.notes.Notes
 import openpay.app.notes.NotesStore.IssueResult
 import openpay.app.rails.IntentRail
@@ -75,7 +76,7 @@ fun NotesScreen(app: OpenPayApp, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (tab == 0) s("Notes · issue") else s("Notes · verify")) },
+                title = { Text(if (tab == 0) s("Notes · issue") else if (tab == 1) s("Notes · verify") else s("Notes · split")) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -95,8 +96,13 @@ fun NotesScreen(app: OpenPayApp, onBack: () -> Unit) {
             TabRow(selectedTabIndex = tab) {
                 Tab(selected = tab == 0, onClick = { tab = 0 }, text = { Text(s("Issue")) })
                 Tab(selected = tab == 1, onClick = { tab = 1 }, text = { Text(s("Verify")) })
+                Tab(selected = tab == 2, onClick = { tab = 2 }, text = { Text(s("Split")) })
             }
-            if (tab == 0) IssueTab(app) else VerifyTab(app)
+            when (tab) {
+                0 -> IssueTab(app)
+                1 -> VerifyTab(app)
+                else -> SplitTab(app)
+            }
         }
     }
 }
@@ -116,6 +122,7 @@ private fun IssueTab(app: OpenPayApp) {
     var memo by rememberSaveable { mutableStateOf("") }
     var minutes by rememberSaveable { mutableStateOf(60) }
     var envelope by remember { mutableStateOf<Notes.Envelope?>(null) }
+    var envelopeQueue by remember { mutableStateOf<List<Notes.Envelope>>(emptyList()) }
     var settleSerial by remember { mutableStateOf<String?>(null) }
 
     val settleLauncher = rememberLauncherForActivityResult(
@@ -252,6 +259,11 @@ private fun IssueTab(app: OpenPayApp) {
                             if (note.open) PayState.PENDING else PayState.SUCCESS
                         )
                     }
+                    if (note.open && note.envelope != null) {
+                        TextButton(onClick = { envelope = Notes.parse(note.envelope!!) }) {
+                            Text(s("Show QR"))
+                        }
+                    }
                     if (note.open) {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             if (!note.payload.vpa.isNullOrBlank()) {
@@ -283,10 +295,14 @@ private fun IssueTab(app: OpenPayApp) {
 
     val current = envelope
     if (current != null) {
+        val advance = {
+            envelope = envelopeQueue.firstOrNull()
+            envelopeQueue = envelopeQueue.drop(1)
+        }
         AlertDialog(
-            onDismissRequest = { envelope = null },
+            onDismissRequest = { advance() },
             confirmButton = {
-                TextButton(onClick = { envelope = null }) { Text(s("Done")) }
+                TextButton(onClick = { advance() }) { Text(s("Done")) }
             },
             title = { Text(s("Note {serial}", "serial" to current.d.serial)) },
             text = {
@@ -468,5 +484,175 @@ private fun VerifyTab(app: OpenPayApp) {
                 }
             }
         }
+    }
+}
+
+
+@Composable
+private fun SplitTab(app: OpenPayApp) {
+    val context = LocalContext.current
+    var total by rememberSaveable { mutableStateOf("") }
+    var people by rememberSaveable { mutableStateOf("") }
+    var vpa by rememberSaveable { mutableStateOf("") }
+    var phone by rememberSaveable { mutableStateOf("") }
+    var names by rememberSaveable { mutableStateOf("") }
+    var memo by rememberSaveable { mutableStateOf("") }
+    var envelope by remember { mutableStateOf<Notes.Envelope?>(null) }
+    var envelopeQueue by remember { mutableStateOf<List<Notes.Envelope>>(emptyList()) }
+
+    val totalPaise = (total.toLongOrNull() ?: 0L) * 100
+    val count = (people.toIntOrNull() ?: 0).coerceAtMost(12)
+    val shares = Split.shares(totalPaise, count)
+    val nameList = names.split(',').map { it.trim() }.filter { it.isNotBlank() }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            s("One bill, many notes. OpenPay cuts the total into fair shares and signs a Note per person, for the same UPI ID."),
+            style = MaterialTheme.typography.bodySmall,
+            color = FaintInk
+        )
+        OutlinedTextField(
+            value = total,
+            onValueChange = { total = it.filter(Char::isDigit).take(5) },
+            label = { Text(s("Total amount in rupees")) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = people,
+            onValueChange = { people = it.filter(Char::isDigit).take(2) },
+            label = { Text(s("Number of shares")) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = vpa,
+            onValueChange = { vpa = it },
+            label = { Text(s("Payee UPI ID, same for every note")) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = phone,
+            onValueChange = { phone = it.filter(Char::isDigit).take(10) },
+            label = { Text(s("Or payee phone")) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = names,
+            onValueChange = { names = it.take(200) },
+            label = { Text(s("Names, comma separated, optional")) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = memo,
+            onValueChange = { memo = it.take(40) },
+            label = { Text(s("Memo, optional")) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        if (shares.isNotEmpty()) {
+            Card(Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        s("Each share"),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    shares.forEachIndexed { i, paise ->
+                        val name = nameList.getOrNull(i) ?: ts("Person {n}", "n" to (i + 1).toString())
+                        Text(
+                            "${i + 1}. $name · ₹${if (paise % 100 == 0L) (paise / 100).toString() else "%d.%02d".format(paise / 100, paise % 100)}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+
+        Button(
+            onClick = {
+                if (totalPaise < count) {
+                    Toast.makeText(context, ts("Total must be at least the number of shares"), Toast.LENGTH_LONG).show()
+                    return@Button
+                }
+                val created = mutableListOf<Notes.Envelope>()
+                var refused: String? = null
+                for (i in shares.indices) {
+                    val name = nameList.getOrNull(i) ?: ts("Person {n}", "n" to (i + 1).toString())
+                    val noteMemo = listOf(memo, ts("Split {i}/{n}", "i" to (i + 1).toString(), "n" to count.toString()))
+                        .filter { it.isNotBlank() }.joinToString(" · ")
+                    when (val r = app.notesStore.issue(
+                        to = name,
+                        vpa = vpa.trim().ifBlank { null },
+                        phone = phone.trim().ifBlank { null },
+                        amountPaise = shares[i],
+                        validMinutes = 60,
+                        memo = noteMemo,
+                        from = app.notesStore.payerName.value
+                    )) {
+                        is IssueResult.Created -> created.add(r.envelope)
+                        is IssueResult.Refused -> { refused = r.reason; break }
+                    }
+                }
+                if (created.isNotEmpty()) {
+                    envelope = created.first()
+                    envelopeQueue = created.drop(1)
+                }
+                if (refused != null) {
+                    Toast.makeText(context, refused, Toast.LENGTH_LONG).show()
+                }
+            },
+            enabled = shares.isNotEmpty(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
+        ) {
+            Text(
+                if (shares.isEmpty()) s("Create Note") else s("Create {n} notes", "n" to count.toString()),
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
+        Spacer(Modifier.height(16.dp))
+    }
+
+    val current = envelope
+    if (current != null) {
+        val advance = {
+            envelope = envelopeQueue.firstOrNull()
+            envelopeQueue = envelopeQueue.drop(1)
+        }
+        AlertDialog(
+            onDismissRequest = { advance() },
+            confirmButton = {
+                TextButton(onClick = { advance() }) { Text(s("Done")) }
+            },
+            title = { Text(s("Note {serial}", "serial" to current.d.serial)) },
+            text = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        bitmap = NoteQr.bitmap(Notes.encode(current), QR_SIZE).asImageBitmap(),
+                        contentDescription = s("Note QR"),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text(
+                        s("The payee scans this in Verify mode. No signal needed on either phone."),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = FaintInk
+                    )
+                }
+            }
+        )
     }
 }

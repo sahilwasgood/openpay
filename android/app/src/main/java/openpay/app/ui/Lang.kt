@@ -195,7 +195,38 @@ private val hi: Map<String, String> = mapOf(
     "Note verified. Rupees {a} from {f}." to "नोट पुष्ट। {f} से ₹{a}।",
     "Note rejected." to "नोट अस्वीकृत।",
     "known payer" to "जाना पहचाना",
-    "new key" to "नई कुंजी"
+    "new key" to "नई कुंजी",
+    "Payments" to "भुगतान",
+    "Spending" to "खर्च",
+    "No spending captured yet. Your bank's debit SMS become a private log here, on this phone only." to
+        "अभी कोई खर्च नहीं। बैंक के डेबिट SMS यहाँ एक निजी बही बनते हैं, सिर्फ़ इसी फ़ोन पर।",
+    "Rs {a}" to "₹{a}",
+    "Reads your bank's debit SMS on device. Nothing leaves this phone." to
+        "बैंक के डेबिट SMS फ़ोन पर ही पढ़े जाते हैं। इस फ़ोन से कुछ बाहर नहीं जाता।",
+    "Expense log" to "खर्च बही",
+    "Private spending log" to "निजी खर्च बही",
+    "Reads bank debit SMS on device to build a private spending log. No internet, ever." to
+        "खर्च बही के लिए बैंक के डेबिट SMS फ़ोन पर ही पढ़े जाते हैं। इंटरनेट कभी नहीं।",
+    "Split" to "बाँटें",
+    "Notes · split" to "नोट · बाँटें",
+    "One bill, many notes. OpenPay cuts the total into fair shares and signs a Note per person, for the same UPI ID." to
+        "एक बिल, कई नोट। OpenPay कुल रक़म को बराबर हिस्सों में बाँटकर हर हिस्से का एक नोट बनाता है, एक ही UPI ID के लिए।",
+    "Total amount in rupees" to "कुल रक़म (रुपये)",
+    "Number of shares" to "कितने हिस्से",
+    "Payee UPI ID, same for every note" to "प्राप्तकर्ता की UPI ID, हर नोट के लिए एक ही",
+    "Names, comma separated, optional" to "नाम, अल्पविराम से, वैकल्पिक",
+    "Each share" to "हर हिस्सा",
+    "Person {n}" to "व्यक्ति {n}",
+    "Split {i}/{n}" to "हिस्सा {i}/{n}",
+    "Create {n} notes" to "{n} नोट बनाएँ",
+    "Total must be at least the number of shares" to "कुल रक़म हिस्सों की संख्या से कम नहीं हो सकती",
+    "Show QR" to "QR दिखाएँ",
+    "Pay again" to "दोबारा भुगतान करें",
+    "Possible double payment" to "दो बार भुगतान हो सकता है",
+    "You started a payment of Rs {a} to {p} {s} seconds ago and it has not confirmed yet. Retrying can double debit. Wait for the SMS or continue." to
+        "आपने {p} को ₹{a} {s} सेकंड पहले भेजा था और वह अभी पुष्ट नहीं हुई। दोबारा भेजने पर दो बार कट सकता है। SMS का इंतज़ार करें या आगे बढ़ें।",
+    "Wait" to "रुकें",
+    "Pay anyway" to "फिर भी भेजें"
 )
 
 /** Composable lookup, falls back to the English literal. */

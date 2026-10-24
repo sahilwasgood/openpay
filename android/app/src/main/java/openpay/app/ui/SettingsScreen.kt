@@ -152,6 +152,7 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
 
             val language by app.store.language.collectAsState()
             val elderly by app.store.elderly.collectAsState()
+            val expensesEnabled by app.store.expensesEnabled.collectAsState()
 
             Card(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -181,6 +182,24 @@ fun SettingsScreen(app: OpenPayApp, onBack: () -> Unit) {
                         Text(s("Elder mode, large text"), style = MaterialTheme.typography.titleMedium)
                     }
                     Switch(checked = elderly, onCheckedChange = { app.store.setElderly(it) })
+                }
+            }
+
+            Card(Modifier.fillMaxWidth()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Eyebrow(s("Expense log"))
+                        Text(s("Private spending log"), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            s("Reads bank debit SMS on device to build a private spending log. No internet, ever."),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = FaintInk
+                        )
+                    }
+                    Switch(checked = expensesEnabled, onCheckedChange = { app.store.setExpensesEnabled(it) })
                 }
             }
 

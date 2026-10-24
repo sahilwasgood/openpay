@@ -30,6 +30,7 @@ import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.ConfirmationNumber
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,6 +42,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -61,6 +63,8 @@ import androidx.core.content.ContextCompat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import openpay.app.OpenPayApp
+import openpay.app.Store
+import openpay.app.rails.Guards
 import openpay.app.data.PayState
 import openpay.app.data.Payee
 import openpay.app.data.Payment
@@ -96,6 +100,8 @@ fun PayScreen(
     var noteText by rememberSaveable { mutableStateOf("") }
     var guide by remember { mutableStateOf<GuideKind?>(null) }
     var pendingIntentPaymentId by rememberSaveable { mutableStateOf<String?>(null) }
+    var dupWarn by remember { mutableStateOf<openpay.app.data.Payment?>(null) }
+    var allowDup by remember { mutableStateOf(false) }
 
     var net by remember { mutableStateOf(Net.netKind(context)) }
     var carrier by remember { mutableStateOf(Net.carrier(context)) }
@@ -166,6 +172,15 @@ fun PayScreen(
 
     fun pay() {
         if (amountPaise <= 0) return
+        val dup = Guards.findDuplicate(
+            app.store.payments.value, amountPaise, payee.vpa, payee.phone,
+            System.currentTimeMillis(), Store.WINDOW_MS
+        )
+        if (dup != null && !allowDup) {
+            dupWarn = dup
+            return
+        }
+        allowDup = false
         val rail: Rail = when (pick) {
             is RailPick.Intent -> Rail.INTENT
             is RailPick.Ussd -> Rail.USSD
@@ -354,6 +369,29 @@ fun PayScreen(
             )
             Spacer(Modifier.height(12.dp))
         }
+    }
+
+    dupWarn?.let { dup ->
+        AlertDialog(
+            onDismissRequest = { dupWarn = null },
+            title = { Text(s("Possible double payment")) },
+            text = {
+                Text(
+                    s(
+                        "You started a payment of Rs {a} to {p} {s} seconds ago and it has not confirmed yet. Retrying can double debit. Wait for the SMS or continue.",
+                        "a" to dup.amountRupeesString,
+                        "p" to dup.payee.displayName.ifBlank { dup.payee.vpa ?: dup.payee.phone ?: "" },
+                        "s" to ((System.currentTimeMillis() - dup.createdAtEpoch) / 1000).toString()
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { dupWarn = null; allowDup = true; pay() }) { Text(s("Pay anyway")) }
+            },
+            dismissButton = {
+                TextButton(onClick = { dupWarn = null }) { Text(s("Wait")) }
+            }
+        )
     }
 
     val currentGuide = guide

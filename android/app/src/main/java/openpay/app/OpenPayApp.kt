@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import openpay.app.data.Banks
+import openpay.app.data.ExpenseStore
 import openpay.app.data.Ledger
 import openpay.app.data.PayState
 import openpay.app.data.Payment
@@ -24,6 +25,7 @@ class OpenPayApp : Application() {
         private set
 
     val notesStore: NotesStore by lazy { NotesStore(this) }
+    val expenseStore: ExpenseStore by lazy { ExpenseStore(this) }
 
     /** Voice readback for merchant verify, the soundbox replacement. */
     val voice: Voice by lazy { Voice(this) }
@@ -68,12 +70,18 @@ class Store(context: Context) {
     val bankIndex = MutableStateFlow(prefs.getInt("bank", Banks.all.lastIndex))
     val onboarded = MutableStateFlow(prefs.getBoolean("onboarded", false))
     val language = MutableStateFlow(prefs.getString("lang", "en") ?: "en")
+    val expensesEnabled = MutableStateFlow(prefs.getBoolean("expenses", true))
     val elderly = MutableStateFlow(prefs.getBoolean("elderly", false))
 
     fun setLanguage(code: String) {
         prefs.edit().putString("lang", code).apply()
         language.value = code
         Lang.set(code)
+    }
+
+    fun setExpensesEnabled(on: Boolean) {
+        prefs.edit().putBoolean("expenses", on).apply()
+        expensesEnabled.value = on
     }
 
     fun setElderly(on: Boolean) {
