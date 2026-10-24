@@ -236,6 +236,9 @@ private val hi: Map<String, String> = mapOf(
     "First note from this key and above Rs 500. Notes are promises, not money. Accept?" to
         "इस कुंजी का पहला नोट है और ₹500 से बड़ा है। नोट वादे हैं, पैसे नहीं। स्वीकार करें?",
     "Accept" to "स्वीकार",
+    "Blacklisted payer. Refuse." to "प्रतिबंधित प्राप्तकर्ता। मना करें।",
+    "Block this payer" to "इस प्राप्तकर्ता को रोकें",
+    "Remove block" to "रोक हटाएँ",
     "Decline" to "अस्वीकार",
     "declined by you" to "आपने अस्वीकार किया",
     "MDR structuring warning" to

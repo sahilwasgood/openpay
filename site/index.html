@@ -53,9 +53,10 @@
       <p class="lede">OpenPay hands every payment to the strongest rail that still works. UPI intent when you have data, USSD or IVR when you only have signal, and a signed offline Note when you have nothing. It confirms, or it tells you exactly what happens next.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/releases">Download APK</a>
+        <button class="install-entry-btn" id="installEntry" type="button" hidden>Install web app</button>
         <a class="btn btn-ghost" href="#ladder">See how it works</a>
       </div>
-      <p class="meta"><span>Apache 2.0</span><span>No ads, no analytics</span><span class="net" id="netchip">Your network: online</span><button class="install-entry" id="installEntry" type="button" hidden>Install web app</button></p>
+      <p class="meta"><span>Apache 2.0</span><span>No ads, no analytics</span><span class="net" id="netchip">Your network: online</span></p>
     </div>
     <div class="phone" aria-hidden="true">
       <div class="phone-notch"></div>
@@ -222,6 +223,7 @@
         <li><strong>Will splitting Rs 10,000 into 5-6 parts save tax?</strong> No. MDR is not tax. Income tax looks at total receipts, not transaction size, and hiding turnover is evasion, not planning.</li>
         <li><strong>Does splitting save the payer money?</strong> No. The payer pays zero MDR either way. The fee comes out of the merchant's proceeds.</li>
         <li><strong>Does splitting even work?</strong> No. NPCI prohibits splitting one purchase into smaller payments and applies the MDR to the total value received for a single invoice. It monitors for it.</li>
+        <li><strong>Person to person is free, always.</strong> That is exactly what OpenPay payments are: push payments to a personal UPI ID. Zero MDR through this app, any amount. Small merchants are exempt from MDR anyway; only large merchants pay it, on their side.</li>
       </ul>
       <p class="sub">Genuine personal transfers stay free. For recurring payments, the legitimate automation rail is UPI Autopay mandates.</p>
     </div>
@@ -234,6 +236,7 @@
       <div class="mdr-out">
         <div class="mdr-line"><span>Merchant fee</span><strong id="mdrFee">Rs 40</strong></div>
         <div class="mdr-line"><span>You pay</span><strong>Rs 0, always</strong></div>
+        <div class="mdr-line"><span>Person to person, any amount</span><strong>Rs 0</strong></div>
       </div>
       <div class="mdr-split">
         <label for="mdrParts">If it were cut into</label>
@@ -332,7 +335,11 @@
     </div>
     <div class="pwb-shots">
       <img src="screenshots/mobile.png" alt="The pay screen with the live rail ladder" loading="lazy">
-      <img src="screenshots/desktop.png" alt="OpenPay on the desktop" loading="lazy">
+      <img src="screenshots/mobile-ladder.png" alt="Switch network state, watch the rail decision" loading="lazy">
+      <img src="screenshots/mobile-notes.png" alt="What a Note is, in plain words" loading="lazy">
+      <img src="screenshots/mobile-mdr.png" alt="The merchant fee calculator" loading="lazy">
+      <img src="screenshots/mobile-verify.png" alt="Verify a Note in any browser" loading="lazy">
+      <img src="screenshots/desktop-verify.png" alt="The browser verifier" loading="lazy">
     </div>
     <p class="pwb-desc">UPI that survives zero signal. Works offline once installed, which is rather the point.</p>
     <div class="pwb-actions" id="pwbActions">

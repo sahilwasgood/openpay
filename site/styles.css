@@ -264,10 +264,11 @@ h2 { font-size: clamp(1.9rem, 3.4vw, 2.7rem); margin-bottom: 16px; }
 
 /* ---------- merchant ---------- */
 
-.two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: center; }
+.two-col { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 64px; align-items: center; }
+.two-col > * { min-width: 0; }
 .ticks { list-style: none; margin-top: 26px; }
 .ticks li { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line-2); font-size: 15px; color: var(--ink-2); }
-.ticks li strong { color: var(--ink); font-weight: 600; white-space: nowrap; }
+.ticks li strong { color: var(--ink); font-weight: 600; }
 .ticks li::before {
   content: ""; flex: none; width: 20px; height: 20px; margin-top: 3px; border-radius: 50%;
   background: var(--green-soft);
@@ -515,3 +516,30 @@ h2 { font-size: clamp(1.9rem, 3.4vw, 2.7rem); margin-bottom: 16px; }
   margin-top: 14px; background: var(--amber-soft); border: 1px solid #E8D5B0;
   color: var(--amber); border-radius: 12px; padding: 12px 14px; font-size: 13.5px;
 }
+
+.mdr-split label { white-space: normal; }
+.sub, .eyebrow, .mdr-calc * { overflow-wrap: break-word; }
+
+/* ---------- fullscreen mobile sheet ---------- */
+
+.install-entry-btn {
+  height: 48px; padding: 0 22px; border-radius: 12px;
+  border: 1px solid var(--dark-line); background: transparent;
+  color: var(--paper); font-family: var(--font-display); font-weight: 600;
+  font-size: 15.5px; cursor: pointer;
+}
+.install-entry-btn:hover { border-color: #3A403C; background: var(--dark-2); }
+
+@media (max-width: 720px) {
+  .pwaboard { padding: 0; align-items: stretch; }
+  .pwaboard-sheet {
+    max-width: none; width: 100%; height: 100dvh; border-radius: 0;
+    padding: 28px 20px 20px; overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  .pwb-shots { flex: 1; }
+  .pwb-shots img { height: 440px; border-radius: 16px; }
+  .pwb-actions { position: sticky; bottom: 0; background: var(--paper); padding-top: 10px; }
+}
+
+.mdr-row input { width: 100%; min-width: 0; }

@@ -423,6 +423,7 @@ private fun VerifyTab(app: OpenPayApp) {
     val receivables by app.notesStore.receivables.collectAsState()
     var verdict by remember { mutableStateOf<Notes.Verdict?>(null) }
     var consentPayload by remember { mutableStateOf<Notes.Payload?>(null) }
+    val blockedKeys by app.notesStore.blockedKeys.collectAsState()
 
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         val content = result.contents ?: return@rememberLauncherForActivityResult
@@ -430,18 +431,24 @@ private fun VerifyTab(app: OpenPayApp) {
         verdict = v
         when (v) {
             is Notes.Verdict.Valid ->
-                if (PayerLimits.needsConsent(v.payload.amountPaise, v.knownPayer) && !v.duplicateSerial) {
-                    consentPayload = v.payload
-                    app.voice.speak(ts("New payer, big note."))
-                } else {
-                    app.voice.speak(
-                        ts(
-                            "Note verified. Rupees {a} from {f}.",
-                            "a" to RupeeFormat.format(v.payload.amountPaise),
-                            "f" to v.payload.from
+                when {
+                    v.payload.payerKey in app.notesStore.blockedKeys.value -> {
+                        app.voice.speak(ts("Blacklisted payer. Refuse."))
+                    }
+                    PayerLimits.needsConsent(v.payload.amountPaise, v.knownPayer) && !v.duplicateSerial -> {
+                        consentPayload = v.payload
+                        app.voice.speak(ts("New payer, big note."))
+                    }
+                    else -> {
+                        app.voice.speak(
+                            ts(
+                                "Note verified. Rupees {a} from {f}.",
+                                "a" to RupeeFormat.format(v.payload.amountPaise),
+                                "f" to v.payload.from
+                            )
                         )
-                    )
-                    app.notesStore.acceptVerified(v.payload, v.knownPayer)
+                        app.notesStore.acceptVerified(v.payload, v.knownPayer)
+                    }
                 }
             is Notes.Verdict.Bad ->
                 app.voice.speak(ts("Note rejected.") + " " + v.reason)
@@ -481,12 +488,24 @@ private fun VerifyTab(app: OpenPayApp) {
 
                 when (val v = verdict) {
                     is Notes.Verdict.Valid -> {
+                        val blockedNow = v.payload.payerKey in blockedKeys
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                                containerColor = if (blockedNow) {
+                                    MaterialTheme.colorScheme.surfaceVariant
+                                } else {
+                                    MaterialTheme.colorScheme.primaryContainer
+                                }
                             )
                         ) {
                             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                if (blockedNow) {
+                                    Text(
+                                        s("Blacklisted payer. Refuse."),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = openpay.app.ui.theme.WarnAmber
+                                    )
+                                }
                                 Text(
                                     if (v.duplicateSerial) s("Duplicate serial, already seen.")
                                     else s("Verified. Signature checks out."),
@@ -507,12 +526,26 @@ private fun VerifyTab(app: OpenPayApp) {
                                     style = MaterialTheme.typography.bodySmall,
                                     color = FaintInk
                                 )
-                                if (!v.knownPayer && !v.duplicateSerial) {
+                                if (!v.knownPayer && !v.duplicateSerial && !blockedNow) {
                                     TextButton(onClick = {
                                         app.notesStore.pinPayer(v.payload.payerKey, v.payload.from)
                                         Toast.makeText(context, ts("Payer saved"), Toast.LENGTH_SHORT).show()
                                     }) {
                                         Text(s("Save this payer"))
+                                    }
+                                }
+                                if (blockedNow) {
+                                    TextButton(onClick = {
+                                        app.notesStore.unblockPayer(v.payload.payerKey)
+                                    }) {
+                                        Text(s("Remove block"))
+                                    }
+                                } else if (!v.duplicateSerial) {
+                                    TextButton(onClick = {
+                                        app.notesStore.blockPayer(v.payload.payerKey)
+                                        app.voice.speak(ts("Blacklisted payer. Refuse."))
+                                    }) {
+                                        Text(s("Block this payer"), color = openpay.app.ui.theme.WarnAmber)
                                     }
                                 }
                             }

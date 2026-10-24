@@ -9,12 +9,33 @@
   "orientation": "portrait-primary",
   "background_color": "#FAFAF7",
   "theme_color": "#0D0F0E",
-  "categories": ["finance", "productivity"],
+  "categories": [
+    "finance",
+    "productivity"
+  ],
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "screenshots": [
     {
@@ -22,7 +43,35 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "The pay screen with the live rail ladder"
+      "label": "Pay screen with the live rail ladder"
+    },
+    {
+      "src": "screenshots/mobile-ladder.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Switch network state, watch the rail decision"
+    },
+    {
+      "src": "screenshots/mobile-notes.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "What a Note is, in plain words"
+    },
+    {
+      "src": "screenshots/mobile-mdr.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "The merchant fee calculator"
+    },
+    {
+      "src": "screenshots/mobile-verify.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Verify a Note in any browser"
     },
     {
       "src": "screenshots/desktop.png",
@@ -30,6 +79,13 @@
       "type": "image/png",
       "form_factor": "wide",
       "label": "OpenPay on the desktop"
+    },
+    {
+      "src": "screenshots/desktop-verify.png",
+      "sizes": "1440x900",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "The browser verifier"
     }
   ]
 }

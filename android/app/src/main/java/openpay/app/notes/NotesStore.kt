@@ -21,6 +21,7 @@ class NotesStore(context: Context) {
     val issued = MutableStateFlow(loadIssued())
     val receivables = MutableStateFlow(loadReceivables())
     val pinnedKeys = MutableStateFlow<Map<String, String>>(loadPinned())
+    val blockedKeys = MutableStateFlow<Set<String>>(loadBlocked())
     val seenSerials = MutableStateFlow<Set<String>>(loadSerials())
     val payerName = MutableStateFlow(loadName())
 
@@ -123,6 +124,18 @@ class NotesStore(context: Context) {
         persist()
     }
 
+    /** The merchant side enforcement: a blocked key never passes quietly again. */
+    fun blockPayer(key: String) {
+        if (key.isBlank()) return
+        blockedKeys.value = blockedKeys.value + key
+        persist()
+    }
+
+    fun unblockPayer(key: String) {
+        blockedKeys.value = blockedKeys.value - key
+        persist()
+    }
+
     fun envelopeFor(serial: String): Notes.Envelope? =
         issued.value.firstOrNull { it.payload.serial == serial }?.envelope?.let { Notes.parse(it) }
 
@@ -150,6 +163,7 @@ class NotesStore(context: Context) {
                     issued = issued.value,
                     receivables = receivables.value,
                     pinned = pinnedKeys.value,
+                    blocked = blockedKeys.value.toList(),
                     serials = seenSerials.value.toList(),
                     payerName = payerName.value
                 )
@@ -162,6 +176,7 @@ class NotesStore(context: Context) {
         val issued: List<Notes.Issued> = emptyList(),
         val receivables: List<Notes.Receivable> = emptyList(),
         val pinned: Map<String, String> = emptyMap(),
+        val blocked: List<String> = emptyList(),
         val serials: List<String> = emptyList(),
         val payerName: String = ""
     )
@@ -172,6 +187,7 @@ class NotesStore(context: Context) {
     private fun loadIssued() = loadPersisted()?.issued ?: emptyList()
     private fun loadReceivables() = loadPersisted()?.receivables ?: emptyList()
     private fun loadPinned() = loadPersisted()?.pinned ?: emptyMap()
+    private fun loadBlocked() = loadPersisted()?.blocked?.toSet() ?: emptySet()
     private fun loadSerials() = loadPersisted()?.serials?.toSet() ?: emptySet()
     private fun loadName() = loadPersisted()?.payerName ?: ""
 }

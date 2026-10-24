@@ -66,7 +66,15 @@
 
   if (!standalone && entry) {
     entry.hidden = false;
-    entry.addEventListener('click', openBoard);
+    entry.addEventListener('click', function () {
+      // one click: browser prompt when available, the sheet is only the fallback
+      if (deferred) {
+        deferred.prompt();
+        deferred.userChoice.then(function () { deferred = null; });
+        return;
+      }
+      openBoard();
+    });
   }
 
   document.addEventListener('click', function (e) {
@@ -76,7 +84,7 @@
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
     deferred = e;
-    if (entry) entry.hidden = standalone;
+    if (entry && !standalone) entry.hidden = false;
   });
 
   window.addEventListener('appinstalled', function () {

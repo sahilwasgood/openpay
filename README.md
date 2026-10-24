@@ -30,6 +30,8 @@ v0.5.0 also shipped: a private spending log (the app reads your own bank debit S
 
 v0.6.0: first time payer consent above Rs 500 (bounded exposure for unknown keys, pinned payers earn room), balance check via *99*3# before issuing, a settle all queue that walks every open note through UPI when you are back online, a stale notes banner after 24 hours, and honest MDR awareness: the split flow warns when a would be single payment above Rs 2,000 is being cut into sub threshold pieces, which NPCI prohibits and which saves nobody anything. The [site](https://sahilwasgood.github.io/openpay/) has a merchant fee calculator and the Rs 2,000 line explained, including why splitting saves no tax.
 
+v0.7.0: payer key blacklist (a merchant blocks a key once and every future note from it is refused loudly, with voice), mobile site fixes (no horizontal scroll down to 360px), one click install for the web app with a fullscreen mobile sheet and seven screenshots, and the fee story completed: person to person payments, which is what OpenPay makes, carry zero MDR at any amount.
+
 Next: more languages, NFC tap for Note exchange, UPI Autopay for recurring settlements.
 
 ## Repo layout
