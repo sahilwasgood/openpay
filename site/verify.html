@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verify a Note · OpenPay</title>
+<meta name="description" content="Check an OpenPay Note's signature, expiry and amount right in the browser. No app needed.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="none" stroke="%230E7C46" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="%230E7C46"/></svg>'>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0D0F0E">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html" aria-label="OpenPay home">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="currentColor"/></svg>
+      <span>OpenPay</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="index.html#ladder">How it works</a>
+      <a href="index.html#notes">Notes</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary btn-sm" href="index.html">Get OpenPay</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="section">
+  <div class="wrap wrap-narrow">
+    <p class="eyebrow">Offline verifier</p>
+    <h2>Verify a Note in the browser.</h2>
+    <p class="sub">No Android app needed. Paste the Note text the payer sent you, and this page checks the signature, the expiry, the amount cap and the fields, all on your device. Install this site as an app once and it keeps working with zero signal.</p>
+
+    <div class="verify-box">
+      <label class="verify-label" for="notetext">Note text</label>
+      <textarea id="notetext" rows="6" placeholder='Paste the text that starts with {"op":"openpay-note" ...'></textarea>
+      <button class="btn btn-primary" id="verifyBtn" type="button">Verify</button>
+      <p class="verify-err" id="cryptoErr" hidden>This browser cannot check Ed25519 signatures. Use Chrome or Edge 113+, Safari 17+, or Firefox 129+, or the Android app.</p>
+    </div>
+
+    <div id="result" class="result" hidden>
+      <div class="result-head" id="resultHead"></div>
+      <div class="result-rows" id="resultRows"></div>
+      <p class="result-foot" id="resultFoot"></p>
+    </div>
+
+    <p class="verify-small">A Note is a signed promise, not money. It settles later over normal UPI. Verification here never sends anything anywhere: this page has no network access of its own.</p>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-note">
+    <p>OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById('verifyBtn');
+  var area = document.getElementById('notetext');
+  var out = document.getElementById('result');
+  var head = document.getElementById('resultHead');
+  var rows = document.getElementById('resultRows');
+  var foot = document.getElementById('resultFoot');
+
+  function b64ToBytes(b64) {
+    var bin = atob(b64.replace(/-/g, '+').replace(/_/g, '/'));
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  function canonical(d) {
+    return [
+      'openpay-note', d.v, d.from, d.payerKey, d.to,
+      d.vpa || '', d.phone || '', d.amountPaise, d.serial, d.nonce,
+      d.expiresEpoch, d.memo || ''
+    ].join('|');
+  }
+
+  function rupees(paise) {
+    var r = Math.floor(paise / 100), p = paise % 100;
+    return p === 0 ? String(r) : r + '.' + String(p).padStart(2, '0');
+  }
+
+  function show(ok, title, pairs, note) {
+    out.hidden = false;
+    head.textContent = title;
+    head.className = 'result-head ' + (ok ? 'ok' : 'bad');
+    rows.innerHTML = '';
+    pairs.forEach(function (kv) {
+      var row = document.createElement('div');
+      row.className = 'r-row';
+      var a = document.createElement('span'); a.textContent = kv[0];
+      var b = document.createElement('strong'); b.textContent = kv[1];
+      row.appendChild(a); row.appendChild(b);
+      rows.appendChild(row);
+    });
+    foot.textContent = note || '';
+  }
+
+  btn.addEventListener('click', function () {
+    var cryptoErr = document.getElementById('cryptoErr');
+    if (!(window.crypto && crypto.subtle && crypto.subtle.importKey)) {
+      cryptoErr.hidden = false; return;
+    }
+    var env;
+    try { env = JSON.parse(area.value.trim()); }
+    catch (e) { show(false, 'Not a Note', [['Reason', 'the text is not valid JSON']], ''); return; }
+    if (!env || env.op !== 'openpay-note' || !env.d || !env.sig) {
+      show(false, 'Not a Note', [['Reason', 'missing op, data or signature']], ''); return;
+    }
+    var d = env.d;
+    var pairs = [
+      ['From', d.from || '?'],
+      ['To', d.to || '?'],
+      ['Amount', 'Rs ' + rupees(Number(d.amountPaise) || 0)],
+      ['Serial', d.serial || '?'],
+      ['Expires', d.expiresEpoch ? new Date(Number(d.expiresEpoch)).toLocaleString() : '?']
+    ];
+    if (d.memo) pairs.push(['Memo', d.memo]);
+    crypto.subtle.importKey('raw', b64ToBytes(d.payerKey), { name: 'Ed25519' }, false, ['verify'])
+      .then(function (key) {
+        return crypto.subtle.verify('Ed25519', key, b64ToBytes(env.sig),
+          new TextEncoder().encode(canonical(d)));
+      })
+      .then(function (sigOk) {
+        if (!sigOk) {
+          show(false, 'Signature does not match. Do not accept.', pairs, 'The note was altered after signing, or the key does not match.');
+          return;
+        }
+        var now = Date.now();
+        if (Number(d.amountPaise) <= 0 || Number(d.amountPaise) > 200000) {
+          show(false, 'Amount is outside note limits.', pairs, 'Notes cap at Rs 2,000 each.');
+          return;
+        }
+        if (now >= Number(d.expiresEpoch)) {
+          show(false, 'Note expired.', pairs, 'Ask the payer to issue a fresh one.');
+          return;
+        }
+        if (!d.serial || !d.nonce) {
+          show(false, 'Missing serial or nonce.', pairs, '');
+          return;
+        }
+        show(true, 'Verified. Signature checks out.', pairs,
+          'The signature proves this exact note came from this key and was never altered. If you have not seen this payer key before, treat it like a first time customer. Keep the text as your proof.');
+      })
+      .catch(function (e) {
+        show(false, 'Could not verify', [['Reason', String(e && e.message || e)]], '');
+      });
+  });
+})();
+</script>
+</body>
+</html>

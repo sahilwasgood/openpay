@@ -10,3 +10,7 @@ local.properties
 .DS_Store
 captures/
 .playwright-mcp/
+keystore.properties
+keystore/
+*.keystore
+*.jks

@@ -22,9 +22,11 @@ Every payment is written to an encrypted local ledger before the call goes out, 
 
 ## Status
 
-v0.3.0 is out: the three network rails (intent, USSD, IVR with DTMF), OpenPay Notes (Ed25519 signed offline vouchers, merchant verify with voice readback), QR scan, encrypted ledger, bank SMS confirmation, pending tracker with NPCI clocks, English and Hindi with an in app language switch, elder mode with large text, and CSV export. 29 unit tests cover the rail decider, the DTMF builder, both SMS parsers, and note signing, tampering, expiry and caps.
+v0.4.0 is out: the three network rails (intent, USSD, IVR with DTMF), OpenPay Notes (Ed25519 signed offline vouchers, merchant verify with voice readback), QR scan, encrypted ledger, bank SMS confirmation, pending tracker with NPCI clocks, English and Hindi, elder mode, CSV export, properly signed release builds from CI, and a browser based Note verifier: [sahilwasgood.github.io/openpay/verify.html](https://sahilwasgood.github.io/openpay/verify.html) checks a Note's signature with WebCrypto, no Android app needed. 29 unit tests cover the rails, the parsers, and note signing.
 
-Next: more languages, NFC tap for Note exchange, reproducible signed release builds.
+CI runs on every push (tests, debug APK, artifacts) and every tag builds a signed release APK from the encrypted keystore in repo secrets. The site deploys to Pages on every change to site/.
+
+Next: more languages, NFC tap for Note exchange.
 
 ## Repo layout
 
@@ -42,6 +44,12 @@ Grab the APK from [Releases](https://github.com/sahilwasgood/openpay/releases). 
 - `CAMERA` to scan UPI QR codes
 
 Your UPI PIN is never seen by OpenPay. It is typed into your bank's USSD menu or the 123Pay call, on the dialer, not in this app.
+
+## What is a Note
+
+A Note is a signed promise, not money. With zero signal, the payer's phone signs an amount, payee, serial and expiry with an Ed25519 key that never leaves the phone, and shows a QR. The payee verifies it fully offline: signature, expiry, the Rs 2,000 cap, and replay by serial. When signal returns, one tap settles it over normal UPI. No money is ever held by OpenPay.
+
+If the payee does not have the Android app, the [web verifier](https://sahilwasgood.github.io/openpay/verify.html) does the same check in any browser. Install the web app once and it verifies offline too. And with even 2G signal, the USSD and IVR rails pay any UPI user with no app on their side at all.
 
 ## Build
 

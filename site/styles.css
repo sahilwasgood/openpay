@@ -435,3 +435,48 @@ h2 { font-size: clamp(1.9rem, 3.4vw, 2.7rem); margin-bottom: 16px; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
+
+/* ---------- verify page ---------- */
+
+.verify-box { margin-top: 36px; }
+.verify-label {
+  display: block; font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 8px;
+}
+.verify-box textarea {
+  width: 100%; border: 1px solid var(--line-2); border-radius: 14px;
+  background: var(--card); color: var(--ink); padding: 14px;
+  font-family: var(--mono); font-size: 13px; resize: vertical;
+}
+.verify-box textarea:focus { outline: 2px solid var(--green); outline-offset: -1px; }
+.verify-box .btn { margin-top: 14px; width: 100%; }
+.verify-err { color: var(--amber); font-size: 14px; margin-top: 10px; }
+.result { margin-top: 26px; border: 1px solid var(--line-2); border-radius: 18px; background: var(--card); overflow: hidden; }
+.result-head { padding: 18px 20px; font-family: var(--font-display); font-weight: 600; font-size: 18px; }
+.result-head.ok { background: var(--green-soft); color: var(--green-deep); }
+.result-head.bad { background: #F6ECD9; color: var(--amber); }
+.result-rows { padding: 8px 20px 12px; }
+.result-rows .r-row {
+  display: flex; justify-content: space-between; gap: 16px;
+  padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 14.5px;
+}
+.result-rows .r-row:last-child { border-bottom: 0; }
+.result-rows .r-row span { color: var(--ink-3); }
+.result-rows .r-row strong { font-weight: 600; text-align: right; }
+.result-foot { padding: 0 20px 18px; font-size: 13.5px; color: var(--ink-3); }
+.verify-small { margin-top: 26px; font-size: 13.5px; color: var(--ink-3); }
+
+/* ---------- notes explainer ---------- */
+
+.notes-steps { margin: 34px 0 30px; }
+.notes-step { display: flex; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line-2); font-size: 15.5px; color: var(--ink-2); }
+.notes-step:last-child { border-bottom: 1px solid var(--line-2); }
+.notes-step span {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--green-soft); color: var(--green-deep);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 600; font-size: 14px;
+}
+.notes-step strong { color: var(--ink); font-weight: 600; }
+.sub a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }

@@ -29,6 +29,7 @@
     </a>
     <nav class="nav-links" aria-label="Sections">
       <a href="#ladder">How it works</a>
+      <a href="#notes">Notes</a>
       <a href="#merchant">Merchant</a>
       <a href="#trust">Trust</a>
       <a href="#faq">FAQ</a>
@@ -221,7 +222,11 @@
         <p>Yes. Jio's all IP network carries no USSD, so OpenPay moves to the UPI 123Pay phone line and enters the details with dial tones. Same money, same rails, no menus.</p>
       </details>
       <details>
-        <summary>What happens if a Note never settles?</summary>
+        <summary>What if the payee does not have the OpenPay app?</summary>
+        <p>With any signal at all, the USSD and IVR rails pay any UPI user, no app needed on their side. With zero signal, they can verify a Note in any browser: open the verify page, paste the note text. Install the web app once and it keeps verifying offline.</p>
+      </details>
+      <details>
+        <summary>What if the payer never settles a Note?</summary>
         <p>A Note is a signed, timestamped promise for a small amount. The pending tracker counts down NPCI's clocks (T+1 auto reversal, T+5 refund deadline) and writes the escalation for you. The signature is your evidence.</p>
       </details>
       <details>
@@ -234,7 +239,7 @@
       </details>
       <details>
         <summary>When can I install it?</summary>
-        <p>The Android APK is on Releases, and this site installs as an app too: tap Install web app above. v0.2 adds Notes and merchant verify.</p>
+        <p>The Android APK is on Releases, and this site installs as an app too: tap Install web app above. v0.3 adds Notes, merchant verify, Hindi, elder mode, and CSV export.</p>
       </details>
       <details>
         <summary>Why not iOS?</summary>
