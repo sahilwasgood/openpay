@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "historyId": "7bf1bc1d-c23f-472b-b5df-d420d2cf122f",
+  "currentRevision": null,
+  "pendingChanges": false,
+  "files": {
+    "AGENTS.md": {
+      "hash": "1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/1d/1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5"
+    },
+    "CLAUDE.md": {
+      "hash": "1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/1d/1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5"
+    },
+    "fonts/Inter-Regular.ttf": {
+      "hash": "6c78f8006b8f721420b701a87f876419feb3e78a259e38d8bf03ea37cd7f4815",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/6c/6c78f8006b8f721420b701a87f876419feb3e78a259e38d8bf03ea37cd7f4815"
+    },
+    "fonts/SpaceGrotesk-Bold.ttf": {
+      "hash": "8df01a9fa09a17afbd0956e8ed52fd0f43f08fbc716abfc66d76a7701d07a9d2",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/8d/8df01a9fa09a17afbd0956e8ed52fd0f43f08fbc716abfc66d76a7701d07a9d2"
+    },
+    "fonts/SpaceGrotesk-Medium.ttf": {
+      "hash": "1b401ee2c47732293f61ae99babe263b152c885ef6b3799119de82ac5ffd019a",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/1b/1b401ee2c47732293f61ae99babe263b152c885ef6b3799119de82ac5ffd019a"
+    },
+    "hyperframes.json": {
+      "hash": "53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
+    },
+    "index.html": {
+      "hash": "af46605574fd1addb77c724ed4285bb31036cf35588dadf74e904af9e651b4b7",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/af/af46605574fd1addb77c724ed4285bb31036cf35588dadf74e904af9e651b4b7"
+    },
+    "meta.json": {
+      "hash": "66394c3b9fa56b080ef62c79c3a8be6731729cd2349a7f97497d2e76d12816e5",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/66/66394c3b9fa56b080ef62c79c3a8be6731729cd2349a7f97497d2e76d12816e5"
+    },
+    "package.json": {
+      "hash": "28be8b284a9abfe0385d0dff6f79c0120d1401331a5bade25a6dabf167ad385d",
+      "content": "/home/mint/.cache/hyperframes/history/7bf1bc1d-c23f-472b-b5df-d420d2cf122f/blobs/28/28be8b284a9abfe0385d0dff6f79c0120d1401331a5bade25a6dabf167ad385d"
+    }
+  },
+  "revisions": {},
+  "checks": {
+    "latest": {
+      "revision": null,
+      "id": "dfdcde52-1f33-4227-b1af-cce819674951"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "id": "dfdcde52-1f33-4227-b1af-cce819674951",
+        "scope": "project",
+        "report": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-portrait/.hyperframes/artifacts/checks/dfdcde52-1f33-4227-b1af-cce819674951.json",
+        "metadata": {
+          "ok": true,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 3000,
+            "contrast": true,
+            "strict": false,
+            "snapshots": false,
+            "browserGpuMode": "auto"
+          }
+        },
+        "createdAt": 1792871724818,
+        "contentHash": "b7eabcdda53354cdc90439828cb61a987f6086ac9f7a4f875cf522a2f59bc447",
+        "revision": null,
+        "inputFingerprint": "15fb9c8c50856e62c256f74fe3b10d008e354f5e440f26fd889f42d7952c9776",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "snapshots": {
+    "latest": {
+      "revision": null,
+      "id": "43ec06ad-661b-40b3-a0ba-f9fe9ffbf171-4"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "scope": "full",
+        "id": "43ec06ad-661b-40b3-a0ba-f9fe9ffbf171-0",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-portrait/.hyperframes/artifacts/snapshots/be1155ed-b169-4688-b0de-d0468de8b1f4/frame-00-at-2s.png",
+        "time": 2,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871759270,
+        "contentHash": "0a44f17ac3481c4e7a1e6ef0b181bda6513db36ca601ab381da439b301057c9c",
+        "revision": null,
+        "inputFingerprint": "15fb9c8c50856e62c256f74fe3b10d008e354f5e440f26fd889f42d7952c9776",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "43ec06ad-661b-40b3-a0ba-f9fe9ffbf171-1",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-portrait/.hyperframes/artifacts/snapshots/be1155ed-b169-4688-b0de-d0468de8b1f4/frame-01-at-7.5s.png",
+        "time": 7.5,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871759270,
+        "contentHash": "0d9ab05b55f447c2f25f19161576a0af59d4d70e0b1b0661c8d1905cb108ad02",
+        "revision": null,
+        "inputFingerprint": "15fb9c8c50856e62c256f74fe3b10d008e354f5e440f26fd889f42d7952c9776",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "43ec06ad-661b-40b3-a0ba-f9fe9ffbf171-2",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-portrait/.hyperframes/artifacts/snapshots/be1155ed-b169-4688-b0de-d0468de8b1f4/frame-02-at-14s.png",
+        "time": 14,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871759270,
+        "contentHash": "b9102c779af0cd0b0731bcad97630cf5043410695be749371029da318f5114a0",
+        "revision": null,
+        "inputFingerprint": "15fb9c8c50856e62c256f74fe3b10d008e354f5e440f26fd889f42d7952c9776",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "43ec06ad-661b-40b3-a0ba-f9fe9ffbf171-3",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-portrait/.hyperframes/artifacts/snapshots/be1155ed-b169-4688-b0de-d0468de8b1f4/frame-03-at-21s.png",
+        "time": 21,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871759271,
+        "contentHash": "e82d46532add2999702420dd8bba85d5a0a30b8bd623aa374b6894d7bb0bd5b6",
+        "revision": null,
+        "inputFingerprint": "15fb9c8c50856e62c256f74fe3b10d008e354f5e440f26fd889f42d7952c9776",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "43ec06ad-661b-40b3-a0ba-f9fe9ffbf171-4",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-portrait/.hyperframes/artifacts/snapshots/be1155ed-b169-4688-b0de-d0468de8b1f4/frame-04-at-23.28s.png",
+        "time": 23.28,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871759271,
+        "contentHash": "4127d39a4610d3825dc669eefb1dc2538145e576838ee6661d7c7fe0621a2de9",
+        "revision": null,
+        "inputFingerprint": "15fb9c8c50856e62c256f74fe3b10d008e354f5e440f26fd889f42d7952c9776",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "renders": {
+    "latest": {
+      "id": "6f456ac2-5565-4344-b1d5-e8ed1009d2b3",
+      "completedAt": 1792871961059,
+      "output": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-portrait/out-1080x1920.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}

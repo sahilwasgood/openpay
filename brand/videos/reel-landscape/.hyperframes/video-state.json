@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "historyId": "9033e2a6-19fb-407b-8249-65eb0aa36222",
+  "currentRevision": null,
+  "pendingChanges": false,
+  "files": {
+    "AGENTS.md": {
+      "hash": "1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/1d/1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5"
+    },
+    "CLAUDE.md": {
+      "hash": "1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/1d/1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5"
+    },
+    "fonts/Inter-Regular.ttf": {
+      "hash": "6c78f8006b8f721420b701a87f876419feb3e78a259e38d8bf03ea37cd7f4815",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/6c/6c78f8006b8f721420b701a87f876419feb3e78a259e38d8bf03ea37cd7f4815"
+    },
+    "fonts/SpaceGrotesk-Bold.ttf": {
+      "hash": "8df01a9fa09a17afbd0956e8ed52fd0f43f08fbc716abfc66d76a7701d07a9d2",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/8d/8df01a9fa09a17afbd0956e8ed52fd0f43f08fbc716abfc66d76a7701d07a9d2"
+    },
+    "fonts/SpaceGrotesk-Medium.ttf": {
+      "hash": "1b401ee2c47732293f61ae99babe263b152c885ef6b3799119de82ac5ffd019a",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/1b/1b401ee2c47732293f61ae99babe263b152c885ef6b3799119de82ac5ffd019a"
+    },
+    "hyperframes.json": {
+      "hash": "53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
+    },
+    "index.html": {
+      "hash": "b8d4cee905bbfc067d0881be00da429390af01fbc4c1ecbf3b627eea6c6ebe72",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/b8/b8d4cee905bbfc067d0881be00da429390af01fbc4c1ecbf3b627eea6c6ebe72"
+    },
+    "meta.json": {
+      "hash": "b0d212b52b75cdfda57fc8237b48fdd5f70a1711bd67d872ce2ca06e5de80ee4",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/b0/b0d212b52b75cdfda57fc8237b48fdd5f70a1711bd67d872ce2ca06e5de80ee4"
+    },
+    "package.json": {
+      "hash": "61232610505a80d47b7aa4a3833d9f81558b9eab0f15142088258c62b83141ed",
+      "content": "/home/mint/.cache/hyperframes/history/9033e2a6-19fb-407b-8249-65eb0aa36222/blobs/61/61232610505a80d47b7aa4a3833d9f81558b9eab0f15142088258c62b83141ed"
+    }
+  },
+  "revisions": {},
+  "checks": {
+    "latest": {
+      "revision": null,
+      "id": "3ff90ae2-c704-45bc-9f7b-35dcd7543f15"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "id": "79ce3eb0-f75e-442c-84ae-f36a025f9012",
+        "scope": "project",
+        "report": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/.hyperframes/artifacts/checks/79ce3eb0-f75e-442c-84ae-f36a025f9012.json",
+        "metadata": {
+          "ok": true,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 3000,
+            "contrast": true,
+            "strict": false,
+            "snapshots": false,
+            "browserGpuMode": "auto"
+          }
+        },
+        "createdAt": 1792871391528,
+        "contentHash": "791e6f2da4f4693f32484e07a0f8f9bb3d0fff8444d127cb9f02a6b3fab97dde",
+        "revision": null,
+        "inputFingerprint": "cad671082c235b7a6a1c88e87e4f7af8210c6040fd2b344ad3738b2505f60f18",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "id": "3ff90ae2-c704-45bc-9f7b-35dcd7543f15",
+        "scope": "project",
+        "report": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/.hyperframes/artifacts/checks/3ff90ae2-c704-45bc-9f7b-35dcd7543f15.json",
+        "metadata": {
+          "ok": true,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 3000,
+            "contrast": true,
+            "strict": false,
+            "snapshots": false,
+            "browserGpuMode": "auto"
+          }
+        },
+        "createdAt": 1792871429729,
+        "contentHash": "791e6f2da4f4693f32484e07a0f8f9bb3d0fff8444d127cb9f02a6b3fab97dde",
+        "revision": null,
+        "inputFingerprint": "cad671082c235b7a6a1c88e87e4f7af8210c6040fd2b344ad3738b2505f60f18",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "snapshots": {
+    "latest": {
+      "revision": null,
+      "id": "7a940ddc-603a-47e1-891d-f1d5c121e252-4"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "scope": "full",
+        "id": "7a940ddc-603a-47e1-891d-f1d5c121e252-0",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/.hyperframes/artifacts/snapshots/c196fd16-b9e0-48e2-93a0-8dbf148f6096/frame-00-at-2s.png",
+        "time": 2,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871474995,
+        "contentHash": "cb5db220c0e0a9e7ef64408bf2f21733733f5a7fc3d23406c82d5f80153ced2b",
+        "revision": null,
+        "inputFingerprint": "cad671082c235b7a6a1c88e87e4f7af8210c6040fd2b344ad3738b2505f60f18",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "7a940ddc-603a-47e1-891d-f1d5c121e252-1",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/.hyperframes/artifacts/snapshots/c196fd16-b9e0-48e2-93a0-8dbf148f6096/frame-01-at-7.5s.png",
+        "time": 7.5,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871474995,
+        "contentHash": "5eacbf7839710302dc076b0e8eacefb29db314d8fc52f18d6e0e79445def9a47",
+        "revision": null,
+        "inputFingerprint": "cad671082c235b7a6a1c88e87e4f7af8210c6040fd2b344ad3738b2505f60f18",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "7a940ddc-603a-47e1-891d-f1d5c121e252-2",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/.hyperframes/artifacts/snapshots/c196fd16-b9e0-48e2-93a0-8dbf148f6096/frame-02-at-14s.png",
+        "time": 14,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871474996,
+        "contentHash": "d1ec8c53a889f084151c9dc4fb1ff6d580ca19261e3c61d44c1b71284ba6dc5c",
+        "revision": null,
+        "inputFingerprint": "cad671082c235b7a6a1c88e87e4f7af8210c6040fd2b344ad3738b2505f60f18",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "7a940ddc-603a-47e1-891d-f1d5c121e252-3",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/.hyperframes/artifacts/snapshots/c196fd16-b9e0-48e2-93a0-8dbf148f6096/frame-03-at-21s.png",
+        "time": 21,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871474996,
+        "contentHash": "79efc63a5b5cfe27fbba7990d58972f332ebf3d11318847f89da3928cf5cb61f",
+        "revision": null,
+        "inputFingerprint": "cad671082c235b7a6a1c88e87e4f7af8210c6040fd2b344ad3738b2505f60f18",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "scope": "full",
+        "id": "7a940ddc-603a-47e1-891d-f1d5c121e252-4",
+        "image": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/.hyperframes/artifacts/snapshots/c196fd16-b9e0-48e2-93a0-8dbf148f6096/frame-04-at-23.28s.png",
+        "time": 23.28,
+        "metadata": {
+          "width": 1920,
+          "height": 1080,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1792871474997,
+        "contentHash": "608c0a3bb981dff5445e8a71fc0fb45bb8f4893986359aac96f1b7186fe89f8d",
+        "revision": null,
+        "inputFingerprint": "cad671082c235b7a6a1c88e87e4f7af8210c6040fd2b344ad3738b2505f60f18",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "renders": {
+    "latest": {
+      "id": "b7fbd33c-7567-4b32-b4d2-e87828ce005b",
+      "completedAt": 1792871674144,
+      "output": "/media/mint/WDC_WD10EZRX_932G/openpay/brand/videos/reel-landscape/out-1080p.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}

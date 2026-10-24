@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("fonts/SpaceGrotesk-Bold.ttf") format("truetype");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("fonts/SpaceGrotesk-Medium.ttf") format("truetype");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("fonts/Inter-Regular.ttf") format("truetype");
+        font-weight: 400;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: #0D0F0E;
+      }
+      #root {
+        width: 100%; height: 100%;
+        font-family: "Space Grotesk", sans-serif;
+        color: #FAFAF7;
+        position: relative;
+        background: #0D0F0E;
+      }
+      .scene { position: absolute; inset: 0; }
+      .glow {
+        position: absolute; width: 1400px; height: 1400px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(46,191,113,0.16) 0%, rgba(46,191,113,0) 62%);
+        left: 240px; top: -320px;
+      }
+      .grid-dots {
+        position: absolute; inset: 0;
+        background-image: radial-gradient(circle at 1px 1px, rgba(250,250,247,0.07) 1.5px, transparent 0);
+        background-size: 44px 44px;
+      }
+      .kicker {
+        font-family: "Inter", sans-serif; font-size: 22px; letter-spacing: 0.34em;
+        text-transform: uppercase; color: #2FBF71; font-weight: 400;
+      }
+      .h1 { font-size: 118px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; }
+      .h2 { font-size: 92px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.06; }
+      .sub { font-family: "Inter", sans-serif; font-size: 28px; font-weight: 400; color: #9BA19B; }
+      .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      .railcard {
+        background: #161A18; border: 2px solid #262B28; border-radius: 28px;
+        padding: 34px 46px; display: flex; align-items: center; gap: 26px;
+      }
+      .railcard .dot { width: 18px; height: 18px; border-radius: 50%; }
+      .railcard .name { font-size: 36px; font-weight: 500; }
+      .railcard .need { font-family: "Inter", sans-serif; font-size: 21px; color: #9BA19B; margin-left: auto; padding-left: 40px; }
+      .note-qr {
+        width: 260px; height: 260px; background: #FAFAF7; border-radius: 22px;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      }
+      .note-qr svg { width: 215px; height: 215px; }
+      .note-badge {
+        background: #E4F2E8; color: #0A5C34; border-radius: 999px;
+        font-family: "Inter", sans-serif; font-weight: 700; font-size: 30px;
+        padding: 14px 34px; display: flex; align-items: center; gap: 14px;
+      }
+      .brandrow { display: flex; align-items: center; gap: 22px; }
+      .brandrow .bname { font-size: 44px; font-weight: 700; letter-spacing: -0.01em; }
+      .finalbtn {
+        background: #0E7C46; color: #FAFAF7; border-radius: 18px;
+        font-size: 34px; font-weight: 700; padding: 26px 64px;
+      }
+      .khata {
+        background: #FAFAF7; border-radius: 18px; padding: 26px 34px; width: 560px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.45); display: flex; flex-direction: column; gap: 16px;
+      }
+      .krow { display: flex; justify-content: space-between; font-family: "Inter", sans-serif; font-size: 27px; color: #0D0F0E; }
+      .krow b { font-family: "Space Grotesk", sans-serif; font-weight: 700; }
+      .nfield {
+        width: 560px; display: flex; justify-content: space-between; align-items: baseline;
+        background: #161A18; border: 2px solid #262B28; border-radius: 16px;
+        padding: 20px 30px; margin-top: 16px;
+      }
+      .nfield span { font-family: "Inter", sans-serif; font-size: 24px; color: #9BA19B; }
+      .nfield b { font-size: 32px; font-weight: 700; color: #FAFAF7; }
+      .beat { display: flex; align-items: center; gap: 22px; }
+      .beat .bn {
+        width: 56px; height: 56px; border-radius: 50%; background: #E4F2E8; color: #0A5C34;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 30px; font-weight: 700;
+      }
+      .beat b { display: block; font-size: 36px; }
+      .beat span { font-family: "Inter", sans-serif; font-size: 24px; color: #9BA19B; }
+      .stamp { font-family: "Inter", sans-serif; font-size: 24px; color: #9BA19B; letter-spacing: 0.2em; text-transform: uppercase; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="22" data-width="1080" data-height="1920">
+
+      <div class="glow" id="glow"></div>
+      <div class="grid-dots" id="dots"></div>
+
+      <!-- S1 khata -->
+      <div class="scene" id="s1" data-start="0" data-duration="5.2" data-track-index="0">
+        <div class="center" style="flex-direction: row; gap: 110px;">
+          <div style="text-align:left; max-width: 760px;">
+            <div class="kicker" id="s1k">You already know this</div>
+            <div class="h2" id="s1h" style="margin: 24px 0 30px;">Udhaar runs on<br>a khata slip.</div>
+            <div class="sub" id="s1s">Trusted on both sides. Settled later.</div>
+          </div>
+          <div class="khata" id="khata">
+            <div class="krow"><span>Meera · 4 chai</span><b>Rs 45</b></div>
+            <div class="krow"><span>Ramesh · bread</span><b>Rs 30</b></div>
+            <div class="krow"><span>You · 2 chai</span><b>Rs 45</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 digital slip -->
+      <div class="scene" id="s2" data-start="5.2" data-duration="8" data-track-index="0">
+        <div class="center" style="flex-direction: row; gap: 110px;">
+          <div style="text-align:left; max-width: 760px;">
+            <div class="kicker" id="s2k">OpenPay Notes</div>
+            <div class="h2" id="s2h" style="margin: 24px 0 30px;">The same slip,<br>signed by math.</div>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <div class="nfield" id="nf1"><span>Maker</span><b>your phone's key</b></div>
+            <div class="nfield" id="nf2"><span>Certain sum</span><b>Rs 45, locked</b></div>
+            <div class="nfield" id="nf3"><span>Serial</span><b>shown once, ever</b></div>
+            <div class="nfield" id="nf4"><span>Settled</span><b>over UPI, later</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 three beats -->
+      <div class="scene" id="s3" data-start="13.2" data-duration="8.8" data-track-index="0">
+        <div class="center" style="gap: 44px;">
+          <div class="beat" id="b1"><span class="bn">1</span><div><b>Write it</b><span>zero signal</span></div></div>
+          <div class="beat" id="b2"><span class="bn">2</span><div><b>Check it</b><span>zero signal</span></div></div>
+          <div class="beat" id="b3"><span class="bn">3</span><div><b>Honour it</b><span>UPI, with your PIN</span></div></div>
+          <div class="stamp" id="s3st" style="margin-top: 20px;">Ed25519 · signed on device · verified on device</div>
+        </div>
+      </div>
+
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      tl.fromTo("#glow", { scale: 0.9, opacity: 0.7 }, { scale: 1.12, opacity: 1, duration: 11, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+      tl.fromTo("#dots", { backgroundPosition: "0px 0px" }, { backgroundPosition: "44px 66px", duration: 22, ease: "none" }, 0);
+
+      tl.fromTo("#s1k", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+      tl.fromTo("#s1h", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.5);
+      tl.fromTo("#khata", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 1.1);
+      tl.fromTo("#khata .krow", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.22, ease: "power2.out" }, 1.5);
+      tl.fromTo("#s1s", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 2.6);
+      tl.to("#s1", { opacity: 0, duration: 0.5 }, 4.6);
+
+      tl.fromTo("#s2k", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 5.5);
+      tl.fromTo("#s2h", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 5.8);
+      tl.fromTo("#nf1", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, 6.7);
+      tl.fromTo("#nf2", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, 7.1);
+      tl.fromTo("#nf3", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, 7.5);
+      tl.fromTo("#nf4", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, 7.9);
+      tl.to("#s2", { opacity: 0, duration: 0.5 }, 12.6);
+
+      tl.fromTo("#b1", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out" }, 13.6);
+      tl.fromTo("#b2", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out" }, 14.5);
+      tl.fromTo("#b3", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out" }, 15.4);
+      tl.fromTo("#s3st", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 16.6);
+      tl.to("#s3", { opacity: 0, duration: 0.6, ease: "power1.in" }, 21.3);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
