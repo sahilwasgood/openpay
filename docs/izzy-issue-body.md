@@ -1,21 +1,26 @@
-[x] the app is not already listed at *IzzyOnDroid*
+* [x] The app complies with the inclusion criteria as listed [in the README](https://gitlab.com/IzzyOnDroid/repo/blob/master/README.md#what-are-the-requirements-an-app-must-meet-to-be-included-with-the-repo)
+* [x] The app is not already listed in the repo or issue tracker
 
-### Package name:
-app.openpay
+---------------------
+
+### Link to the source code:
+https://github.com/sahilwasgood/openpay
 
 ### Link to app in another app store:
-None, this is the initial listing request. Source and releases: https://github.com/sahilwasgood/openpay (tagged vX.Y.Z, one APK per release named OpenPay-vX.Y.Z.apk, SHA-256 in the release notes, CI-signed)
+None yet, this is the first listing request.
 
-### Category and group:
-* Money
+### License used:
+Apache-2.0
 
-Summary: UPI payments that work with zero signal.
+### Category:
+Money
 
-OpenPay hands every payment to the strongest rail that still works: UPI intent when data exists, USSD *99# when only signal does, the UPI 123Pay IVR line for Jio, and signed promissory notes (Ed25519, verified fully offline) when nothing does. Notes settle over normal UPI later, like udhaar in a digital khata. No internet permission: the app cannot reach any server, verifiable in the manifest. Encrypted local ledger, bank SMS confirmation inside a strict window, private on-device spending log, bill splitting into fair-share notes, double debit guard, QR scan autofill, contact payments, balance check, English and Hindi, elder mode. Apache-2.0, 48 unit tests.
+### Summary:
+UPI payments that work with zero signal. OpenPay hands every payment to the strongest rail that still works: UPI intent when data exists, USSD *99# when only signal does, the UPI 123Pay IVR line for Jio, and Ed25519 signed promissory notes verified fully offline when nothing does. Notes settle over normal UPI later.
 
-Fastlane metadata (title, descriptions, icon, changelogs) is in the repo at fastlane/metadata/android/en-US/. No trackers, no ads, no analytics.
-
-### Useful additional links:
-* Website / web app: https://sahilwasgood.github.io/openpay/
-* Architecture map: https://github.com/sahilwasgood/openpay/blob/main/docs/ARCHITECTURE.md
-* Icon (512): https://raw.githubusercontent.com/sahilwasgood/openpay/main/fastlane/metadata/android/en-US/icon.png
+Notes for review:
+- APKs are attached to tagged GitHub releases (vX.Y.Z) as OpenPay-vX.Y.Z.apk, signed with the project's release key (no debuggable/testOnly), SHA-256 printed in each release's notes: https://github.com/sahilwasgood/openpay/releases
+- The app ships WITHOUT the INTERNET permission: it cannot reach any server, verifiable in the manifest. No trackers, no ads, no ATS elements (it processes payment records, so we hold it to the strictest ATS reading).
+- No cleartext traffic flag, nothing downloads executables, unique packageName `openpay.app` and displayName `OpenPay`.
+- Fastlane metadata (title, short/full description, icon, changelogs) lives in the repo at `fastlane/metadata/android/en-US/`.
+- APK size ~3.6 MB.

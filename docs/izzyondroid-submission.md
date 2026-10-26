@@ -1,22 +1,33 @@
-# IzzyOnDroid submission (F-Droid compatible store)
+# IzzyOnDroid: the real submission (repo inclusion)
 
-IzzyOnDroid serves this project's own signed release APKs through the F-Droid client, so users install from a known store and Play Protect does not stand in the way. Their daily checker then picks up every new tagged release automatically.
+The applists tracker was the wrong door (Izzy confirmed it only covers the listings site, not repo inclusion). Inclusion requests go to the repo's own issue tracker on GitLab as a "New App:" issue.
 
-The canonical tracker is on **GitLab** (Codeberg is a read-only mirror, GitHub is not involved):
+**Status:** the wrong-tracker issue (applists #40) needs a one line comment from you pointing here, then close it.
 
-**One human step: open this prefilled link, log in, press Create issue:**
+**The one human step: open this prefilled link, log in, press Create issue:**
 
-[https://gitlab.com/IzzyOnDroid/applists/-/issues/new?issue%5Btitle%5D=OpenPay+%28app.openpay%29+%C2%B7+UPI+payments+that+work+with+zero+signal&issue%5Bdescription%5D=%5Bx%5D+the+app+is+not+already+listed+at+%2AIzzyOnDroid%2A%0A%0A%23%23%23+Package+name%3A%0Aapp.openpay%0A%0A%23%23%23+Link+to+app+in+another+app+store%3A%0ANone%2C+this+is+the+initial+listing+request.+Source+and+releases%3A+https%3A%2F%2Fgithub.com%2Fsahilwasgood%2Fopenpay+%28tagged+vX.Y.Z%2C+one+APK+per+release+named+OpenPay-vX.Y.Z.apk%2C+SHA-256+in+the+release+notes%2C+CI-signed%29%0A%0A%23%23%23+Category+and+group%3A%0A%2A+Money%0A%0ASummary%3A+UPI+payments+that+work+with+zero+signal.%0A%0AOpenPay+hands+every+payment+to+the+strongest+rail+that+still+works%3A+UPI+intent+when+data+exists%2C+USSD+%2A99%23+when+only+signal+does%2C+the+UPI+123Pay+IVR+line+for+Jio%2C+and+signed+promissory+notes+%28Ed25519%2C+verified+fully+offline%29+when+nothing+does.+Notes+settle+over+normal+UPI+later%2C+like+udhaar+in+a+digital+khata.+No+internet+permission%3A+the+app+cannot+reach+any+server%2C+verifiable+in+the+manifest.+Encrypted+local+ledger%2C+bank+SMS+confirmation+inside+a+strict+window%2C+private+on-device+spending+log%2C+bill+splitting+into+fair-share+notes%2C+double+debit+guard%2C+QR+scan+autofill%2C+contact+payments%2C+balance+check%2C+English+and+Hindi%2C+elder+mode.+Apache-2.0%2C+48+unit+tests.%0A%0AFastlane+metadata+%28title%2C+descriptions%2C+icon%2C+changelogs%29+is+in+the+repo+at+fastlane%2Fmetadata%2Fandroid%2Fen-US%2F.+No+trackers%2C+no+ads%2C+no+analytics.%0A%0A%23%23%23+Useful+additional+links%3A%0A%2A+Website+%2F+web+app%3A+https%3A%2F%2Fsahilwasgood.github.io%2Fopenpay%2F%0A%2A+Architecture+map%3A+https%3A%2F%2Fgithub.com%2Fsahilwasgood%2Fopenpay%2Fblob%2Fmain%2Fdocs%2FARCHITECTURE.md%0A%2A+Icon+%28512%29%3A+https%3A%2F%2Fraw.githubusercontent.com%2Fsahilwasgood%2Fopenpay%2Fmain%2Ffastlane%2Fmetadata%2Fandroid%2Fen-US%2Ficon.png%0A](https://gitlab.com/IzzyOnDroid/applists/-/issues/new?issue%5Btitle%5D=OpenPay+%28app.openpay%29+%C2%B7+UPI+payments+that+work+with+zero+signal&issue%5Bdescription%5D=%5Bx%5D+the+app+is+not+already+listed+at+%2AIzzyOnDroid%2A%0A%0A%23%23%23+Package+name%3A%0Aapp.openpay%0A%0A%23%23%23+Link+to+app+in+another+app+store%3A%0ANone%2C+this+is+the+initial+listing+request.+Source+and+releases%3A+https%3A%2F%2Fgithub.com%2Fsahilwasgood%2Fopenpay+%28tagged+vX.Y.Z%2C+one+APK+per+release+named+OpenPay-vX.Y.Z.apk%2C+SHA-256+in+the+release+notes%2C+CI-signed%29%0A%0A%23%23%23+Category+and+group%3A%0A%2A+Money%0A%0ASummary%3A+UPI+payments+that+work+with+zero+signal.%0A%0AOpenPay+hands+every+payment+to+the+strongest+rail+that+still+works%3A+UPI+intent+when+data+exists%2C+USSD+%2A99%23+when+only+signal+does%2C+the+UPI+123Pay+IVR+line+for+Jio%2C+and+signed+promissory+notes+%28Ed25519%2C+verified+fully+offline%29+when+nothing+does.+Notes+settle+over+normal+UPI+later%2C+like+udhaar+in+a+digital+khata.+No+internet+permission%3A+the+app+cannot+reach+any+server%2C+verifiable+in+the+manifest.+Encrypted+local+ledger%2C+bank+SMS+confirmation+inside+a+strict+window%2C+private+on-device+spending+log%2C+bill+splitting+into+fair-share+notes%2C+double+debit+guard%2C+QR+scan+autofill%2C+contact+payments%2C+balance+check%2C+English+and+Hindi%2C+elder+mode.+Apache-2.0%2C+48+unit+tests.%0A%0AFastlane+metadata+%28title%2C+descriptions%2C+icon%2C+changelogs%29+is+in+the+repo+at+fastlane%2Fmetadata%2Fandroid%2Fen-US%2F.+No+trackers%2C+no+ads%2C+no+analytics.%0A%0A%23%23%23+Useful+additional+links%3A%0A%2A+Website+%2F+web+app%3A+https%3A%2F%2Fsahilwasgood.github.io%2Fopenpay%2F%0A%2A+Architecture+map%3A+https%3A%2F%2Fgithub.com%2Fsahilwasgood%2Fopenpay%2Fblob%2Fmain%2Fdocs%2FARCHITECTURE.md%0A%2A+Icon+%28512%29%3A+https%3A%2F%2Fraw.githubusercontent.com%2Fsahilwasgood%2Fopenpay%2Fmain%2Ffastlane%2Fmetadata%2Fandroid%2Fen-US%2Ficon.png%0A)
+https://gitlab.com/IzzyOnDroid/repo/-/issues/new?issue%5Btitle%5D=New+App%3A+OpenPay&issue%5Bdescription%5D=%2A+%5Bx%5D+The+app+complies+with+the+inclusion+criteria+as+listed+%5Bin+the+README%5D%28https%3A%2F%2Fgitlab.com%2FIzzyOnDroid%2Frepo%2Fblob%2Fmaster%2FREADME.md%23what-are-the-requirements-an-app-must-meet-to-be-included-with-the-repo%29%0A%2A+%5Bx%5D+The+app+is+not+already+listed+in+the+repo+or+issue+tracker%0A%0A---------------------%0A%0A%23%23%23+Link+to+the+source+code%3A%0Ahttps%3A%2F%2Fgithub.com%2Fsahilwasgood%2Fopenpay%0A%0A%23%23%23+Link+to+app+in+another+app+store%3A%0ANone+yet%2C+this+is+the+first+listing+request.%0A%0A%23%23%23+License+used%3A%0AApache-2.0%0A%0A%23%23%23+Category%3A%0AMoney%0A%0A%23%23%23+Summary%3A%0AUPI+payments+that+work+with+zero+signal.+OpenPay+hands+every+payment+to+the+strongest+rail+that+still+works%3A+UPI+intent+when+data+exists%2C+USSD+%2A99%23+when+only+signal+does%2C+the+UPI+123Pay+IVR+line+for+Jio%2C+and+Ed25519+signed+promissory+notes+verified+fully+offline+when+nothing+does.+Notes+settle+over+normal+UPI+later.%0A%0ANotes+for+review%3A%0A-+APKs+are+attached+to+tagged+GitHub+releases+%28vX.Y.Z%29+as+OpenPay-vX.Y.Z.apk%2C+signed+with+the+project%27s+release+key+%28no+debuggable%2FtestOnly%29%2C+SHA-256+printed+in+each+release%27s+notes%3A+https%3A%2F%2Fgithub.com%2Fsahilwasgood%2Fopenpay%2Freleases%0A-+The+app+ships+WITHOUT+the+INTERNET+permission%3A+it+cannot+reach+any+server%2C+verifiable+in+the+manifest.+No+trackers%2C+no+ads%2C+no+ATS+elements+%28it+processes+payment+records%2C+so+we+hold+it+to+the+strictest+ATS+reading%29.%0A-+No+cleartext+traffic+flag%2C+nothing+downloads+executables%2C+unique+packageName+%60openpay.app%60+and+displayName+%60OpenPay%60.%0A-+Fastlane+metadata+%28title%2C+short%2Ffull+description%2C+icon%2C+changelogs%29+lives+in+the+repo+at+%60fastlane%2Fmetadata%2Fandroid%2Fen-US%2F%60.%0A-+APK+size+~3.6+MB.%0A
 
-If the prefill does not carry over, paste `docs/izzy-issue-body.md` into the *suggest_app* template.
+If the prefill does not carry over, paste `docs/izzy-issue-body.md` (matches the format of successfully included apps, e.g. WebsocketCAM #1007).
 
-Already done on our side:
+Comment to paste on applists #40 before closing it:
 
-- One APK per tagged release, `OpenPay-vX.Y.Z.apk`, SHA-256 in the release notes, CI-signed
-- LICENSE (Apache 2.0) at the repo root
-- Fastlane metadata at `fastlane/metadata/android/en-US/` which IzzyOnDroid reads for the listing and release notes
-- App ID `openpay.app` (listing id `app.openpay`), no trackers, no INTERNET permission
+```
+Wrong tracker on my part, apologies. Filed for repo inclusion at:
+https://gitlab.com/IzzyOnDroid/repo/-/issues (New App: OpenPay). Please close.
+```
 
-F-Droid proper (main repo, reproducible builds with their key) is a later roadmap item. IzzyOnDroid works with today's pipeline.
+## Policy check (Inclusion-Policy)
 
-Play Store note for later: RECEIVE_SMS is a restricted permission on Play and needs a declaration plus review. If Play rejects it, the store build ships without SMS confirmation, F-Droid keeps the full build.
+- Apache-2.0, OSI approved
+- End user app, code public on GitHub with description
+- Zero proprietary components, zero trackers, zero ATS (the app processes payment records, so the strictest no-ATS rule applies and is met: there is no INTERNET permission at all)
+- No downloaded executables, no cleartext flag
+- Release-key signed APKs attached to tagged GitHub releases (their preferred source, enables reproducible builds later)
+- Unique packageName `openpay.app`, displayName `OpenPay`
+- ~3.6 MB, well under the 30 MB rule of thumb
+- Not a game, all-ages content
+
+## After acceptance
+
+Their daily checker picks up every future vX.Y.Z tag automatically. F-Droid proper (reproducible builds with their key) remains the later roadmap item.
