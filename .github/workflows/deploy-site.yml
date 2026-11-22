@@ -30,5 +30,10 @@ jobs:
         with:
           path: site
 
+      # Artifact metadata is eventually consistent. Without this pause,
+      # deploy-pages can see zero artifacts immediately after a successful upload.
+      - name: Wait for artifact metadata
+        run: sleep 20
+
       - id: deployment
         uses: actions/deploy-pages@v4
