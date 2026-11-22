@@ -37,6 +37,10 @@ No server backend, by design. A server would break the no network calls and no-a
 
 The `pages` concurrency group no longer cancels in progress. Deploy 45058522137 still failed with the GitHub Actions transient "Found 0 artifacts" error; the next push deploy 45059375080 succeeded and published commits a20ce82 and 4fb93e6. A cache-busted fetch of the live `sw.js` confirms `openpay-v18`. If a deploy fails this way, re-run the workflow or push once more rather than changing the site.
 
+## Final verification
+
+All four live portrait videos return HTTP 200 from the Pages domain. No landscape or note video references remain. `node --test tests/*.test.js` reports 14 pass and 0 fail. Live service worker is v20.
+
 ## Resource note
 
 Machine measured at 4 CPUs, load 8-9, 3.8 GB free, 2.3 GB swap used, with other root sessions active. Concurrency reduced to 2 implementation subagents plus the root; builds serialized.
