@@ -694,6 +694,6 @@ body.webapp.elder .webapp-body { zoom: 1.22; }
   .rc-badge { white-space: normal; }
 }
 @media (max-width: 480px) {
-  .tabs { flex-wrap: wrap; }
-  .tab { flex: 1 1 30%; font-size: 13px; padding: 10px 2px; }
+  .tabs { flex-wrap: nowrap; gap: 6px; }
+  .tab { flex: 1 1 0; min-width: 0; font-size: 12px; padding: 10px 2px; }
 }

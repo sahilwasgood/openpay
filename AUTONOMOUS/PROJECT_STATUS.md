@@ -25,6 +25,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-13 | Replace four brand videos with four portrait liquid glass films | COMPLETED | reel-pay, reel-recharge, reel-ivr, reel-trust; all four check clean and render 1080 by 1920, copied to site/videos |
 | OP-14 | Commit regression tests for the recharge rules | COMPLETED | tests/recharge.test.js, 7 assertions over the marked pure block in webapp.js, all passing |
 | OP-15 | Close primary-source gaps in docs/RECHARGE.md | COMPLETED | Paytm 1 Aug 2024, BSNL *123#, Jio self service and UPI 123Pay voice flow now sourced; operator coverage explicitly flagged unverified |
+| OP-16 | Browser smoke test of the PWA | COMPLETED | Playwright with system Chrome over file://: four tabs present, no note or verify tab, SBI handoff links correct, over-cap warning works, zero console errors, four tabs fit one phone row |
 
 ## Architecture decision
 
