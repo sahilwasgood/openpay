@@ -41,6 +41,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-29 | Language accessibility attribute | COMPLETED | Switching to Hindi now sets html lang to hi, smoke test asserts both directions, 22 tests pass |
 | OP-30 | Dynamic text follows language switch | COMPLETED | Rail copy, recent payees and history re-render on language change, Hindi rail strings added, smoke test asserts it |
 | OP-31 | History labels translated | COMPLETED | Rail, pending/paid state and action labels use t(), empty state translated, smoke test asserts Hindi status in history |
+| OP-32 | Locale-aware dates | COMPLETED | History and export dates use hi-IN or en-IN according to language; Chrome renders Latin digits for hi-IN, so no digit assertion is possible |
 
 ## Architecture decision
 

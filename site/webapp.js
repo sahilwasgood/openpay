@@ -368,6 +368,9 @@
 
   // ---------- history tab ----------
 
+  function dateLabel(epoch) {
+    return new Date(epoch).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN');
+  }
   function stateLabel(s) {
     return t(s, s === 'pending' ? 'लंबित' : 'चुकता');
   }
@@ -391,7 +394,7 @@
       b.textContent = 'Rs ' + rupees(p.paise) + ' · ' + (p.name || p.vpa || p.phone);
       var sub = document.createElement('span');
       sub.className = 'mono dim';
-      sub.textContent = new Date(p.at).toLocaleString() + ' · ' + railText(p.rail) + ' · ' + stateLabel(p.state);
+      sub.textContent = dateLabel(p.at) + ' · ' + railText(p.rail) + ' · ' + stateLabel(p.state);
       left.appendChild(b); left.appendChild(sub);
       var act = document.createElement('button');
       act.className = 'linklike';
@@ -417,7 +420,7 @@
 
   $('exportBtn').onclick = function () {
     var text = state.payments.map(function (p) {
-      return new Date(p.at).toLocaleString() + ' · Rs ' + rupees(p.paise) + ' · ' +
+      return dateLabel(p.at) + ' · Rs ' + rupees(p.paise) + ' · ' +
         (p.name || p.vpa || p.phone) + ' · ' + p.rail + ' · ' + p.state;
     }).join('\n') || 'No payments yet.';
     if (navigator.share) navigator.share({ text: text }).catch(function () {});

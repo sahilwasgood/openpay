@@ -5,7 +5,7 @@
    Offline, the cache answers. Each deploy ships a new CACHE id and the old
    cache is deleted only after the new one is fully written. */
 
-const CACHE = 'openpay-v29';
+const CACHE = 'openpay-v30';
 
 const SHELL = [
   './',
