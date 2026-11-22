@@ -27,6 +27,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-15 | Close primary-source gaps in docs/RECHARGE.md | COMPLETED | Paytm 1 Aug 2024, BSNL *123#, Jio self service and UPI 123Pay voice flow now sourced; operator coverage explicitly flagged unverified |
 | OP-16 | Browser smoke test of the PWA | COMPLETED | Playwright with system Chrome over file://: four tabs present, no note or verify tab, SBI handoff links correct, over-cap warning works, zero console errors, four tabs fit one phone row |
 | OP-17 | Remove third-party assets and add offline regression tests | COMPLETED | tests/offline.test.js, local fonts in site/fonts, Google Fonts links removed, fonts added to SW shell, browser confirms zero external requests, 14 tests pass |
+| OP-18 | Accessibility pass on the PWA | COMPLETED | No unlabelled visible inputs or buttons, aria-label on the collapsed dial link, global keyboard focus outline verified in the browser |
 
 ## Architecture decision
 
