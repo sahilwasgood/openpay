@@ -25,7 +25,7 @@ if (from < 0 || to < 0 || to < from) {
     SBI_TARGET: '917208933145',
     SBI_REG_TARGET: '07208933148',
     SBI_DAILY_CAP: 700,
-    navigator: { userAgent: 'Android' },
+    navigator: { userAgent: 'Android', maxTouchPoints: 0 },
     encodeURIComponent,
     console
   };
@@ -92,5 +92,14 @@ if (from < 0 || to < 0 || to < from) {
     assert.match(api.smsHref('917208933145', 'MOBRC JIO 199'), /^sms:917208933145&body=/);
     sandbox.navigator.userAgent = 'Android';
     assert.match(api.smsHref('917208933145', 'MOBRC JIO 199'), /^sms:917208933145\?body=/);
+  });
+
+  test('iPadOS desktop user agent still gets the iOS separator', () => {
+    sandbox.navigator.userAgent = 'Macintosh; Intel Mac OS X 10_15_7';
+    sandbox.navigator.maxTouchPoints = 5;
+    assert.match(api.smsHref('917208933145', 'MOBRC JIO 199'), /^sms:917208933145&body=/);
+    sandbox.navigator.maxTouchPoints = 0;
+    assert.match(api.smsHref('917208933145', 'MOBRC JIO 199'), /^sms:917208933145\?body=/);
+    sandbox.navigator.userAgent = 'Android';
   });
 }

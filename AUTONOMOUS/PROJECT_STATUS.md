@@ -33,6 +33,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-21 | Harden QR paste against malformed input | COMPLETED | tests/parse-upi.test.js, 3 new tests, malformed percent-encoding now returns null and shows the no-UPI toast, 17 tests pass |
 | OP-22 | Verify true offline reload | COMPLETED | Local HTTP server, service worker controls the page, cache openpay-v22, offline reload renders all four tabs |
 | OP-23 | Reject fractional rupee amounts | COMPLETED | All three bank handoff builders now require whole rupees, one regression test added, 18 tests pass |
+| OP-24 | iPadOS SMS handoff detection | COMPLETED | Macintosh user agents with multi-touch now use the iOS &body= separator, verified by test, 19 tests pass |
 
 ## Architecture decision
 

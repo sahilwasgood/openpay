@@ -422,7 +422,8 @@
   function validAmount(a) { return Number.isFinite(a) && a > 0 && Math.floor(a) === a; }
   function smsHref(target, body) {
     var ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
-    var ios = /iP(hone|ad|od)/.test(ua);
+    var ios = /iP(hone|ad|od)/.test(ua) ||
+      (/Macintosh/.test(ua) && (navigator.maxTouchPoints || 0) > 1);
     return 'sms:' + target + (ios ? '&body=' : '?body=') + encodeURIComponent(body);
   }
   function smsLinks(targets, body) {
