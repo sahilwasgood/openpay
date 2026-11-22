@@ -5,7 +5,7 @@
    Offline, the cache answers. Each deploy ships a new CACHE id and the old
    cache is deleted only after the new one is fully written. */
 
-const CACHE = 'openpay-v18';
+const CACHE = 'openpay-v19';
 
 const SHELL = [
   './',
@@ -15,6 +15,9 @@ const SHELL = [
   './styles.css',
   './app.js',
   './manifest.webmanifest',
+  './fonts/Inter-Regular.ttf',
+  './fonts/SpaceGrotesk-Medium.ttf',
+  './fonts/SpaceGrotesk-Bold.ttf',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png'
