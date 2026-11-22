@@ -31,6 +31,8 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-19 | Functional browser pass over Pay, Settings and the landing demo | COMPLETED | UPI link built correctly, Hindi and elder toggles work, payment recorded in history, signal and Jio rail demo copy switches correctly, toast made click-through |
 | OP-20 | Data flow browser pass | COMPLETED | QR paste autofills VPA, name and amount; export blob contains all op_ keys; wipe clears storage; restore from JSON brings the payment back |
 | OP-21 | Harden QR paste against malformed input | COMPLETED | tests/parse-upi.test.js, 3 new tests, malformed percent-encoding now returns null and shows the no-UPI toast, 17 tests pass |
+| OP-22 | Verify true offline reload | COMPLETED | Local HTTP server, service worker controls the page, cache openpay-v22, offline reload renders all four tabs |
+| OP-23 | Reject fractional rupee amounts | COMPLETED | All three bank handoff builders now require whole rupees, one regression test added, 18 tests pass |
 
 ## Architecture decision
 

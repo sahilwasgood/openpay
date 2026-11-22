@@ -66,6 +66,12 @@ if (from < 0 || to < 0 || to < from) {
     assert.equal(api.buildAxisSms('9876543210', 'JIO', '199', '12345').ok, false);
   });
 
+  test('fractional rupees are rejected in every bank handoff', () => {
+    assert.equal(api.buildSbiStep1('9876543210', '199.5', 'VI').ok, false);
+    assert.equal(api.buildAxisSms('9876543210', 'JIO', '199.5', '123456').ok, false);
+    assert.equal(api.buildIvr('9876543210', '199.5').ok, false);
+  });
+
   test('UPI 123Pay hands off to the IVR number', () => {
     const d = api.buildIvr('9876543210', '199');
     assert.equal(d.links[0].href, 'tel:08045163666');

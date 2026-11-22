@@ -419,6 +419,7 @@
     return d;
   }
   function validMobile(s) { return /^[6-9]\d{9}$/.test(mobileDigits(s)); }
+  function validAmount(a) { return Number.isFinite(a) && a > 0 && Math.floor(a) === a; }
   function smsHref(target, body) {
     var ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
     var ios = /iP(hone|ad|od)/.test(ua);
@@ -448,7 +449,7 @@
   function buildSbiStep1(number, amount, token) {
     var n = mobileDigits(number), a = Number(amount);
     if (!validMobile(n)) return fail(t('Enter a valid 10-digit mobile number', 'मान्य 10 अंकों का मोबाइल नंबर दर्ज करें'));
-    if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
+    if (!validAmount(a)) return fail(t('Enter a whole number of rupees above zero', 'शून्य से बड़ी पूरी रक़म रुपयों में दर्ज करें'));
     if (a > SBI_DAILY_CAP) return fail(t('SBI Quick caps at Rs 700 per day (Rs 1,000 a month). Lower the amount.', 'SBI Quick की सीमा Rs 700 प्रति दिन (Rs 1,000 प्रति माह) है। रक़म घटाएँ।'));
     var tok = (token || '').trim().toUpperCase();
     if (!tok) return fail(t('Choose an operator token', 'ऑपरेटर टोकन चुनें'));
@@ -478,7 +479,7 @@
     var op = (operator || '').trim().toUpperCase();
     if (!validMobile(n)) return fail(t('Enter a valid 10-digit mobile number', 'मान्य 10 अंकों का मोबाइल नंबर दर्ज करें'));
     if (!op) return fail(t('Enter the operator token', 'ऑपरेटर टोकन दर्ज करें'));
-    if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
+    if (!validAmount(a)) return fail(t('Enter a whole number of rupees above zero', 'शून्य से बड़ी पूरी रक़म रुपयों में दर्ज करें'));
     if (!/^\d{6}$/.test(l6)) return fail(t('Enter the last 6 digits of your Axis account', 'अपने Axis खाते के आख़िरी 6 अंक दर्ज करें'));
     var body = 'MOBILE ' + n + ' ' + op + ' ' + a + ' ' + l6;
     return step(
@@ -493,7 +494,7 @@
   function buildIvr(number, amount) {
     var n = mobileDigits(number), a = Number(amount);
     if (!validMobile(n)) return fail(t('Enter a valid 10-digit mobile number', 'मान्य 10 अंकों का मोबाइल नंबर दर्ज करें'));
-    if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
+    if (!validAmount(a)) return fail(t('Enter a whole number of rupees above zero', 'शून्य से बड़ी पूरी रक़म रुपयों में दर्ज करें'));
     return step(
       t('Call UPI 123Pay', 'UPI 123Pay पर कॉल करें'),
       t('Choose Mobile Recharge, say or confirm the operator, then enter the number and amount. Approve with your UPI PIN. Money moves bank → UPI → operator, no wallet.', 'मोबाइल रिचार्ज चुनें, ऑपरेटर बोलें या पुष्टि करें, फिर नंबर और रक़म दर्ज करें। UPI PIN से स्वीकृत करें। पैसे बैंक → UPI → ऑपरेटर जाते हैं, कोई वॉलेट नहीं।'),
