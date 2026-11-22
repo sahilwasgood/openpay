@@ -21,6 +21,8 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-09 | Handset verification of SMS/IVR flows | BACKLOG | Needs a real SIM and bank account |
 | OP-10 | Close primary-source gaps listed in docs/RECHARGE.md | BACKLOG | NPCI 123Pay menu, Paytm handle retirement date, BSNL exact code |
 | OP-11 | Rewrite all owned docs as PWA-only with no Android or note feature | COMPLETED | 8 owned docs files rewritten in this task |
+| OP-12 | Strip notes and APK references from the PWA, site and brand docs | COMPLETED | webapp.js 999 to 668 lines, app.html 290 to 236, styles.css 804 to 730, note verifier and screenshots removed |
+| OP-13 | Replace four brand videos with four portrait liquid glass films | COMPLETED | reel-pay, reel-recharge, reel-ivr, reel-trust; all four check clean and render 1080 by 1920, copied to site/videos |
 
 ## Architecture decision
 
@@ -28,7 +30,7 @@ No server backend, by design. A server would break the no network calls and no-a
 
 ## Pages deploy
 
-The last Pages deploy failed because two rapid pushes to main hit the same `pages` concurrency group with `cancel-in-progress: true`. One push cancelled the other's artifact before deployment, so the published site did not update. Root will re-run the deploy with a single push. The workflow itself is unchanged.
+An earlier Pages deploy failed because two rapid pushes hit the `pages` concurrency group with `cancel-in-progress: true`; one run cancelled the other's artifact upload. Fixed by setting `cancel-in-progress: false`, then pushing once (commit 5870c05). Push deploy 45057467658 and manual deploy 45057489709 both succeeded. Cache-busted fetches of `sw.js` and `app.html` from the live domain return the new v16 PWA-only build; uncached edge responses can still show the previous version for a short TTL.
 
 ## Resource note
 
