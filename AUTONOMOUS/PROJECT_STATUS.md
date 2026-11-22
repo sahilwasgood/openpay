@@ -40,7 +40,7 @@ No server backend, by design. A server would break the no network calls and no-a
 
 ## Pages deploy
 
-The `pages` concurrency group no longer cancels in progress. Deploy 45058522137 still failed with the GitHub Actions transient "Found 0 artifacts" error; the next push deploy 45059375080 succeeded and published commits a20ce82 and 4fb93e6. A cache-busted fetch of the live `sw.js` confirms `openpay-v18`. If a deploy fails this way, re-run the workflow or push once more rather than changing the site.
+The "Found 0 artifacts" failure was traced: `upload-pages-artifact` succeeds, then `deploy-pages` queries artifact metadata before GitHub's API has caught up. A 20 second pause between those steps fixes it. Deploy 45067654947 then succeeded and the live `sw.js` confirms `openpay-v23`. This replaces the earlier cancellation-race theory.
 
 ## Final verification
 
