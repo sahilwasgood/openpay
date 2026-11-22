@@ -106,6 +106,7 @@
     if (!el.dataset.en) el.dataset.en = el.innerHTML;
   });
   function applyLang() {
+    document.documentElement.lang = lang;
     document.querySelectorAll('[data-i]').forEach(function (el) {
       el.innerHTML = lang === 'hi' ? (HI[el.dataset.i] || el.dataset.en) : el.dataset.en;
     });

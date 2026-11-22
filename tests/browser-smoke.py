@@ -41,6 +41,14 @@ def main():
             assert names == ['Pay', 'Recharge', 'History', 'Settings'], names
             assert all('note' not in n.lower() and 'verify' not in n.lower() for n in names)
 
+            # Language must be announced correctly by screen readers
+            tab(pg, 'settings')
+            pg.evaluate("document.getElementById('langHi').click()")
+            assert pg.evaluate('document.documentElement.lang') == 'hi'
+            pg.evaluate("document.getElementById('langEn').click()")
+            assert pg.evaluate('document.documentElement.lang') == 'en'
+            tab(pg, 'pay')
+
             # QR paste autofill
             pg.evaluate("document.getElementById('qrPasteWrap').classList.remove('hidden')")
             pg.fill('#qrPaste', 'upi://pay?pa=test@ybl&pn=Test%20Shop&am=99&cu=INR')
