@@ -313,7 +313,7 @@
     if (!('BarcodeDetector' in window)) {
       $('qrPasteWrap').classList.remove('hidden');
       $('qrPaste').focus();
-      toast('This browser cannot scan, paste instead');
+      toast(t('This browser cannot scan, paste instead', 'यह ब्राउज़र स्कैन नहीं कर सकता, पेस्ट करें'));
       return;
     }
     var video = $('payScanVideo');
@@ -337,14 +337,14 @@
       })
       .catch(function () {
         $('qrPasteWrap').classList.remove('hidden');
-        toast('Camera refused, paste instead');
+        toast(t('Camera refused, paste instead', 'कैमरा अनुमति नहीं मिली, पेस्ट करें'));
       });
   });
 
   $('qrPasteBtn').addEventListener('click', function () {
     var f = parseUpi($('qrPaste').value);
     if (f) { $('qrPasteWrap').classList.add('hidden'); autofill(f); }
-    else toast('No UPI ID found in that text');
+    else toast(t('No UPI ID found in that text', 'इस टेक्स्ट में UPI ID नहीं मिली'));
   });
 
   if ('contacts' in navigator && navigator.contacts && navigator.contacts.select) {
@@ -359,7 +359,7 @@
           if (tel.length === 12 && tel.indexOf('91') === 0) tel = tel.slice(2);
           if (tel.length === 10) { $('pPhone').value = tel; }
           refreshPay();
-          toast('Contact filled');
+          toast(t('Contact filled', 'कॉन्टैक्ट भरा गया'));
         })
         .catch(function () {});
     });
@@ -411,7 +411,7 @@
         $('pAmt').value = p.paise ? String(Math.round(p.paise / 100)) : '';
         switchTab('pay');
         refreshPay();
-        toast('Filled, pay again');
+        toast(t('Filled, pay again', 'भर गया, फिर से भुगतान करें'));
       };
       row.appendChild(left); row.appendChild(act);
       box.appendChild(row);
