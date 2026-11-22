@@ -13,7 +13,7 @@ Date: 2026-11-22. Owner: sahilwasgood. Repo: github.com/sahilwasgood/openpay (pu
 | OP-05 | Liquid glass recharge screen (Android) | COMPLETED | RechargeScreen.kt, wired into MainActivity and PayScreen |
 | OP-06 | Liquid glass recharge pane (web PWA) | COMPLETED | site/app.html, webapp.js, styles.css, 30 builder checks by subagent |
 | OP-07 | Docs for handoff and no-backend decision | COMPLETED | README, PRODUCT, RESEARCH, ARCHITECTURE, new docs/RECHARGE.md |
-| OP-08 | Full build + assembleDebug verification | IN PROGRESS | Detached gradle run, log in ~/.cache/opencode2-coordination/openpay-build.log |
+| OP-08 | Full build + assembleDebug verification | COMPLETED | `./gradlew test` 60 tests 0 failures, `./gradlew assembleDebug` BUILD SUCCESSFUL, commit 74f3fa5 pushed |
 | OP-09 | Handset verification of SMS/IVR flows | BACKLOG | Needs a real SIM and bank account |
 | OP-10 | Close primary-source gaps listed in docs/RECHARGE.md | BACKLOG | NPCI 123Pay menu, Paytm handle retirement date, BSNL exact code |
 
