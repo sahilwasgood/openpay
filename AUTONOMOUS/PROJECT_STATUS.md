@@ -40,7 +40,7 @@ The `pages` concurrency group no longer cancels in progress. Deploy 45058522137 
 
 ## Final verification
 
-All four live portrait videos return HTTP 200 from the Pages domain. No landscape or note video references remain. `node --test tests/*.test.js` reports 14 pass and 0 fail. Live service worker is v20.
+All four live portrait videos return HTTP 200 from the Pages domain. No landscape or note video references remain. `node --test tests/*.test.js` reports 14 pass and 0 fail. Manifest and every service-worker shell entry resolve on disk. Live service worker is v21.
 
 ## Resource note
 
