@@ -50,6 +50,7 @@
     none: 'No rail here yet. Add a UPI ID or a phone number for the 123Pay call.'
   };
 
+  // @rail-start
   function railLink(rail, vpa, name, amt, phone) {
     if (rail === 'intent') {
       var u = 'upi://pay?pa=' + encodeURIComponent(vpa) +
@@ -59,10 +60,12 @@
     }
     if (rail === 'ussd') return { href: 'tel:*99*1*3%23', text: 'Dial *99*1*3#' };
     if (rail === 'ivr') {
+      if (!Number.isInteger(Number(amt))) return null;
       return { href: 'tel:08045163666,,1,' + phone + ',,' + amt + ',,1', text: 'Call 123Pay, keyed in' };
     }
     return null;
   }
+  // @rail-end
 
   // ---------- pay tab ----------
 
@@ -229,6 +232,12 @@
     var rail = ok ? pickRail(vpa, phone) : 'none';
     $('railbox').textContent = RAILTXT[rail] || RAILTXT.none;
     var link = ok ? railLink(rail, vpa, name, amt, phone) : null;
+    if (!link && ok && rail === 'ivr') {
+      $('railbox').textContent = t(
+        'IVR 123Pay needs whole rupees. Drop the paise or use a UPI ID with data.',
+        '123Pay कॉल में पूरे रुपये चाहिए। पैसे हटाएँ या डेटा पर UPI ID इस्तेमाल करें।'
+      );
+    }
     if (link) {
       $('payBtn').href = link.href;
       $('payBtn').textContent = link.text;

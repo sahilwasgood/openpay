@@ -35,6 +35,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-23 | Reject fractional rupee amounts | COMPLETED | All three bank handoff builders now require whole rupees, one regression test added, 18 tests pass |
 | OP-24 | iPadOS SMS handoff detection | COMPLETED | Macintosh user agents with multi-touch now use the iOS &body= separator, verified by test, 19 tests pass |
 | OP-25 | Share target with embedded UPI link | COMPLETED | URL anywhere in shared text now fills VPA, name and amount, verified in browser, 20 tests pass |
+| OP-26 | IVR rail decimal guard | COMPLETED | 123Pay DTMF links now require whole rupees with a clear hint, UPI intent keeps paise, verified offline in browser, 22 tests pass |
 
 ## Architecture decision
 
