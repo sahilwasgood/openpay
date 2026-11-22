@@ -39,6 +39,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-27 | Commit a browser smoke test | COMPLETED | tests/browser-smoke.py covers tabs, QR autofill, history, recharge cap, share target and landing demo; passes with system Chrome |
 | OP-28 | Enforce tests in CI | COMPLETED | .github/workflows/test.yml runs node --test on every push and PR, first run 45072404675 succeeded |
 | OP-29 | Language accessibility attribute | COMPLETED | Switching to Hindi now sets html lang to hi, smoke test asserts both directions, 22 tests pass |
+| OP-30 | Dynamic text follows language switch | COMPLETED | Rail copy, recent payees and history re-render on language change, Hindi rail strings added, smoke test asserts it |
 
 ## Architecture decision
 

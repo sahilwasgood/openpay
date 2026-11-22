@@ -57,6 +57,13 @@ def main():
             assert (pg.input_value('#pVpa'), pg.input_value('#pName'), pg.input_value('#pAmt')) == \
                    ('test@ybl', 'Test Shop', '99')
 
+            # Dynamic rail copy follows the language switch too
+            tab(pg, 'settings')
+            pg.evaluate("document.getElementById('langHi').click()")
+            assert 'डेटा' in pg.locator('#railbox').inner_text()
+            pg.evaluate("document.getElementById('langEn').click()")
+            tab(pg, 'pay')
+
             # Pay link and history
             pg.evaluate("document.getElementById('payBtn').click()")
             pg.wait_for_timeout(100)

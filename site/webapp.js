@@ -49,6 +49,12 @@
     ivr: 'IVR 123Pay · needs signal · the dialer keys it in',
     none: 'No rail here yet. Add a UPI ID or a phone number for the 123Pay call.'
   };
+  var RAILHI = {
+    intent: 'UPI Intent · डेटा चाहिए · आपके UPI ऐप को भेजता है',
+    ussd: 'USSD *99# · सिग्नल चाहिए · बाकी कैरियर मेन्यू में करें',
+    ivr: 'IVR 123Pay · सिग्नल चाहिए · डायलर नंबर दबाता है',
+    none: 'अभी कोई रास्ता नहीं। UPI ID या फ़ोन नंबर जोड़ें।'
+  };
 
   // @rail-start
   function railLink(rail, vpa, name, amt, phone) {
@@ -114,6 +120,9 @@
     $('langHi').classList.toggle('on', lang === 'hi');
     LS.set('lang', lang);
     renderRecharge();
+    renderPayees();
+    renderHistory();
+    refreshPay();
   }
   $('langEn').onclick = function () { lang = 'en'; applyLang(); };
   $('langHi').onclick = function () { lang = 'hi'; applyLang(); };
@@ -231,7 +240,9 @@
     var amt = $('pAmt').value.trim();
     var ok = amt && Number(amt) > 0 && (vpa || phone);
     var rail = ok ? pickRail(vpa, phone) : 'none';
-    $('railbox').textContent = RAILTXT[rail] || RAILTXT.none;
+    $('railbox').textContent = lang === 'hi'
+      ? (RAILHI[rail] || RAILHI.none)
+      : (RAILTXT[rail] || RAILTXT.none);
     var link = ok ? railLink(rail, vpa, name, amt, phone) : null;
     if (!link && ok && rail === 'ivr') {
       $('railbox').textContent = t(
