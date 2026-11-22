@@ -19,7 +19,12 @@ OpenPay is built to be forked. The whole map, start to finish.
    ```
    Open `http://localhost:8000/app.html`. There is no compiler and no package install.
 3. Try Pay with a test VPA and a carrier setting, then Recharge with the SBI Quick path. Nothing is sent from the app, so no SIM or bank account is needed to see the handoffs.
-4. Change one small thing, push, watch the Pages deploy go green. That is the whole loop.
+4. Run the recharge rules tests from the repo root:
+   ```
+   node --test tests/recharge.test.js
+   ```
+   The tests read the marked pure block in `site/webapp.js` and check every SMS body, cap and dial link. Keep the `@recharge-core-start` and `@recharge-core-end` markers when editing that block.
+5. Change one small thing, push, watch the Pages deploy go green. That is the whole loop.
 
 ## Publishing your fork's site
 

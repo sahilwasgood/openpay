@@ -407,7 +407,14 @@
     number: LS.get('rc_number', '')
   };
 
+  // @recharge-core-start
   function rcDigits(s) { return (s || '').replace(/\D/g, ''); }
+  function mobileDigits(s) {
+    var d = rcDigits(s);
+    if (d.length === 12 && d.indexOf('91') === 0) d = d.slice(2);
+    return d;
+  }
+  function validMobile(s) { return /^[6-9]\d{9}$/.test(mobileDigits(s)); }
   function smsHref(target, body) {
     var ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
     var ios = /iP(hone|ad|od)/.test(ua);
@@ -435,8 +442,8 @@
   }
 
   function buildSbiStep1(number, amount, token) {
-    var n = rcDigits(number), a = Number(amount);
-    if (!/^\d{10}$/.test(n)) return fail(t('Enter a 10-digit mobile number', '10 अंकों का मोबाइल नंबर दर्ज करें'));
+    var n = mobileDigits(number), a = Number(amount);
+    if (!validMobile(n)) return fail(t('Enter a valid 10-digit mobile number', 'मान्य 10 अंकों का मोबाइल नंबर दर्ज करें'));
     if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
     if (a > SBI_DAILY_CAP) return fail(t('SBI Quick caps at Rs 700 per day (Rs 1,000 a month). Lower the amount.', 'SBI Quick की सीमा Rs 700 प्रति दिन (Rs 1,000 प्रति माह) है। रक़म घटाएँ।'));
     var tok = (token || '').trim().toUpperCase();
@@ -463,9 +470,9 @@
 
   // Axis: single SMS, no internet needed, any number. Token is editable.
   function buildAxisSms(number, operator, amount, last6) {
-    var n = rcDigits(number), a = Number(amount), l6 = rcDigits(last6);
+    var n = mobileDigits(number), a = Number(amount), l6 = rcDigits(last6);
     var op = (operator || '').trim().toUpperCase();
-    if (!/^\d{10}$/.test(n)) return fail(t('Enter a 10-digit mobile number', '10 अंकों का मोबाइल नंबर दर्ज करें'));
+    if (!validMobile(n)) return fail(t('Enter a valid 10-digit mobile number', 'मान्य 10 अंकों का मोबाइल नंबर दर्ज करें'));
     if (!op) return fail(t('Enter the operator token', 'ऑपरेटर टोकन दर्ज करें'));
     if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
     if (!/^\d{6}$/.test(l6)) return fail(t('Enter the last 6 digits of your Axis account', 'अपने Axis खाते के आख़िरी 6 अंक दर्ज करें'));
@@ -480,8 +487,8 @@
 
   // UPI 123Pay: a phone call, the keypad drives the bank menu.
   function buildIvr(number, amount) {
-    var n = rcDigits(number), a = Number(amount);
-    if (!/^\d{10}$/.test(n)) return fail(t('Enter a 10-digit mobile number', '10 अंकों का मोबाइल नंबर दर्ज करें'));
+    var n = mobileDigits(number), a = Number(amount);
+    if (!validMobile(n)) return fail(t('Enter a valid 10-digit mobile number', 'मान्य 10 अंकों का मोबाइल नंबर दर्ज करें'));
     if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
     return step(
       t('Call UPI 123Pay', 'UPI 123Pay पर कॉल करें'),
@@ -524,6 +531,7 @@
       '', [dial(t('Call 1299', '1299 पर कॉल करें'), '1299')]);
   }
 
+  // @recharge-core-end
   // DOM layer: user values go in via textContent, never innerHTML.
   function rcEl(tag, cls, text) {
     var e = document.createElement(tag);

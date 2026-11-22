@@ -19,10 +19,12 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-07 | Docs for handoff and no-backend decision | COMPLETED | README, PRODUCT, RESEARCH, ARCHITECTURE, docs/RECHARGE.md rewritten PWA-only |
 | OP-08 | Full Android build and assembleDebug verification | REJECTED | No Gradle, no APK and no 60 Kotlin tests in a PWA-only product |
 | OP-09 | Handset verification of SMS/IVR flows | BACKLOG | Needs a real SIM and bank account |
-| OP-10 | Close primary-source gaps listed in docs/RECHARGE.md | BACKLOG | NPCI 123Pay menu, Paytm handle retirement date, BSNL exact code |
+| OP-10 | Close primary-source gaps listed in docs/RECHARGE.md | COMPLETED | Superseded by OP-15, three of four gaps closed with primary sources and the rest flagged unverified |
 | OP-11 | Rewrite all owned docs as PWA-only with no Android or note feature | COMPLETED | 8 owned docs files rewritten in this task |
 | OP-12 | Strip notes and APK references from the PWA, site and brand docs | COMPLETED | webapp.js 999 to 668 lines, app.html 290 to 236, styles.css 804 to 730, note verifier and screenshots removed |
 | OP-13 | Replace four brand videos with four portrait liquid glass films | COMPLETED | reel-pay, reel-recharge, reel-ivr, reel-trust; all four check clean and render 1080 by 1920, copied to site/videos |
+| OP-14 | Commit regression tests for the recharge rules | COMPLETED | tests/recharge.test.js, 7 assertions over the marked pure block in webapp.js, all passing |
+| OP-15 | Close primary-source gaps in docs/RECHARGE.md | COMPLETED | Paytm 1 Aug 2024, BSNL *123#, Jio self service and UPI 123Pay voice flow now sourced; operator coverage explicitly flagged unverified |
 
 ## Architecture decision
 
