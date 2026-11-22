@@ -55,6 +55,11 @@
     ivr: 'IVR 123Pay · सिग्नल चाहिए · डायलर नंबर दबाता है',
     none: 'अभी कोई रास्ता नहीं। UPI ID या फ़ोन नंबर जोड़ें।'
   };
+  function railText(rail) {
+    return lang === 'hi'
+      ? (RAILHI[rail] || RAILHI.none)
+      : (RAILTXT[rail] || RAILTXT.none);
+  }
 
   // @rail-start
   function railLink(rail, vpa, name, amt, phone) {
@@ -240,9 +245,7 @@
     var amt = $('pAmt').value.trim();
     var ok = amt && Number(amt) > 0 && (vpa || phone);
     var rail = ok ? pickRail(vpa, phone) : 'none';
-    $('railbox').textContent = lang === 'hi'
-      ? (RAILHI[rail] || RAILHI.none)
-      : (RAILTXT[rail] || RAILTXT.none);
+    $('railbox').textContent = railText(rail);
     var link = ok ? railLink(rail, vpa, name, amt, phone) : null;
     if (!link && ok && rail === 'ivr') {
       $('railbox').textContent = t(
@@ -365,11 +368,19 @@
 
   // ---------- history tab ----------
 
+  function stateLabel(s) {
+    return t(s, s === 'pending' ? 'लंबित' : 'चुकता');
+  }
+  function stateAction(s) {
+    return t(s === 'pending' ? 'mark paid' : 'mark pending',
+      s === 'pending' ? 'भुगतान चिह्नित करें' : 'लंबित चिह्नित करें');
+  }
+
   function renderHistory() {
     var box = $('histList');
     box.innerHTML = '';
     if (!state.payments.length) {
-      box.innerHTML = '<p class="app-note">Nothing yet.</p>';
+      box.innerHTML = '<p class="app-note">' + t('Nothing yet.', 'अभी कुछ नहीं।') + '</p>';
       return;
     }
     state.payments.slice(0, 100).forEach(function (p) {
@@ -380,11 +391,11 @@
       b.textContent = 'Rs ' + rupees(p.paise) + ' · ' + (p.name || p.vpa || p.phone);
       var sub = document.createElement('span');
       sub.className = 'mono dim';
-      sub.textContent = new Date(p.at).toLocaleString() + ' · ' + p.rail + ' · ' + p.state;
+      sub.textContent = new Date(p.at).toLocaleString() + ' · ' + railText(p.rail) + ' · ' + stateLabel(p.state);
       left.appendChild(b); left.appendChild(sub);
       var act = document.createElement('button');
       act.className = 'linklike';
-      act.textContent = p.state === 'pending' ? 'mark paid' : 'mark pending';
+      act.textContent = stateAction(p.state);
       act.onclick = function () {
         p.state = p.state === 'pending' ? 'paid' : 'pending';
         save(); renderHistory();

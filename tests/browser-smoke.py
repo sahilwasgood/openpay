@@ -71,6 +71,15 @@ def main():
             tab(pg, 'history')
             assert 'Test Shop' in pg.locator('#histList').inner_text()
 
+            # History labels are translated too
+            tab(pg, 'settings')
+            pg.evaluate("document.getElementById('langHi').click()")
+            tab(pg, 'history')
+            assert 'लंबित' in pg.locator('#histList').inner_text()
+            tab(pg, 'settings')
+            pg.evaluate("document.getElementById('langEn').click()")
+            tab(pg, 'pay')
+
             # Recharge handoff and cap guard
             tab(pg, 'recharge')
             pg.fill('#rcNumber', '9876543210')
