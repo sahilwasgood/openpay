@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+"""End-to-end smoke test for the PWA. Uses system Chrome when available.
+
+Run from the repo root: python3 tests/browser-smoke.py
+Skips cleanly when Playwright or a browser is not installed.
+"""
+import os
+import sys
+from urllib.parse import quote
+
+try:
+    from playwright.sync_api import sync_playwright
+except ImportError:
+    print('SKIP: playwright not installed')
+    sys.exit(0)
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'site'))
+APP = 'file://' + os.path.join(ROOT, 'app.html')
+HOME = 'file://' + os.path.join(ROOT, 'index.html')
+CHROME = '/usr/bin/google-chrome'
+
+
+def tab(pg, name):
+    pg.evaluate("document.querySelector('.tab[data-tab=\\\"" + name + "\\\"]').click()")
+    pg.wait_for_timeout(80)
+
+
+def main():
+    with sync_playwright() as p:
+        opts = {'headless': True, 'args': ['--no-sandbox', '--no-proxy-server', '--disable-dev-shm-usage']}
+        if os.path.exists(CHROME):
+            opts['executable_path'] = CHROME
+        browser = p.chromium.launch(**opts)
+        try:
+            pg = browser.new_page(viewport={'width': 390, 'height': 844})
+            errors = []
+            pg.on('pageerror', lambda e: errors.append(str(e)))
+            pg.goto(APP, wait_until='load')
+
+            names = pg.locator('.tab').all_text_contents()
+            assert names == ['Pay', 'Recharge', 'History', 'Settings'], names
+            assert all('note' not in n.lower() and 'verify' not in n.lower() for n in names)
+
+            # QR paste autofill
+            pg.evaluate("document.getElementById('qrPasteWrap').classList.remove('hidden')")
+            pg.fill('#qrPaste', 'upi://pay?pa=test@ybl&pn=Test%20Shop&am=99&cu=INR')
+            pg.evaluate("document.getElementById('qrPasteBtn').click()")
+            pg.wait_for_timeout(100)
+            assert (pg.input_value('#pVpa'), pg.input_value('#pName'), pg.input_value('#pAmt')) == \
+                   ('test@ybl', 'Test Shop', '99')
+
+            # Pay link and history
+            pg.evaluate("document.getElementById('payBtn').click()")
+            pg.wait_for_timeout(100)
+            assert len(pg.evaluate("localStorage.getItem('op_payments')") or '') > 2
+            tab(pg, 'history')
+            assert 'Test Shop' in pg.locator('#histList').inner_text()
+
+            # Recharge handoff and cap guard
+            tab(pg, 'recharge')
+            pg.fill('#rcNumber', '9876543210')
+            pg.fill('#rcAmt', '199')
+            pg.fill('#rcAcct', '12345678901')
+            pg.wait_for_timeout(100)
+            bodies = pg.locator('#rcOutput .rc-code').all_text_contents()
+            assert any('MOBRC' in b for b in bodies), bodies
+            pg.fill('#rcAmt', '701')
+            pg.wait_for_timeout(100)
+            assert 'hidden' not in (pg.locator('#rcCapWarn').get_attribute('class') or '')
+            assert not any('MOBRC' in b for b in pg.locator('#rcOutput .rc-code').all_text_contents())
+
+            # Share target with a UPI link inside a sentence
+            shared = 'Pay me: upi://pay?pa=share@ybl&pn=Share&am=77'
+            share = browser.new_page()
+            share.goto(APP + '?text=' + quote(shared, safe=''), wait_until='load')
+            share.wait_for_timeout(100)
+            assert (share.input_value('#pVpa'), share.input_value('#pName'), share.input_value('#pAmt')) == \
+                   ('share@ybl', 'Share', '77')
+
+            # Landing rail demo
+            home = browser.new_page(viewport={'width': 390, 'height': 844})
+            home.goto(HOME, wait_until='load')
+            home.click('.seg[data-net="signal"]')
+            home.wait_for_timeout(100)
+            assert '*99#' in home.locator('#boardCopy').inner_text()
+            home.click('.seg[data-carrier="jio"]')
+            home.wait_for_timeout(100)
+            assert '123Pay' in home.locator('#boardCopy').inner_text()
+
+            assert not errors, errors[:3]
+        finally:
+            browser.close()
+    print('browser smoke PASS')
+
+
+if __name__ == '__main__':
+    main()

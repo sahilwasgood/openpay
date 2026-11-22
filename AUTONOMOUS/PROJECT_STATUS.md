@@ -36,6 +36,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-24 | iPadOS SMS handoff detection | COMPLETED | Macintosh user agents with multi-touch now use the iOS &body= separator, verified by test, 19 tests pass |
 | OP-25 | Share target with embedded UPI link | COMPLETED | URL anywhere in shared text now fills VPA, name and amount, verified in browser, 20 tests pass |
 | OP-26 | IVR rail decimal guard | COMPLETED | 123Pay DTMF links now require whole rupees with a clear hint, UPI intent keeps paise, verified offline in browser, 22 tests pass |
+| OP-27 | Commit a browser smoke test | COMPLETED | tests/browser-smoke.py covers tabs, QR autofill, history, recharge cap, share target and landing demo; passes with system Chrome |
 
 ## Architecture decision
 
