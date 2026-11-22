@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0D0F0E">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=13">
+<link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body class="webapp">
 
@@ -36,6 +36,7 @@
 
     <div class="tabs" role="tablist">
       <button class="tab on" data-tab="pay" type="button" data-i="tab_pay">Pay</button>
+      <button class="tab" data-tab="recharge" type="button" data-i="tab_recharge">Recharge</button>
       <button class="tab" data-tab="notes" type="button" data-i="tab_notes">Notes</button>
       <button class="tab" data-tab="verify" type="button" data-i="tab_verify">Verify</button>
       <button class="tab" data-tab="history" type="button" data-i="tab_history">History</button>
@@ -75,6 +76,104 @@
 
       <a class="btn btn-primary btn-block" id="payBtn" href="#">Choose a rail</a>
       <p class="app-note">Your PIN is typed in the UPI app, on the carrier menu, or on the call keypad. This page never sees it.</p>
+    </div>
+
+    <!-- RECHARGE -->
+    <div class="pane hidden" id="pane-recharge">
+      <div class="rc-stage">
+        <header class="rc-head">
+          <div>
+            <p class="rc-eyebrow" data-i="rc_eyebrow">Recharge handoff</p>
+            <h2 class="rc-title" data-i="rc_title">Top up, without us holding money.</h2>
+          </div>
+          <span class="rc-badge" data-i="rc_badge">No wallet · No server</span>
+        </header>
+        <p class="rc-intro" data-i="rc_intro">OpenPay never holds money. All we do is open your bank's SMS app or the dialer. You finish there, and your bank sends the confirmation.</p>
+
+        <p class="f-label rc-method-label" data-i="rc_method_label">Choose a method</p>
+        <div class="rc-methods" role="group" aria-label="Recharge method">
+          <button class="rc-method on" data-method="sbi" type="button" data-i="rc_sbi">SBI Quick</button>
+          <button class="rc-method" data-method="axis" type="button" data-i="rc_axis">Axis SMS</button>
+          <button class="rc-method" data-method="ivr" type="button" data-i="rc_ivr">UPI 123Pay</button>
+          <button class="rc-method" data-method="op" type="button" data-i="rc_op">Operator codes</button>
+        </div>
+
+        <div class="rc-grid">
+          <section class="glass rc-card">
+            <h3 class="rc-card-h" data-i="rc_details_h">1 · Your details</h3>
+
+            <div class="rc-field">
+              <label class="f-label rc-label" for="rcNumber" data-i="rc_number">Mobile number to recharge</label>
+              <input id="rcNumber" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10 digits" maxlength="10">
+            </div>
+            <div class="rc-field">
+              <label class="f-label rc-label" for="rcAmt" data-i="rc_amount">Amount, rupees</label>
+              <input id="rcAmt" type="number" inputmode="numeric" min="1" placeholder="500">
+            </div>
+
+            <div class="rc-field" data-for="sbi">
+              <label class="f-label rc-label" for="rcAcct" data-i="rc_acct">SBI account number, for one-time registration</label>
+              <input id="rcAcct" type="tel" inputmode="numeric" placeholder="Account number" autocomplete="off">
+            </div>
+            <div class="rc-field" data-for="sbi">
+              <label class="f-label rc-label" for="rcSbiToken" data-i="rc_token">Operator token</label>
+              <select id="rcSbiToken">
+                <option value="AIR">AIR · Airtel</option>
+                <option value="BSN">BSN · BSNL</option>
+                <option value="MTD">MTD · MTNL Delhi</option>
+                <option value="MTM">MTM · MTNL Mumbai</option>
+                <option value="JIO">JIO · Jio</option>
+                <option value="VI">VI · Vi</option>
+              </select>
+            </div>
+            <div class="rc-field" data-for="sbi">
+              <label class="f-label rc-label" for="rcOtp" data-i="rc_otp">SBI OTP, 6 digits, from the SMS</label>
+              <input id="rcOtp" type="tel" inputmode="numeric" placeholder="6 digits" maxlength="6">
+            </div>
+
+            <div class="rc-field" data-for="axis">
+              <label class="f-label rc-label" for="rcAxisOp" data-i="rc_token_edit">Operator token, edit if needed</label>
+              <input id="rcAxisOp" type="text" autocapitalize="characters" placeholder="AIR" value="AIR" list="rcOpList">
+              <datalist id="rcOpList">
+                <option value="AIR"></option><option value="BSN"></option><option value="MTD"></option>
+                <option value="MTM"></option><option value="JIO"></option><option value="VI"></option>
+              </datalist>
+              <p class="rc-mini" data-i="rc_axis_note">Axis does not publish exact Jio/Airtel/Vi tokens. Confirm the token with Axis before sending.</p>
+            </div>
+            <div class="rc-field" data-for="axis">
+              <label class="f-label rc-label" for="rcLast6" data-i="rc_last6">Last 6 digits of your Axis account</label>
+              <input id="rcLast6" type="tel" inputmode="numeric" placeholder="6 digits" maxlength="6">
+            </div>
+
+            <div class="rc-field" data-for="op">
+              <label class="f-label rc-label" for="rcOpSel" data-i="rc_opsel">Operator</label>
+              <select id="rcOpSel">
+                <option value="vi">Vi</option>
+                <option value="airtel">Airtel</option>
+                <option value="bsnl">BSNL</option>
+                <option value="mtnl">MTNL</option>
+                <option value="jio">Jio</option>
+              </select>
+            </div>
+            <div class="rc-field" data-for="op">
+              <label class="f-label rc-label" for="rcVoucher" data-i="rc_voucher">Voucher code, for BSNL RC code</label>
+              <input id="rcVoucher" type="text" autocapitalize="characters" placeholder="e.g. 12345">
+            </div>
+
+            <p class="rc-warn hidden" id="rcCapWarn" role="status"></p>
+          </section>
+
+          <section class="glass rc-card rc-out">
+            <h3 class="rc-card-h" data-i="rc_handoff_h">2 · Handoff</h3>
+            <div id="rcOutput"></div>
+          </section>
+        </div>
+
+        <aside class="glass rc-avoid">
+          <strong data-i="rc_avoid_h">Avoid these</strong>
+          <p data-i="rc_avoid">Vi+Paytm @paytm VPA (Paytm retired handles in August 2024) and ICICI SMS recharge. Neither gives a reliable top up.</p>
+        </aside>
+      </div>
     </div>
 
     <!-- NOTES -->
@@ -186,6 +285,6 @@
 </footer>
 
 <script src="vendor/qrcode.js"></script>
-<script src="webapp.js?v=12" defer></script>
+<script src="webapp.js?v=14" defer></script>
 </body>
 </html>

@@ -152,7 +152,20 @@
     lbl_backup: 'बैकअप और पुनर्स्थापना', lbl_backup_sub: 'ब्राउज़र स्टोरेज मिट सकता है। एक्सपोर्ट में आपकी कुंजी, नोट और इतिहास सुरक्षित रहते हैं।',
     btn_export_json: 'बैकअप निर्यात करें', btn_import_json: 'बैकअप पुनर्स्थापित करें',
     lbl_key: 'इस ब्राउज़र की साइनिंग कुंजी', btn_keycopy: 'पब्लिक की कॉपी करें', btn_wipe: 'सब मिटाएँ',
-    set_foot: 'OpenPay वेब सब कुछ सिर्फ़ इसी ब्राउज़र में रखता है। कोई सर्वर नहीं, कोई खाता नहीं।'
+    set_foot: 'OpenPay वेब सब कुछ सिर्फ़ इसी ब्राउज़र में रखता है। कोई सर्वर नहीं, कोई खाता नहीं।',
+    tab_recharge: 'रिचार्ज',
+    rc_eyebrow: 'रिचार्ज हैंडऑफ़', rc_title: 'रिचार्ज, बिना पैसे रखे।', rc_badge: 'कोई वॉलेट नहीं · कोई सर्वर नहीं',
+    rc_intro: 'OpenPay कभी पैसे नहीं रखता। हम सिर्फ़ आपके बैंक का SMS ऐप या डायलर खोलते हैं। बाकी आप करते हैं, और आपका बैंक कन्फर्मेशन भेजता है।',
+    rc_method_label: 'तरीका चुनें', rc_sbi: 'SBI Quick', rc_axis: 'Axis SMS', rc_ivr: 'UPI 123Pay', rc_op: 'ऑपरेटर कोड',
+    rc_details_h: '1 · आपकी जानकारी', rc_handoff_h: '2 · हैंडऑफ़',
+    rc_number: 'रिचार्ज करने वाला मोबाइल नंबर', rc_amount: 'रक़म, रुपयों में',
+    rc_acct: 'SBI खाता नंबर, एक बार पंजीकरण के लिए', rc_token: 'ऑपरेटर टोकन',
+    rc_otp: 'SBI OTP, 6 अंक, SMS से', rc_token_edit: 'ऑपरेटर टोकन, ज़रूरत हो तो बदलें',
+    rc_axis_note: 'Axis सटीक Jio/Airtel/Vi टोकन प्रकाशित नहीं करता। भेजने से पहले टोकन Axis से तय करें।',
+    rc_last6: 'अपने Axis खाते के आख़िरी 6 अंक', rc_opsel: 'ऑपरेटर',
+    rc_voucher: 'वाउचर कोड, BSNL RC कोड के लिए',
+    rc_avoid_h: 'इनसे बचें',
+    rc_avoid: 'Vi+Paytm @paytm VPA (Paytm ने August 2024 में हैंडल रिटायर किए) और ICICI SMS रिचार्ज। इनसे रिचार्ज भरोसेमंद नहीं है।'
   };
 
   var lang = LS.get('lang', 'en');
@@ -166,6 +179,7 @@
     $('langEn').classList.toggle('on', lang === 'en');
     $('langHi').classList.toggle('on', lang === 'hi');
     LS.set('lang', lang);
+    renderRecharge();
   }
   $('langEn').onclick = function () { lang = 'en'; applyLang(); };
   $('langHi').onclick = function () { lang = 'hi'; applyLang(); };
@@ -265,7 +279,7 @@
       if (f) { autofill(f); return; }
     }
     var h = (location.hash || '').replace('#', '');
-    if (['pay', 'notes', 'verify', 'history', 'settings'].indexOf(h) !== -1) switchTab(h);
+    if (['pay', 'recharge', 'notes', 'verify', 'history', 'settings'].indexOf(h) !== -1) switchTab(h);
   }
 
   // ---------- recent payees ----------
@@ -688,6 +702,225 @@
     }
   };
 
+  // ---------- recharge handoff ----------
+  // OpenPay holds no money and has no server. Builders below are pure: they
+  // return descriptors only. The DOM layer turns them into sms:/tel: links
+  // the handset opens. Nothing here can send a message or read a bank SMS.
+
+  var SBI_TARGET = '917208933145';
+  var SBI_REG_TARGET = '07208933148';
+  var SBI_DAILY_CAP = 700;
+
+  var recharge = {
+    method: LS.get('rc_method', 'sbi'),
+    number: LS.get('rc_number', '')
+  };
+
+  function rcDigits(s) { return (s || '').replace(/\D/g, ''); }
+  function smsHref(target, body) {
+    var ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+    var ios = /iP(hone|ad|od)/.test(ua);
+    return 'sms:' + target + (ios ? '&body=' : '?body=') + encodeURIComponent(body);
+  }
+  function smsLinks(targets, body) {
+    return targets.map(function (x) { return { label: x, href: smsHref(x, body) }; });
+  }
+  function step(title, instruction, body, links, note) {
+    return { ok: true, title: title, instruction: instruction, body: body, links: links, note: note || '' };
+  }
+  function fail(error) { return { ok: false, error: error }; }
+
+  // SBI Quick: one-time REG, then a two-step MOBRC / MOBACC flow.
+  function buildSbiRegister(account) {
+    var acc = (account || '').trim();
+    if (!/^\d+$/.test(acc)) return fail(t('Enter your SBI account number to see the one-time registration SMS', 'एक बार पंजीकरण का SMS देखने के लिए अपना SBI खाता नंबर दर्ज करें'));
+    var body = 'REG ' + acc;
+    return step(
+      t('One-time registration', 'एक बार पंजीकरण'),
+      t('Send this once from the mobile registered with your SBI account. Skip it if you already registered.', 'अपने SBI खाते से जुड़े मोबाइल से यह एक बार भेजें। अगर पहले हो चुका है तो छोड़ दें।'),
+      body, smsLinks([SBI_REG_TARGET], body),
+      t('Register to ' + SBI_REG_TARGET + ' · same registered mobile only.', SBI_REG_TARGET + ' पर पंजीकरण · सिर्फ़ उसी पंजीकृत मोबाइल से।')
+    );
+  }
+
+  function buildSbiStep1(number, amount, token) {
+    var n = rcDigits(number), a = Number(amount);
+    if (!/^\d{10}$/.test(n)) return fail(t('Enter a 10-digit mobile number', '10 अंकों का मोबाइल नंबर दर्ज करें'));
+    if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
+    if (a > SBI_DAILY_CAP) return fail(t('SBI Quick caps at Rs 700 per day (Rs 1,000 a month). Lower the amount.', 'SBI Quick की सीमा Rs 700 प्रति दिन (Rs 1,000 प्रति माह) है। रक़म घटाएँ।'));
+    var tok = (token || '').trim().toUpperCase();
+    if (!tok) return fail(t('Choose an operator token', 'ऑपरेटर टोकन चुनें'));
+    var body = 'MOBRC ' + tok + ' ' + a;
+    return step(
+      t('Step 1 · Start recharge', 'चरण 1 · रिचार्ज शुरू करें'),
+      t('Send this from the mobile registered with your SBI account. Your bank replies with a 6-digit OTP.', 'अपने SBI खाते से जुड़े मोबाइल से भेजें। आपका बैंक 6 अंकों का OTP भेजेगा।'),
+      body, smsLinks([SBI_TARGET], body),
+      t('Rs 700 a day, Rs 1,000 a month. Same registered mobile only.', 'प्रति दिन Rs 700, प्रति माह Rs 1,000। सिर्फ़ उसी पंजीकृत मोबाइल से।')
+    );
+  }
+
+  function buildSbiStep2(otp) {
+    var o = rcDigits(otp);
+    if (!/^\d{6}$/.test(o)) return fail(t('Enter the 6-digit OTP your bank just sent', 'बैंक ने जो 6 अंकों का OTP भेजा है वह दर्ज करें'));
+    var body = 'MOBACC ' + o;
+    return step(
+      t('Step 2 · Confirm with the OTP', 'चरण 2 · OTP से पुष्टि करें'),
+      t('Send this within 10 minutes of the OTP. Same registered mobile only.', 'OTP मिलने के 10 मिनट के भीतर भेजें। सिर्फ़ उसी पंजीकृत मोबाइल से।'),
+      body, smsLinks([SBI_TARGET], body)
+    );
+  }
+
+  // Axis: single SMS, no internet needed, any number. Token is editable.
+  function buildAxisSms(number, operator, amount, last6) {
+    var n = rcDigits(number), a = Number(amount), l6 = rcDigits(last6);
+    var op = (operator || '').trim().toUpperCase();
+    if (!/^\d{10}$/.test(n)) return fail(t('Enter a 10-digit mobile number', '10 अंकों का मोबाइल नंबर दर्ज करें'));
+    if (!op) return fail(t('Enter the operator token', 'ऑपरेटर टोकन दर्ज करें'));
+    if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
+    if (!/^\d{6}$/.test(l6)) return fail(t('Enter the last 6 digits of your Axis account', 'अपने Axis खाते के आख़िरी 6 अंक दर्ज करें'));
+    var body = 'MOBILE ' + n + ' ' + op + ' ' + a + ' ' + l6;
+    return step(
+      t('Send the Axis SMS', 'Axis SMS भेजें'),
+      t('Works without internet or GPRS, and can recharge any number. Confirm the operator token with Axis before sending.', 'इंटरनेट या GPRS के बिना चलता है और किसी भी नंबर का रिचार्ज कर सकता है। भेजने से पहले ऑपरेटर टोकन Axis से तय करें।'),
+      body, smsLinks(['9951860002', '56161600'], body),
+      t('If one number does not work, try the other.', 'अगर एक नंबर काम न करे तो दूसरा आज़माएँ।')
+    );
+  }
+
+  // UPI 123Pay: a phone call, the keypad drives the bank menu.
+  function buildIvr(number, amount) {
+    var n = rcDigits(number), a = Number(amount);
+    if (!/^\d{10}$/.test(n)) return fail(t('Enter a 10-digit mobile number', '10 अंकों का मोबाइल नंबर दर्ज करें'));
+    if (!a || a <= 0) return fail(t('Enter an amount above zero', 'शून्य से बड़ी रक़म दर्ज करें'));
+    return step(
+      t('Call UPI 123Pay', 'UPI 123Pay पर कॉल करें'),
+      t('Choose Mobile Recharge, say or confirm the operator, then enter the number and amount. Approve with your UPI PIN. Money moves bank → UPI → operator, no wallet.', 'मोबाइल रिचार्ज चुनें, ऑपरेटर बोलें या पुष्टि करें, फिर नंबर और रक़म दर्ज करें। UPI PIN से स्वीकृत करें। पैसे बैंक → UPI → ऑपरेटर जाते हैं, कोई वॉलेट नहीं।'),
+      '', [{ label: t('Dial 08045163666', '08045163666 डायल करें'), href: 'tel:08045163666' }],
+      t('Menu items vary by bank. Your number: ' + n + ' · Rs ' + a, 'मेन्यू बैंक अनुसार बदलता है। आपका नंबर: ' + n + ' · Rs ' + a)
+    );
+  }
+
+  // Operator self-service: spends existing balance or a voucher, no bank money.
+  function buildOperator(op, voucher) {
+    var v = (voucher || '').trim().toUpperCase();
+    if (v.indexOf('RC') === 0) v = v.slice(2);
+    function dial(label, code) { return { label: label, href: 'tel:' + code }; }
+
+    if (op === 'vi') return step('Vi',
+      t('Dial *199# and pick a plan. This spends your existing Vi balance, not bank money.', '*199# डायल करें और प्लान चुनें। यह आपके मौजूदा Vi बैलेंस से कटेगा, बैंक के पैसे से नहीं।'),
+      '', [dial(t('Dial *199#', '*199# डायल करें'), '*199%23')]);
+
+    if (op === 'airtel') return step('Airtel',
+      t('Dial *121# for recharge offers. For a data loan dial *567*3#.', 'रिचार्ज ऑफ़र के लिए *121# डायल करें। डेटा लोन के लिए *567*3# डायल करें।'),
+      '', [dial(t('Dial *121#', '*121# डायल करें'), '*121%23'), dial(t('Data loan *567*3#', 'डेटा लोन *567*3#'), '*567*3%23')]);
+
+    if (op === 'bsnl') {
+      var links = [dial(t('Dial *123#', '*123# डायल करें'), '*123%23')];
+      if (v) links.push({ label: t('SMS RC code to 123', 'RC कोड 123 पर भेजें'), href: smsHref('123', 'RC' + v) });
+      return step('BSNL',
+        t('Dial *123# to browse STV codes, or SMS RC followed by your voucher code to 123.', 'STV कोड देखने के लिए *123# डायल करें, या RC के बाद वाउचर कोड 123 पर SMS करें।'),
+        '', links,
+        v ? t('Voucher SMS: RC' + v, 'वाउचर SMS: RC' + v)
+          : t('Enter a voucher code above to enable the RC SMS link.', 'RC SMS लिंक चालू करने के लिए ऊपर वाउचर कोड दर्ज करें।'));
+    }
+
+    if (op === 'mtnl') return step('MTNL',
+      t('Dial *444#, then choose 4, then 1, to recharge.', '*444# डायल करें, फिर 4, फिर 1 चुनें।'),
+      '', [dial(t('Dial *444#', '*444# डायल करें'), '*444%23')]);
+
+    return step('Jio',
+      t('Jio has no USSD code. Use the MyJio app, or call the 1299 IVR and pick recharge.', 'Jio का कोई USSD कोड नहीं है। MyJio ऐप इस्तेमाल करें, या 1299 IVR पर कॉल कर रिचार्ज चुनें।'),
+      '', [dial(t('Call 1299', '1299 पर कॉल करें'), '1299')]);
+  }
+
+  // DOM layer: user values go in via textContent, never innerHTML.
+  function rcEl(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function rcStepCard(d, n) {
+    var card = rcEl('div', 'rc-step' + (d.ok ? '' : ' is-pending'));
+    var head = rcEl('div', 'rc-step-head');
+    head.appendChild(rcEl('span', 'rc-step-no', d.ok ? String(n) : '·'));
+    head.appendChild(rcEl('strong', 'rc-step-title', d.ok ? d.title : t('Waiting for details', 'जानकारी का इंतज़ार')));
+    card.appendChild(head);
+    if (!d.ok) {
+      card.appendChild(rcEl('p', 'rc-step-inst rc-pending', d.error));
+      return card;
+    }
+    if (d.instruction) card.appendChild(rcEl('p', 'rc-step-inst', d.instruction));
+    if (d.body) card.appendChild(rcEl('code', 'rc-code', d.body));
+    var acts = rcEl('div', 'rc-acts');
+    d.links.forEach(function (l) {
+      var a = rcEl('a', 'btn btn-primary btn-sm rc-handoff', l.label);
+      a.href = l.href;
+      acts.appendChild(a);
+    });
+    card.appendChild(acts);
+    if (d.note) card.appendChild(rcEl('p', 'rc-mini', d.note));
+    return card;
+  }
+
+  function renderRecharge() {
+    if (!$('rcOutput')) return;
+    document.querySelectorAll('.rc-method').forEach(function (b) {
+      var on = b.dataset.method === recharge.method;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('.rc-field[data-for]').forEach(function (f) {
+      f.classList.toggle('hidden', f.dataset.for !== recharge.method);
+    });
+
+    var number = $('rcNumber').value;
+    var amount = $('rcAmt').value;
+    var steps = [];
+    var over = recharge.method === 'sbi' && Number(amount) > SBI_DAILY_CAP;
+    $('rcCapWarn').classList.toggle('hidden', !over);
+    if (over) {
+      $('rcCapWarn').textContent = t(
+        'SBI Quick allows only Rs 700 per day (Rs 1,000 a month). This amount will not be sent.',
+        'SBI Quick सिर्फ़ Rs 700 प्रति दिन (Rs 1,000 प्रति माह) देता है। यह रक़म भेजी नहीं जाएगी।'
+      );
+    }
+
+    if (recharge.method === 'sbi') {
+      steps.push(buildSbiRegister($('rcAcct').value));
+      steps.push(buildSbiStep1(number, amount, $('rcSbiToken').value));
+      steps.push(buildSbiStep2($('rcOtp').value));
+    } else if (recharge.method === 'axis') {
+      steps.push(buildAxisSms(number, $('rcAxisOp').value, amount, $('rcLast6').value));
+    } else if (recharge.method === 'ivr') {
+      steps.push(buildIvr(number, amount));
+    } else {
+      steps.push(buildOperator($('rcOpSel').value, $('rcVoucher').value));
+    }
+
+    var out = $('rcOutput');
+    out.innerHTML = '';
+    steps.forEach(function (d, i) { out.appendChild(rcStepCard(d, i + 1)); });
+  }
+
+  $('rcNumber').value = recharge.number;
+  document.querySelectorAll('.rc-method').forEach(function (b) {
+    b.addEventListener('click', function () {
+      recharge.method = b.dataset.method;
+      LS.set('rc_method', recharge.method);
+      renderRecharge();
+    });
+  });
+  ['rcNumber', 'rcAmt', 'rcAcct', 'rcSbiToken', 'rcOtp', 'rcAxisOp', 'rcLast6', 'rcOpSel', 'rcVoucher'].forEach(function (id) {
+    var node = $(id);
+    node.addEventListener('input', function () {
+      if (id === 'rcNumber') { recharge.number = rcDigits(node.value); LS.set('rc_number', recharge.number); }
+      renderRecharge();
+    });
+    node.addEventListener('change', renderRecharge);
+  });
+
   // ---------- glue ----------
 
   function switchTab(name) {
@@ -699,6 +932,7 @@
     if (name === 'history') renderHistory();
     if (name === 'notes') renderOpenNotes();
     if (name === 'verify') renderReceivables();
+    if (name === 'recharge') renderRecharge();
   }
 
   document.querySelectorAll('.tab').forEach(function (t) {

@@ -14,6 +14,7 @@ import openpay.app.ui.Lang
 import openpay.app.ui.NotesScreen
 import openpay.app.ui.OnboardingScreen
 import openpay.app.ui.PayScreen
+import openpay.app.ui.RechargeScreen
 import openpay.app.ui.SettingsScreen
 import openpay.app.ui.theme.OpenPayTheme
 
@@ -41,8 +42,12 @@ class MainActivity : ComponentActivity() {
                             app = app,
                             onOpenHistory = { nav.navigate("history") },
                             onOpenNotes = { nav.navigate("notes") },
+                            onOpenRecharge = { nav.navigate("recharge") },
                             onOpenSettings = { nav.navigate("settings") }
                         )
+                    }
+                    composable("recharge") {
+                        RechargeScreen(onBack = { nav.popBackStack() })
                     }
                     composable("notes") {
                         NotesScreen(app = app, onBack = { nav.popBackStack() })

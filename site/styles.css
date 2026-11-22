@@ -21,6 +21,14 @@
   --font-body: "Inter", system-ui, -apple-system, sans-serif;
   --font-display: "Space Grotesk", var(--font-body);
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --glass-ink: #0B0F14;
+  --glass-fill: rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.18);
+  --glass-hi: rgba(255,255,255,0.28);
+  --glass-text: #E7EDF5;
+  --glass-muted: #94A3B8;
+  --glass-signal: #34D399;
+  --glass-warn: #FBBF24;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -689,4 +697,108 @@ body.webapp.elder .webapp-body { zoom: 1.22; }
 @media (max-width: 520px) {
   .vidgrid { grid-template-columns: 1fr; }
   .vidgrid video:nth-child(3), .vidgrid video:nth-child(4) { aspect-ratio: 9 / 16; }
+}
+
+/* ---------- liquid glass recharge handoff ---------- */
+
+.rc-stage {
+  position: relative; overflow: hidden;
+  background: var(--glass-ink); color: var(--glass-text);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 24px; padding: 26px 24px 24px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+}
+.rc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.rc-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--glass-signal); margin: 0 0 8px;
+}
+.rc-title { font-size: clamp(1.5rem, 4vw, 2.1rem); color: var(--glass-text); margin: 0; max-width: 20em; }
+.rc-badge {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
+  color: var(--glass-text); padding: 7px 12px; border-radius: 999px;
+  border: 1px solid var(--glass-border); background: var(--glass-fill); white-space: nowrap;
+}
+.rc-intro { color: var(--glass-muted); font-size: 14px; margin: 14px 0 4px; max-width: 44em; }
+.rc-method-label { color: var(--glass-muted); margin: 22px 0 8px; }
+.rc-methods { display: flex; gap: 8px; flex-wrap: wrap; }
+.rc-method {
+  min-height: 48px; padding: 0 16px; border-radius: 14px; cursor: pointer;
+  border: 1px solid var(--glass-border); background: var(--glass-fill);
+  color: var(--glass-muted); font-family: var(--font-display);
+  font-weight: 600; font-size: 14px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.rc-method:hover { color: var(--glass-text); border-color: rgba(255,255,255,0.34); }
+.rc-method.on { color: var(--glass-ink); background: var(--glass-signal); border-color: var(--glass-signal); }
+.rc-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); gap: 16px; margin-top: 18px; align-items: start; }
+
+/* reusable glass surface: translucent over ink, opaque fallback, top-left sheen */
+.glass {
+  position: relative;
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: 0 10px 34px rgba(0,0,0,0.32);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+.glass::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(135deg, var(--glass-hi), rgba(255,255,255,0) 42%);
+}
+.glass > * { position: relative; }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass { background: #151B24; }
+}
+
+.rc-card { padding: 20px; color: var(--glass-text); }
+.rc-card-h { font-size: 15px; margin: 0 0 6px; color: var(--glass-text); }
+.rc-label { color: var(--glass-muted); margin: 16px 0 6px; }
+.rc-stage input, .rc-stage select {
+  width: 100%; min-height: 48px; border-radius: 12px;
+  border: 1px solid var(--glass-border); background: rgba(255,255,255,0.07);
+  color: var(--glass-text); padding: 10px 13px; font-size: 16px; font-family: inherit;
+}
+.rc-stage input::placeholder { color: #6B7A8C; }
+.rc-stage input:focus, .rc-stage select:focus,
+.rc-method:focus-visible, .rc-handoff:focus-visible {
+  outline: 2px solid var(--glass-signal); outline-offset: 2px;
+}
+.rc-mini { font-size: 12px; color: var(--glass-muted); margin: 8px 0 0; line-height: 1.5; }
+.rc-warn {
+  margin: 16px 0 0; padding: 11px 13px; border-radius: 12px;
+  background: rgba(251,191,36,0.14); border: 1px solid rgba(251,191,36,0.45);
+  color: var(--glass-warn); font-size: 13px;
+}
+.rc-step { border-top: 1px solid var(--glass-border); padding: 16px 0; }
+.rc-step:first-child { border-top: 0; padding-top: 4px; }
+.rc-step-head { display: flex; align-items: center; gap: 10px; }
+.rc-step-no {
+  flex: none; width: 26px; height: 26px; border-radius: 50%;
+  border: 1px solid var(--glass-border); display: inline-flex;
+  align-items: center; justify-content: center; font-family: var(--mono); font-size: 12px;
+}
+.rc-step-title { font-size: 14.5px; }
+.rc-step-inst { color: var(--glass-muted); font-size: 13px; margin: 9px 0 0; line-height: 1.55; }
+.rc-step.is-pending .rc-step-title { color: var(--glass-muted); font-weight: 500; }
+.rc-code {
+  display: block; margin: 10px 0; padding: 10px 12px; border-radius: 10px;
+  background: rgba(0,0,0,0.28); border: 1px solid var(--glass-border);
+  font-family: var(--mono); font-size: 13.5px; color: var(--glass-signal); word-break: break-word;
+}
+.rc-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.rc-handoff { min-height: 48px; }
+.rc-avoid { margin-top: 16px; padding: 16px 20px; }
+.rc-avoid strong { font-size: 14px; color: var(--glass-warn); }
+.rc-avoid p { color: var(--glass-muted); font-size: 13px; margin: 6px 0 0; }
+
+@media (max-width: 720px) {
+  .rc-stage { padding: 20px 16px; border-radius: 18px; }
+  .rc-grid { grid-template-columns: 1fr; }
+  .rc-badge { white-space: normal; }
+}
+@media (max-width: 480px) {
+  .tabs { flex-wrap: wrap; }
+  .tab { flex: 1 1 30%; font-size: 13px; padding: 10px 2px; }
 }

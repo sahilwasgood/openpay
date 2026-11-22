@@ -17,8 +17,9 @@ class RailLogicTest {
         net: NetKind,
         carrier: String? = "Airtel",
         vpa: Boolean = true,
-        phone: Boolean = true
-    ) = RailContext(net, carrier, payeeHasVpa = vpa, payeeHasPhone = phone)
+        phone: Boolean = true,
+        amountPaise: Long = 45_000L
+    ) = RailContext(net, carrier, payeeHasVpa = vpa, payeeHasPhone = phone, amountPaise = amountPaise)
 
     @Test
     fun onlinePicksIntent() {
@@ -28,6 +29,29 @@ class RailLogicTest {
     @Test
     fun signalNonJioWithVpaPicksUssd() {
         assertEquals(RailPick.Ussd, RailDecider.pick(ctx(NetKind.SIGNAL, carrier = "Airtel")))
+    }
+
+    @Test
+    fun ussdAllowsTheAdvertisedFiveThousandCap() {
+        assertEquals(
+            RailPick.Ussd,
+            RailDecider.pick(ctx(NetKind.SIGNAL, amountPaise = 500_000L))
+        )
+    }
+
+    @Test
+    fun signalWithVpaOverUssdCapAndNoPhoneHasNoRail() {
+        val pick = RailDecider.pick(ctx(NetKind.SIGNAL, amountPaise = 500_001L, phone = false))
+        assertTrue(pick is RailPick.None)
+        assertEquals(RailPick.Reason.OVER_USSD_CAP, (pick as RailPick.None).reason)
+    }
+
+    @Test
+    fun signalWithVpaOverUssdCapFallsBackToIvrWhenPhonePresent() {
+        assertEquals(
+            RailPick.Ivr,
+            RailDecider.pick(ctx(NetKind.SIGNAL, amountPaise = 600_000L))
+        )
     }
 
     @Test

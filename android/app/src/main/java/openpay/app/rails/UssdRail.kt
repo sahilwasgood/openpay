@@ -11,6 +11,7 @@ object UssdRail {
 
     const val USSD_SEND_MONEY_VPA = "*99*1*3#"
     const val USSD_BALANCE = "*99*3#"
+    const val MAX_RUPEES: Long = 5_000L
 
     /** Dialable URI. # must be encoded, * survives as-is on every dialer tested. */
     fun dialUri(ussd: String = USSD_SEND_MONEY_VPA): Uri =

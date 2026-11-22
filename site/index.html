@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OpenPay · UPI that works with zero signal</title>
-<meta name="description" content="OpenPay picks the strongest rail that still works: UPI intent, USSD, IVR, or a signed offline Note that settles itself. Open source, no internet permission, no accounts.">
+<meta name="description" content="OpenPay picks the strongest rail that still works: UPI intent, USSD, IVR, or a signed offline Note you settle with one tap. Open source, no internet permission, no accounts.">
 <meta property="og:title" content="OpenPay · UPI that works with zero signal">
 <meta property="og:description" content="One payment, four rails. Works with data, with signal only, or with nothing at all.">
 <link rel="icon" href="icons/favicon.ico" sizes="any">
@@ -18,7 +18,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="OpenPay">
-<link rel="stylesheet" href="styles.css?v=13">
+<link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
 
@@ -137,8 +137,8 @@
         </div>
         <h3>OpenPay Note</h3>
         <p class="needs"><span>Nothing</span></p>
-        <p>A voucher signed on your phone and verified on theirs with zero signal. It settles over UPI the moment either phone reconnects.</p>
-        <p class="limit">₹2,000 per Note · shipped in v0.2</p>
+        <p>A voucher signed on your phone and verified on theirs with zero signal. One tap settles it over UPI when either phone reconnects.</p>
+        <p class="limit">₹2,000 per Note</p>
       </article>
     </div>
   </div>
@@ -174,7 +174,7 @@
       <div class="notes-step"><span>2</span><div><strong>Check it, offline.</strong> The payee scans. Signature, expiry, the Rs 2,000 cap and replay by serial, all verified on their phone. Zero network on either side.</div></div>
       <div class="notes-step"><span>3</span><div><strong>Honour it, online.</strong> Later, with signal, one tap opens your usual UPI app with payee and amount prefilled.</div></div>
     </div>
-    <p class="sub">Forged screenshots cannot pass, because nothing visual is trusted. The same slip cannot be shown twice, because the serial is remembered. And the receiver does not even need the app: any browser can check a Note on the <a href="verify.html">verify page</a>, loaded once and offline forever after.</p>
+    <p class="sub">Forged screenshots cannot pass, because nothing visual is trusted. The app and the web app remember serials, so the same slip cannot be spent twice there. The receiver does not even need the app: any browser can check a Note's signature and expiry on the <a href="verify.html">verify page</a>, loaded once and offline forever after. That bare page does not remember serials across visits, so replay checks need the app or web app.</p>
   </div>
 </section>
 
@@ -183,11 +183,11 @@
     <div>
       <p class="eyebrow">Merchant mode</p>
       <h2>For the counter. No soundbox, no fake screenshots.</h2>
-      <p class="sub">A customer with no signal taps Pay and hands you a Note. Your phone checks the signature offline, locks the amount, and reads it back out loud. When your connection returns, everything settles over UPI on its own.</p>
+      <p class="sub">A customer with no signal taps Pay and hands you a Note. Your phone checks the signature offline, locks the amount, and reads it back out loud. When your connection returns, one tap settles each Note over UPI.</p>
       <ul class="ticks">
         <li><strong>Verify offline.</strong> Ed25519 signatures checked on the device. No server, no data.</li>
         <li><strong>Hear it.</strong> Voice readback replaces the soundbox.</li>
-        <li><strong>Auto settle.</strong> The queue clears itself when the network returns.</li>
+        <li><strong>One tap to settle.</strong> Open a Note and tap Settle, or use Settle all open notes, which confirms them one at a time.</li>
       </ul>
     </div>
     <div class="receipt" aria-hidden="true">
@@ -201,7 +201,7 @@
       <div class="r-row"><span>Nonce</span><span class="mono">9C22E610</span></div>
       <div class="r-row"><span>Expires</span><span class="mono">18 Oct 2026, 21:04</span></div>
       <div class="r-row"><span>Signature</span><span class="mono">ed25519 · 64B</span></div>
-      <div class="r-foot">Settles over UPI on reconnect · replay proof by serial</div>
+      <div class="r-foot">Settle over UPI with a tap · replay proof in the app</div>
     </div>
   </div>
 </section>
@@ -237,8 +237,8 @@
       </div>
       <div class="trust">
         <h3>Encrypted on device</h3>
-        <p class="code">SQLCipher · keys in secure hardware</p>
-        <p>Every record lives in a local vault. Export anytime as CSV or PDF.</p>
+        <p class="code">AES-256-GCM · keys in Android Keystore</p>
+        <p>Every record lives in a local encrypted vault. Export anytime as CSV.</p>
       </div>
       <div class="trust">
         <h3>Signed, not screenshotted</h3>
@@ -256,7 +256,7 @@
     <div class="limits">
       <div class="limit-row"><span>UPI Intent</span><span>Your bank's limit, typically ₹1,00,000 a day. ₹5,00,000 for hospitals and taxes.</span></div>
       <div class="limit-row"><span>USSD · *99#</span><span>₹5,000 per payment. NPCI's cap on the channel.</span></div>
-      <div class="limit-row"><span>IVR · 123Pay</span><span>₹10,000 per payment. Raised by RBI in Nov 2024.</span></div>
+      <div class="limit-row"><span>IVR · 123Pay</span><span>₹10,000 per payment. Raised by RBI in Oct 2024.</span></div>
       <div class="limit-row"><span>OpenPay Notes</span><span>₹2,000 per Note, ₹10,000 open at once. Small by design, until trust grows.</span></div>
     </div>
   </div>
@@ -314,7 +314,7 @@
       </details>
       <details>
         <summary>What if the payee does not have the OpenPay app?</summary>
-        <p>With any signal at all, the USSD and IVR rails pay any UPI user, no app needed on their side. With zero signal, they verify in any browser at the <a href="verify.html">verify page</a>: the payer shares the Note as text, the payee pastes it, the signature is checked on their device. Loading the page once is enough, it keeps working offline afterwards. 60 KB over 2G or a shared hotspot is all the setup a shop needs, once.</p>
+        <p>With any signal at all, the USSD and IVR rails pay any UPI user, no app needed on their side. With zero signal, they check a Note in any browser at the <a href="verify.html">verify page</a>: the payer shares the Note as text, the payee pastes it, and the signature and expiry are checked on their device. The bare page does not remember serials across visits, so replay checks need the app or web app. Loading the page once is enough, it keeps working offline afterwards. 60 KB over 2G or a shared hotspot is all the setup a shop needs, once.</p>
       </details>
       <details>
         <summary>What if the payer never settles a Note?</summary>
@@ -338,7 +338,7 @@
       </details>
       <details>
         <summary>When can I install it?</summary>
-        <p>Three ways. The <a href="app.html">web app</a> pays, writes and verifies Notes, works offline once installed, no download needed: open it and tap Install in its header. The Android app carries the same rails plus bank SMS confirmation: one APK per version on Releases, F-Droid listing via IzzyOnDroid in submission for phones where Play Protect blocks sideloads. And the bare <a href="verify.html">verify page</a> checks any Note in any browser at all.</p>
+        <p>Three ways. The <a href="app.html">web app</a> pays, writes and verifies Notes, works offline once installed, no download needed: open it and tap Install in its header. The Android app carries the same rails plus bank SMS confirmation: one APK per version on Releases, F-Droid listing via IzzyOnDroid in submission for phones where Play Protect blocks sideloads. And the bare <a href="verify.html">verify page</a> checks any Note's signature and expiry in any browser, though replay checks need the app or web app.</p>
       </details>
       <details>
         <summary>Play Protect flags the APK. Is something wrong?</summary>
@@ -380,7 +380,7 @@
     <p>OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank. *99# and UPI 123Pay are NPCI services.</p>
   </div>
 </footer>
-<script src="app.js?v=12" defer></script>
+<script src="app.js?v=14" defer></script>
 
 <script>
 (function () {

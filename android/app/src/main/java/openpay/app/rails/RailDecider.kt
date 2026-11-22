@@ -7,7 +7,8 @@ data class RailContext(
     val net: NetKind,
     val carrierName: String?,
     val payeeHasVpa: Boolean,
-    val payeeHasPhone: Boolean
+    val payeeHasPhone: Boolean,
+    val amountPaise: Long
 )
 
 sealed interface RailPick {
@@ -16,7 +17,7 @@ sealed interface RailPick {
     data object Ivr : RailPick
     data class None(val reason: Reason) : RailPick
 
-    enum class Reason { NO_PAYEE, OFFLINE_NO_PHONE, NO_SIGNAL, NO_TELEPHONY }
+    enum class Reason { NO_PAYEE, OFFLINE_NO_PHONE, NO_SIGNAL, NO_TELEPHONY, OVER_USSD_CAP }
 }
 
 /**
@@ -25,7 +26,7 @@ sealed interface RailPick {
  * ONLINE        -> UPI intent handoff
  * SIGNAL, Jio   -> IVR (Jio's all IP network carries no USSD)
  * SIGNAL, other -> USSD when we have a VPA, IVR when we only have a phone
- * NONE          -> nothing works yet (OpenPay Notes arrive in the next release)
+ * NONE          -> nothing works, sign an OpenPay Note instead
  */
 object RailDecider {
 
@@ -42,9 +43,9 @@ object RailDecider {
             isJio(ctx.carrierName) ->
                 if (ctx.payeeHasPhone) RailPick.Ivr
                 else RailPick.None(RailPick.Reason.OFFLINE_NO_PHONE)
-            ctx.payeeHasVpa -> RailPick.Ussd
+            ctx.payeeHasVpa && ctx.amountPaise <= UssdRail.MAX_RUPEES * 100 -> RailPick.Ussd
             ctx.payeeHasPhone -> RailPick.Ivr
-            else -> RailPick.None(RailPick.Reason.NO_PAYEE)
+            else -> RailPick.None(RailPick.Reason.OVER_USSD_CAP)
         }
         NetKind.NONE -> RailPick.None(RailPick.Reason.NO_SIGNAL)
     }

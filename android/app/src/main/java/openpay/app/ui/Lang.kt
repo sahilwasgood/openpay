@@ -61,6 +61,8 @@ private val hi: Map<String, String> = mapOf(
     "No network at all right now. Create an OpenPay Note instead: it verifies offline and settles over UPI later. The ticket icon opens Notes." to
         "अभी नेट है ही नहीं। इसकी जगह OpenPay नोट बनाएं: वह ऑफ़लाइन जाँचा जाता है और बाद में UPI से चुकता होता है। टिकट आइकन से नोट खुलता है।",
     "No SIM detected on this phone." to "इस फ़ोन में SIM नहीं मिला।",
+    "USSD *99# is capped at Rs 5,000 per payment. Lower the amount, add a phone number for 123Pay, or wait for data." to
+        "USSD *99# की एक भुगतान सीमा ₹5,000 है। राशि घटाएँ, 123Pay के लिए फ़ोन नंबर जोड़ें, या डेटा का इंतज़ार करें।",
     "The 123Pay call needs whole rupees. Drop the paise or use a UPI ID with data." to
         "123Pay कॉल में पूरे रुपये चाहिए। पैसे हटाएँ या डेटा पर UPI ID इस्तेमाल करें।",
     "Your UPI PIN is typed on the carrier menu or the call keypad. OpenPay never sees it." to
@@ -242,7 +244,48 @@ private val hi: Map<String, String> = mapOf(
     "Decline" to "अस्वीकार",
     "declined by you" to "आपने अस्वीकार किया",
     "MDR structuring warning" to
-        "₹2,000 से बड़े P2M भुगतान पर MDR प्राप्तकर्ता व्यापारी देता है, और NPCI एक ही खरीद को छोटे भुगतानों में बाँटकर बचाने से रोकता है। इससे आपका कुछ नहीं बचता और आयकर कुल रक़म देखता है, लेन-देन का आकार नहीं। सिर्फ़ सचमुच अलग हिस्सों के लिए बाँटें।"
+        "₹2,000 से बड़े P2M भुगतान पर MDR प्राप्तकर्ता व्यापारी देता है, और NPCI एक ही खरीद को छोटे भुगतानों में बाँटकर बचाने से रोकता है। इससे आपका कुछ नहीं बचता और आयकर कुल रक़म देखता है, लेन-देन का आकार नहीं। सिर्फ़ सचमुच अलग हिस्सों के लिए बाँटें।",
+    // recharge handoff
+    "Recharge" to "रिचार्ज",
+    "Offline recharge" to "ऑफ़लाइन रिचार्ज",
+    "Back" to "वापस",
+    "Buy a data pack with zero mobile data" to "बिना मोबाइल डेटा के डाटा पैक खरीदें",
+    "OpenPay never touches the money. It composes the message or dials the number. You confirm on the handset, your bank pays, the operator credits the number." to
+        "OpenPay कभी पैसे को छूता नहीं। वह संदेश तैयार करता है या नंबर डायल करता है। आप फ़ोन पर पुष्टि करते हैं, आपका बैंक भुगतान करता है, ऑपरेटर नंबर में डाटा देता है।",
+    "How do you want to pay?" to "आप कैसे भुगतान करना चाहते हैं?",
+    "SBI SMS" to "SBI SMS",
+    "Axis SMS" to "Axis SMS",
+    "UPI 123Pay" to "UPI 123Pay",
+    "Operator menu" to "ऑपरेटर मेन्यू",
+    "Operator" to "ऑपरेटर",
+    "Amount in rupees" to "राशि, रुपयों में",
+    "SBI Quick: Rs 700 a day, Rs 1000 a month, your own registered mobile only." to
+        "SBI Quick: प्रतिदिन ₹700, प्रति महीने ₹1,000, केवल आपके पंजीकृत मोबाइल से।",
+    "Step 1 of 2 · Compose bank SMS" to "चरण 1 of 2 · बैंक SMS तैयार करें",
+    "After the OTP SMS arrives, enter its 6 digits and send the second SMS within 10 minutes." to
+        "OTP SMS आने पर उसके 6 अंक दर्ज करें और 10 मिनट के भीतर दूसरा SMS भेजें।",
+    "6 digit OTP" to "6 अंकों का OTP",
+    "Step 2 of 2 · Confirm" to "चरण 2 of 2 · पुष्टि करें",
+    "Any mobile number, no internet. Confirm the operator token with Axis." to
+        "कोई भी मोबाइल नंबर, बिना इंटरनेट। ऑपरेटर टोकन Axis से जाँच लें।",
+    "Mobile number" to "मोबाइल नंबर",
+    "Operator token, eg JIO" to "ऑपरेटर कोड, जैसे JIO",
+    "Last 6 digits of Axis account" to "Axis खाते के आख़िरी 6 अंक",
+    "Compose Axis SMS" to "Axis SMS तैयार करें",
+    "UPI 123Pay voice line" to "UPI 123Pay वॉइस लाइन",
+    "Dial 080 4516 3666, choose Mobile Recharge, say the operator, enter the number and amount, then your UPI PIN. Your bank pays the operator directly. Menu wording depends on your bank." to
+        "080 4516 3666 डायल करें, Mobile Recharge चुनें, ऑपरेटर बोलें, नंबर और राशि दर्ज करें, फिर UPI PIN डालें। आपका बैंक सीधे ऑपरेटर को भुगतान करता है। मेन्यू के शब्द आपके बैंक पर निर्भर हैं।",
+    "Dial UPI 123Pay" to "UPI 123Pay डायल करें",
+    "Jio carries no USSD. Use the MyJio app or a retailer for a data pack. This menu is for balance and offers only." to
+        "Jio पर USSD नहीं चलता। डाटा पैक के लिए MyJio ऐप या दुकान इस्तेमाल करें। यह मेन्यू सिर्फ़ बैलेंस और ऑफ़र के लिए है।",
+    "Spends existing balance or a voucher, not bank money." to
+        "यह मौजूदा बैलेंस या वाउचर खर्च करता है, बैंक के पैसे नहीं।",
+    "Dial operator menu" to "ऑपरेटर मेन्यू डायल करें",
+    "Good to know" to "जान लेना अच्छा है",
+    "A website cannot run USSD or send SMS by itself. You always see and confirm the message or call in your own phone app. OpenPay has no internet permission, no server, and never holds funds." to
+        "वेबसाइट अपने आप USSD चला या SMS नहीं भेज सकती। आप हमेशा अपने फ़ोन के ऐप में संदेश या कॉल देखकर पुष्टि करते हैं। OpenPay के पास इंटरनेट अनुमति नहीं, कोई सर्वर नहीं, और वह कभी पैसे नहीं रखता।",
+    "No SMS app found" to "कोई SMS ऐप नहीं मिला",
+    "No dialer found" to "कोई डायलर नहीं मिला"
 )
 
 /** Composable lookup, falls back to the English literal. */

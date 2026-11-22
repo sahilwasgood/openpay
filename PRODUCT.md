@@ -1,6 +1,6 @@
 # OpenPay: Product Spec v0
 
-Pay when the network cannot. An open source Android app and site for UPI payments that degrade gracefully from full data to zero signal, with deferred settlement that clears itself.
+Pay when the network cannot. An open source Android app and site for UPI payments that degrade gracefully from full data to zero signal, with deferred settlement you confirm in one tap.
 
 One line: **scan or type, OpenPay picks the best rail that still works, and every payment either confirms or tells you exactly what happens next.**
 
@@ -8,7 +8,7 @@ One line: **scan or type, OpenPay picks the best rail that still works, and ever
 
 Not another USSD wrapper. The two reference apps (Flowpay, OffPayApp) each implement one slice and stop. OpenPay is the full ladder plus the payee side, built to be the app people actually install before a trip, a concert, or life in a low signal town.
 
-Non-goals: we are not a TPAP, not a wallet, never hold funds, no accounts on a server, no analytics, ads, or tracking. Open source, reproducible builds, APK on GitHub Releases and the site.
+Non-goals: we are not a TPAP, not a wallet, never hold funds, no accounts on a server, no analytics, ads, or tracking. No server backend at all: the domain/rules layer is what a conventional app would call a backend, and it runs on the device. We are not a payment aggregator, so there is no collection or settlement flow. A server would break the privacy promise, and collecting from a payer to settle with an operator would make OpenPay an unlicensed payment aggregator. Open source, reproducible builds, APK on GitHub Releases and the site.
 
 ## The core mechanic: the rail ladder
 
@@ -17,18 +17,24 @@ Every payment runs the same decision:
 1. **Intent (data available)**. Hand off to any installed UPI app via `upi://pay` with prefilled VPA, amount, note. We orchestrate; the user's bank app does the network.
 2. **USSD (no data, GSM signal, not Jio)**. Dial `*99#` flows. QR payload fills the amount; the carrier session completes with PIN.
 3. **IVR (Jio, or USSD failed)**. 123Pay IVR `080 4516 3666` with sequenced DTMF payload (recipient phone, amount, confirm). Fixes the gap both repos leave: Jio is India's largest carrier.
-4. **OpenPay Note (zero signal, or every rail failed)**. A signed offline voucher: amount, payee, nonce, serial, expiry, created in under 3 seconds. The payee verifies it offline against the payer's public key. When either phone regains connectivity, the payer's app fires the UPI intent to settle and both ledgers reconcile automatically.
+4. **OpenPay Note (zero signal, or every rail failed)**. A signed offline voucher: amount, payee, nonce, serial, expiry, created in under 3 seconds. The payee verifies it offline against the payer's public key. When either phone regains connectivity, one tap in the payer's app fires the UPI intent to settle and both ledgers reconcile.
 
 Confirmation truth, inherited from Flowpay and hardened: pending row written before dial, bank SMS captured only inside a tight operation window, sender ID checked against the known bank shortcode (both reference apps skip this), dedup by amount and window, "no confirmation, no record" honesty.
+
+## Recharge handoff
+
+A recharge is a different job from a payment: the payee is an operator and the bank SMS paths need no data or VPA. OpenPay does not send money. The domain/rules layer builds the exact SMS body and destination, or opens the dialer for a USSD or IVR path, and the user sends or confirms it on the handset. The bank debits the payer's account or the prepaid balance and credits the operator. OpenPay holds nothing.
+
+The paths, codes, limits and sources are in [docs/RECHARGE.md](docs/RECHARGE.md), checked against official pages on 2026-11-22. They cover SBI Quick and Axis SMS recharge, the Mobile Recharge menu on the UPI 123Pay IVR, operator self service menus that need no bank money, and two dead paths: the Vi plus Paytm `@paytm` VPA and ICICI SMS recharge. The website cannot send SMS or run USSD, so the web app builds `sms:` and `tel:` handoffs and the user finishes on the handset.
 
 ## Feature set
 
 v1 (the wedge)
 - One box: scan QR (ZXing + CameraX, offline), type UPI ID or phone, or pick a contact
 - Rail ladder 1-3 with live network and carrier detection; Jio detection up front
-- Signed OpenPay Notes: create, verify, settle; keys exchanged by QR or NFC when parties meet; Ed25519 signatures, serial + nonce replay protection, per Note cap ₹2,000 and ₹10,000 outstanding (RBI small value offline comfort zone)
-- Merchant mode: accept Notes offline, offline verify, TTS voice confirmation (soundbox alternative), pending settlement queue that clears automatically
-- Encrypted local ledger (SQLCipher + Keystore), CSV and PDF export
+- Signed OpenPay Notes: create, verify, settle; keys exchanged by QR when parties meet (NFC is on the v2 list); Ed25519 signatures, serial + nonce replay protection, per Note cap ₹2,000 and ₹10,000 outstanding (RBI small value offline comfort zone)
+- Merchant mode: accept Notes offline, offline verify, TTS voice confirmation (soundbox alternative), pending settlement queue cleared with one tap per Note
+- Encrypted local ledger (AES-256-GCM EncryptedFile + Keystore), CSV export (PDF not yet shipped)
 - Pending tracker: every unconfirmed outbound payment shows the NPCI clock (T+1 auto reversal, T+5 refund deadline, ₹100/day penalty) with one tap escalation templates (bank email, upihelp.npci.org.in link)
 - No INTERNET permission at all. Settlement goes through the UPI intent handoff, which runs in the user's installed UPI app. Verifiable claim, not a promise
 - English + Hindi at minimum; architecture ready for 8 more languages (both repos failed here)

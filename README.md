@@ -13,7 +13,13 @@ OpenPay is an open source Android app and web app for India. You never pick a ra
 
 ## A Note is a promissory note
 
-The kirana shop already solved this: udhaar goes in the khata book, both sides trust the record, it is settled later. A Note is the same slip, digital. The payer's phone signs the amount, payee, serial and expiry with an Ed25519 key that never leaves the phone. The payee verifies the signature, expiry, cap and replay state fully offline, by app or in [any browser](https://sahilwasgood.github.io/openpay/verify.html). With signal back, one tap settles over normal UPI. No money is held, ever. Strangers are capped at Rs 500 with explicit accept, blocked keys are refused on sight.
+The kirana shop already solved this: udhaar goes in the khata book, both sides trust the record, it is settled later. A Note is the same slip, digital. The payer's phone signs the amount, payee, serial and expiry with an Ed25519 key that never leaves the phone. The payee verifies the signature, expiry and cap fully offline, in the app or in [any browser](https://sahilwasgood.github.io/openpay/verify.html). Replay by serial is remembered in the app and the web app. The bare verify page checks the signature but cannot remember serials across visits, so use the app or web app for replay checks. With signal back, one tap settles over normal UPI. No money is held, ever. Strangers are capped at Rs 500 with explicit accept, blocked keys are refused on sight.
+
+## Recharge, composed on your phone
+
+A recharge is not a payment. With no data, OpenPay builds the exact bank SMS or opens the dialer for a USSD or IVR path, and you send or confirm it on the handset. The bank or operator moves the money from your account or prepaid balance to the operator. OpenPay never holds it. Codes, operators, limits and sources are in [docs/RECHARGE.md](docs/RECHARGE.md). A website cannot send SMS or run a USSD session, so the web app hands off with `sms:` and `tel:` links and you finish on the phone.
+
+There is no server behind it. The rules that pick a path and build the message are the domain/rules layer, pure code on your device, what a conventional app would put in a backend. A server would break the no INTERNET permission and no accounts promise, and a collection and settlement flow would make OpenPay an unlicensed payment aggregator. OpenPay only composes the instruction you send.
 
 ## Trust, in the manifest
 
@@ -39,6 +45,7 @@ Kotlin and Compose, one framework free site, 48 tests, CI that signs and release
 - `android/` the app
 - `site/` the site and PWA
 - `docs/ARCHITECTURE.md` the system map
+- `docs/RECHARGE.md` every recharge path, code and limit
 - `RESEARCH.md` the UPI research this is built on
 - `PRODUCT.md` the product spec
 

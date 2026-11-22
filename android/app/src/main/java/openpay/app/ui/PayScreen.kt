@@ -28,6 +28,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.ConfirmationNumber
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -92,6 +93,7 @@ fun PayScreen(
     app: OpenPayApp,
     onOpenHistory: () -> Unit,
     onOpenNotes: () -> Unit,
+    onOpenRecharge: () -> Unit,
     onOpenSettings: () -> Unit
 ) {
     val context = LocalContext.current
@@ -122,7 +124,12 @@ fun PayScreen(
         phone = phone.trim().ifBlank { null }
     )
     val pick = RailDecider.pick(
-        RailContext(net, carrier, payeeHasVpa = payee.vpa != null, payeeHasPhone = payee.phone != null)
+        RailContext(
+            net, carrier,
+            payeeHasVpa = payee.vpa != null,
+            payeeHasPhone = payee.phone != null,
+            amountPaise = amountPaise
+        )
     )
     val rupeesString = if (amountPaise > 0) RupeeFormat.format(amountPaise) else ""
     val ivrRupees = amountPaise / 100
@@ -262,6 +269,9 @@ fun PayScreen(
                     }
                     IconButton(onClick = onOpenNotes) {
                         Icon(Icons.Filled.ConfirmationNumber, contentDescription = "Notes")
+                    }
+                    IconButton(onClick = onOpenRecharge) {
+                        Icon(Icons.Filled.Phone, contentDescription = s("Recharge"))
                     }
                     IconButton(onClick = onOpenSettings) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
@@ -549,6 +559,8 @@ private fun noneCopy(reason: RailPick.Reason): String = when (reason) {
     RailPick.Reason.NO_SIGNAL ->
         s("No network at all right now. Create an OpenPay Note instead: it verifies offline and settles over UPI later. The ticket icon opens Notes.")
     RailPick.Reason.NO_TELEPHONY -> s("No SIM detected on this phone.")
+    RailPick.Reason.OVER_USSD_CAP ->
+        s("USSD *99# is capped at Rs 5,000 per payment. Lower the amount, add a phone number for 123Pay, or wait for data.")
 }
 
 @Composable

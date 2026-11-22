@@ -53,7 +53,7 @@ Read: the USSD wrapper idea keeps being reinvented every few months and dying. T
 | Rail | How | Limits | Status Oct 2026 |
 |---|---|---|---|
 | USSD *99# | SIM signaling channel, menu driven | ₹5,000/txn (raised from ₹10,000 proposal line; see [RBI](https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=53385)) | Alive, flat/declining use, dead on Jio VoLTE |
-| UPI 123Pay | 4 channels: IVR 080 4516 3666, app on feature phone, sound based (ToneTag), missed call pay | ₹5,000/txn | Alive technically, commercially dead; PhonePe launched it only Sep 2026 to "revive" it |
+| UPI 123Pay | 4 channels: IVR 080 4516 3666, app on feature phone, sound based (ToneTag), missed call pay | ₹10,000/txn, raised by RBI in Oct 2024 | Alive technically, commercially dead; PhonePe launched it only Sep 2026 to "revive" it |
 | UPI Lite | On device wallet | ₹1,000/txn no PIN, ₹5,000 wallet | ~50M users, ~5-10% of volume, buried in bank app UIs |
 | UPI Lite X | NFC debit from Lite wallet, no internet, no PIN | small per txn (~₹500) | Shipped 2023, near zero adoption |
 | UPI Tap & Pay | Phone taps PoS over NFC, unlock only | no PIN to ₹2,000-5,000 | Launched Sep 2026 at GFF; PoS still needs internet |
@@ -85,9 +85,17 @@ Read: the USSD wrapper idea keeps being reinvented every few months and dying. T
 ## 7. White space (what nobody ships)
 
 1. **Graceful degradation.** UPI today is binary: works or errors. No app walks a fallback ladder (intent → USSD → IVR → deferred) automatically.
-2. **Consumer offline queuing.** A signed payment intent passed payer to payee via QR/NFC, verified offline, auto-settled via UPI when either side reconnects. RBI's small value offline framework is the legal backdrop; nobody has built the consumer version.
+2. **Consumer offline queuing.** A signed payment intent passed payer to payee via QR/NFC, verified offline, settled with one tap over UPI when either side reconnects. RBI's small value offline framework is the legal backdrop; nobody has built the consumer version.
 3. **Offline merchant verification.** Cryptographic vouchers kill the fake screenshot problem; TTS voice confirmation kills the soundbox dependence. No open source product does both.
 4. **Pending payment justice.** Every stuck transaction app shows a spinner; none explains T+1/T+5 rights or automates escalation.
 5. **Trust posture as a feature.** Both repos proved the pitch (no INTERNET permission, no server) dies without distribution and polish. Neither shipped an APK or a language beyond English.
 
 The conclusion: OpenPay should not be "another USSD wrapper". It should be the complete ladder plus deferred settlement plus merchant verification, in a package simple enough for a shopkeeper and a parent.
+
+## 8. Recharge without data (checked 2026-11-22)
+
+Recharge is not a UPI payment. The bank SMS paths need only signal. SBI Quick registers with `REG <account>` to 07208933148, then `MOBRC <AIR|BSN|MTD|MTM|JIO|VI> <amount>` to 917208933145, then `MOBACC <OTP>` within 10 minutes, capped at Rs 700 a day and Rs 1000 a month, same registered mobile only ([SBI](https://sbi.bank.in/web/personal-banking/information-services/kyc-guidelines/sbi-quick-missed-call-banking)). Axis sends `MOBILE <number> <operator> <amount> <last6>` to 9951860002 or 56161600, no internet or GPRS, any target prepaid number ([Axis](https://www.axis.bank.in/bank-smart/sms-banking/recharge-through-sms)).
+
+The other live paths: UPI 123Pay IVR 08045163666 has a Mobile Recharge menu through a biller, bank -> UPI -> operator, no wallet, and the menu varies by bank. Bharat Connect postpaid covers all major operators, but prepaid data packs only BSNL and MTNL. Operator self service needs no bank money: Vi `*199#`, Airtel `*121#` or `*567*3#`, BSNL `*123#` with STV and RC, MTNL `*444#`, Jio app or IVR only. Two old paths are dead: the Vi plus Paytm `@paytm` VPA, with Paytm retiring handles on 1 Aug 2024, and ICICI SMS recharge, stopped 9 Mar 2023. Full table, sources, liveness and verification gaps in [docs/RECHARGE.md](docs/RECHARGE.md).
+
+The architecture stays local. What a conventional app would call a backend is here the domain/rules layer, pure on-device code that picks the path and formats the handoff. A server would break the no INTERNET permission and no accounts promise, and a collection and settlement flow would make OpenPay an unlicensed payment aggregator. OpenPay composes the instruction, the user sends it, and the money moves bank or prepaid balance to operator directly.
