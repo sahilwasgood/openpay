@@ -27,6 +27,11 @@ if (from < 0 || to < 0 || to < from) {
       { vpa: 'test@ybl', name: 'Test Shop', amt: '99' });
   });
 
+  test('UPI link inside a shared sentence fills the amount too', () => {
+    assert.deepEqual(JSON.parse(JSON.stringify(parse('Pay me: upi://pay?pa=share%40ybl&pn=Share&am=77'))),
+      { vpa: 'share@ybl', name: 'Share', amt: '77' });
+  });
+
   test('malformed percent-encoding returns null instead of throwing', () => {
     assert.doesNotThrow(() => assert.equal(parse('upi://pay?pa=%ZZ&pn=Bad'), null));
     assert.equal(parse('upi://pay?pa=ok%40ybl&pn=%E0%A4%A'), null);

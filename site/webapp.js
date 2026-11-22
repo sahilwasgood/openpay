@@ -257,7 +257,7 @@
   // @parse-upi-start
   function parseUpi(text) {
     var t = (text || '').trim();
-    var m = t.match(/^upi:\/\/pay\?([^#]*)/i);
+    var m = t.match(/upi:\/\/pay\?([^#\s]*)/i);
     if (m) {
       var q = {};
       try {
