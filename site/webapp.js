@@ -254,15 +254,18 @@
 
   // ---------- QR autofill, contacts, balance ----------
 
+  // @parse-upi-start
   function parseUpi(text) {
     var t = (text || '').trim();
     var m = t.match(/^upi:\/\/pay\?([^#]*)/i);
     if (m) {
       var q = {};
-      m[1].split('&').forEach(function (kv) {
-        var p = kv.split('=');
-        q[decodeURIComponent(p[0]).toLowerCase()] = decodeURIComponent((p[1] || '').replace(/\+/g, ' '));
-      });
+      try {
+        m[1].split('&').forEach(function (kv) {
+          var p = kv.split('=');
+          q[decodeURIComponent(p[0]).toLowerCase()] = decodeURIComponent((p[1] || '').replace(/\+/g, ' '));
+        });
+      } catch (e) { return null; }
       if (q.pa) {
         return { vpa: q.pa, name: q.pn || '', amt: q.am ? String(Number(q.am)) : '' };
       }
@@ -271,6 +274,7 @@
     if (v) return { vpa: v[0], name: '', amt: '' };
     return null;
   }
+  // @parse-upi-end
 
   function autofill(f) {
     $('pVpa').value = f.vpa || '';
