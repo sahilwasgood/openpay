@@ -44,9 +44,8 @@ Stroke based, 1.7 weight, round caps, single color. Filled shapes only for the b
 
 ## Applications in this repo
 
-- Site and web app: `site/styles.css` is the token source of truth for the web.
-- Android: `ui/theme/Theme.kt` mirrors the same tokens, Space Grotesk and Inter ship as variable fonts in `res/font/`.
-- Videos: `brand/videos/` holds the HyperFrames projects. Each `index.html` is a self-contained composition; regenerate any of them with `npx hyperframes render --quality looks --output out.mp4`.
+- Site and PWA: `site/styles.css` is the token source of truth. The liquid glass surface is reusable as `.glass` and uses the `--glass-*` tokens.
+- Videos: `brand/videos/` holds four portrait HyperFrames projects, all 1080 by 1920. Each `index.html` is a self-contained composition; regenerate with `bunx --bun hyperframes@0.8.181 render --resolution portrait --quality looks`. Outputs are copied to `brand/final/` and `site/videos/`.
 
 ## Copy rules
 

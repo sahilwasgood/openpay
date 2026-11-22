@@ -2,41 +2,41 @@
 
 Instructions for coding agents working in this repository. Human forkers: `CONTRIBUTING.md`. System map: `docs/ARCHITECTURE.md`.
 
-## Build and test
+OpenPay is a single installable PWA. There is no build step and no test runner in this repo.
+
+## Preview and verify
 
 ```
-cd android
-./gradlew test assembleDebug        # everything, JDK 17+, SDK platform 34
-./gradlew assembleRelease           # signed if keystore.properties exists (gitignored)
+cd site
+python3 -m http.server 8000
 ```
 
-Local toolchain on this machine: Gradle 8.7 at `~/tools/gradle-8.7`, Android SDK at `~/android-sdk`. CI does the same on ubuntu-latest.
+Open `http://localhost:8000/app.html`. Verify a change by exercising Pay, Recharge, History and Settings in a browser, then check install and offline with the service worker. Use a desktop browser and a phone. There is no SDK, no JDK and no package install.
 
 ## Layout
 
-- `android/app/src/main/java/openpay/app/rails/` payment rail logic, pure Kotlin, unit tested. RailDecider, IntentRail, UssdRail, IvrRail, SmsParser, SmsConfirmations, Guards, Mdr, ExpenseParser.
-- `android/app/src/main/java/openpay/app/notes/` the promissory note instrument. Notes (Ed25519, canonical string), NotesStore, PayerLimits, Split, NoteQr.
-- `android/app/src/main/java/openpay/app/data/` persistence. Ledger and Vault (EncryptedFile), Banks, ExpenseStore.
-- `android/app/src/main/java/openpay/app/ui/` Compose screens. Lang.kt is the string table.
-- `android/app/src/test/` the tests. Run them before pushing anything.
-- `site/` the site and PWA, no build step.
-- `.github/workflows/` CI: tests on push, signed release on v* tags, Pages on site/ changes.
+- `site/index.html` the marketing site. `site/app.js` drives it.
+- `site/app.html` plus `site/webapp.js` the product: Pay, Recharge, History and Settings. State lives in `localStorage` under `op_` keys.
+- `site/webapp.js` also holds the pure rail and recharge builders. The DOM layer renders their output.
+- `site/styles.css` the single stylesheet.
+- `site/manifest.webmanifest` installability, `start_url` is `app.html`.
+- `site/sw.js` the service worker, network first when online and cached when offline.
+- `.github/workflows/deploy-site.yml` Pages deploy on site changes.
+- `docs/ARCHITECTURE.md`, `docs/RECHARGE.md`, `RESEARCH.md`, `PRODUCT.md` the system and the reasoning.
 
 ## Rules
 
-1. The app ships without the internet permission. Nothing that requires the network inside the app is acceptable, ever.
-2. Money rules go in pure Kotlin under `rails/` or `notes/` with unit tests. Screens call them. No payment logic in composables.
-3. Strings: English literals are the keys in `ui/Lang.kt`. Use `s()` in composables, `ts()` inside callbacks and TTS. Add the Hindi entry when you add a string, missing entries fall back to English safely.
+1. The app makes no network calls. It builds `upi://`, `tel:` and `sms:` links. No fetch, no API, no telemetry, ever.
+2. Path and money rules stay as pure functions in `site/webapp.js`, under the rail and recharge builders. Event handlers call them, they do not re-implement them.
+3. Strings: English literals are the keys, Hindi lives in the `HI` map, `data-i` attributes are the hooks. Add the Hindi entry when you add a string, missing entries fall back to English safely.
 4. Copy style, everywhere including commit messages and docs: no em or en dashes, use the middle dot · or a comma. No filler phrases, no claims the code does not make.
-5. Kotlin namespace and applicationId are both `openpay.app`. Never use the package prefix `in.` anywhere, `in` is a Kotlin keyword.
-6. Ed25519 canonical string for notes is frozen: pipe joined `openpay-note|v|from|payerKey|to|vpa|phone|amountPaise|serial|nonce|expiresEpoch|memo`. The browser verifier in `site/verify.html` must stay byte compatible.
-7. Release signing: keystore in `android/keystore/` (gitignored) or gradle properties `storeFile/storePassword/keyAlias/keyPassword`. Store and key password must be identical (Android rejects split PKCS12 passwords).
-8. Version bumps: `versionCode` and `versionName` in `android/app/build.gradle.kts`, tag `vX.Y.Z` pushes a signed release automatically. The release carries the release APK only.
-9. Service worker cache id in `site/sw.js` must be bumped on every site change so installed PWAs swap caches atomically after one online visit. Bump the `?v=` suffix on `styles.css` and `app.js` in both HTML files in the same change, HTTP caches can otherwise serve the old assets for up to ten minutes.
+5. No money custody, no server, no accounts, no analytics. Browser storage can be cleared by the browser, so keep the export path honest.
+6. Service worker cache id in `site/sw.js` must be bumped on every site change so installed PWAs swap caches atomically after one online visit. Bump the `?v=` suffix on `styles.css` and on `app.js` or `webapp.js` in both `index.html` and `app.html` in the same change, HTTP caches can otherwise serve the old assets for a while.
+7. The product is the rail ladder and the recharge handoff. Do not add a deferred payment or signature verification feature.
 
 ## Useful facts
 
-- Jio phones have no USSD, the decider sends them to the IVR rail.
-- Bank SMS confirmation only counts inside a 6 minute window with matching sender, debit wording and exact amount.
-- Notes cap at Rs 2,000 each, Rs 10,000 open, first notes from unknown keys cap at Rs 500 with explicit consent.
-- Network flakiness on this machine is real: retry loops with sleeps for anything hitting GitHub or Maven.
+- Jio phones have no USSD. The rail builder sends them to the 123Pay IVR string.
+- The 123Pay IVR line is 080 4516 3666. The USSD dial string is `tel:*99*1*3%23`.
+- SBI Quick caps at Rs 700 a day and Rs 1000 a month, and only works from the mobile registered with the account.
+- Browsers cannot read bank SMS. Confirmation in History is manual, the user marks a row paid or pending.

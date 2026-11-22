@@ -1,6 +1,6 @@
 # Recharge handoff
 
-OpenPay does not perform a recharge. The domain/rules layer builds the exact bank SMS, or opens the dialer for a USSD or IVR path, and the user sends or confirms it on the handset. The bank or operator moves the money from the payer's account or prepaid balance straight to the operator. OpenPay never receives, holds or routes it. Facts below were checked against official bank and operator pages on 2026-11-22.
+OpenPay does not perform a recharge. The rules layer in the PWA builds the exact bank SMS, or opens the dialer for a USSD or IVR path, and the user sends or confirms it on the handset. The bank or operator moves the money from the payer's account or prepaid balance straight to the operator. OpenPay never receives, holds or routes it. Facts below were checked against official bank and operator pages on 2026-11-22.
 
 This page is the reference for codes, operators, limits and sources. The table records live and dead paths, plus paths the handoff may use. It is not a claim that every row is wired into a screen.
 
@@ -37,12 +37,12 @@ Can:
 
 - Build the SMS body and destination number for a bank path, or open a `tel:` link for a USSD or IVR path
 - Show the exact steps for a path, including SBI's two step OTP flow and the daily and monthly caps
-- Run all of this with no network call from OpenPay, in the domain/rules layer
+- Run all of this with no network call from OpenPay, in the rules layer in `site/webapp.js`
 
 Cannot:
 
 - Send an SMS or execute a USSD session from a website. A browser can only open `sms:` and `tel:` links. The user sends the message or completes the menu on the handset, and OpenPay never touches the network
-- Read bank SMS in the browser. The Android app can confirm a payment from a bank SMS inside a window, because SMS is a platform API there. The web app cannot, so its confirmation is manual
+- Read bank SMS. Browsers cannot, so the PWA leaves confirmation to the user in History
 - Debit an account, hold a balance, top up a wallet, or act as a bank, a PSP or a payment aggregator
 - Make a bank send from a number it does not allow. SBI Quick only recharges the same registered mobile, whatever a handoff composes
 
@@ -52,10 +52,10 @@ Every path ends with a human action on the handset. That is the boundary.
 
 There is no server backend. This is a decision, not a missing feature.
 
-- A server would break the privacy promise. The manifest carries no INTERNET permission, and there are no accounts, no analytics and no tracking. A backend would make those claims false and would need the permission back.
+- A server would break the privacy promise. The app makes no network calls, and there are no accounts, no analytics and no tracking. A backend would make those claims false.
 - A collection and settlement flow would make OpenPay an unlicensed payment aggregator. If OpenPay took money from a payer and settled with the operator, it would be collecting and settling payments. It does neither. Every path in the table moves money directly from the payer's bank account or prepaid balance to the operator, with the user sending the instruction from their own handset.
 
-What a conventional app would call a backend is, here, the domain/rules layer: pure, unit tested, on-device code that picks a path, validates amounts and formats the handoff. It stays under `rails/` and any recharge path code, with the same rule as payments, no money logic in composables and no network code in the app.
+What a conventional app would call a backend is, here, the rules layer: pure, on-device code in `site/webapp.js` that picks a path, validates amounts and formats the handoff. There is no money logic in event handlers and no network code in the app.
 
 ## Verification gaps
 

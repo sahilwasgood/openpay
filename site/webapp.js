@@ -1,7 +1,6 @@
 /* OpenPay web app: the product in the browser.
-   The rail ladder as links (upi:// and tel:), notes signed with WebCrypto
-   Ed25519 using the exact canonical string the Android app uses, everything
-   stored locally. Browsers cannot read SMS: confirmation is manual. */
+   The rail ladder as links (upi:// and tel:), plus offline recharge handoff.
+   Everything stored locally. Browsers cannot read SMS: confirmation is manual. */
 
 (function () {
   'use strict';
@@ -18,82 +17,17 @@
 
   var state = {
     carrier: LS.get('carrier', null),        // 'jio' | 'other'
-    payments: LS.get('payments', []),
-    issued: LS.get('issued', []),
-    receivables: LS.get('receivables', []),
-    seen: LS.get('seen_serials', []),
-    pinned: LS.get('pinned_keys', {}),
-    blocked: LS.get('blocked_keys', []),
-    key: LS.get('keypair', null)
+    payments: LS.get('payments', [])
   };
 
   function save() {
     LS.set('carrier', state.carrier);
     LS.set('payments', state.payments);
-    LS.set('issued', state.issued);
-    LS.set('receivables', state.receivables);
-    LS.set('seen_serials', state.seen);
-    LS.set('pinned_keys', state.pinned);
-    LS.set('blocked_keys', state.blocked);
   }
 
-  // ---------- canonical note string, byte identical to the Android app ----------
-
-  function canonical(d) {
-    return ['openpay-note', d.v, d.from, d.payerKey, d.to,
-      d.vpa || '', d.phone || '', d.amountPaise, d.serial, d.nonce,
-      d.expiresEpoch, d.memo || ''].join('|');
-  }
-
-  function b64(buf) {
-    var bytes = new Uint8Array(buf), s = '', i;
-    for (i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
-    return btoa(s);
-  }
-  function unb64(s) {
-    var bin = atob(s.replace(/-/g, '+').replace(/_/g, '/')), bytes = new Uint8Array(bin.length), i;
-    for (i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return bytes;
-  }
   function rupees(paise) {
     var r = Math.floor(paise / 100), p = paise % 100;
     return p === 0 ? String(r) : r + '.' + String(p).padStart(2, '0');
-  }
-  function serial() {
-    var a = new Uint8Array(5); crypto.getRandomValues(a);
-    return 'NB' + Array.from(a).map(function (b) { return b.toString(16).padStart(2, '0').toUpperCase(); }).join('');
-  }
-  function nonce() {
-    var a = new Uint8Array(4); crypto.getRandomValues(a);
-    return Array.from(a).map(function (b) { return b.toString(16).padStart(2, '0').toUpperCase(); }).join('');
-  }
-
-  function ensureKey() {
-    if (state.key) return Promise.resolve(state.key);
-    return crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign', 'verify'])
-      .then(function (kp) {
-        return Promise.all([
-          crypto.subtle.exportKey('raw', kp.publicKey),
-          crypto.subtle.exportKey('jwk', kp.privateKey)
-        ]).then(function (out) {
-          state.key = { pub: b64(out[0]), priv: out[1] };
-          LS.set('keypair', state.key);
-          return state.key;
-        });
-      });
-  }
-
-  function signNote(d) {
-    return ensureKey().then(function (k) {
-      d.payerKey = k.pub;
-      return crypto.subtle.importKey('jwk', k.priv, { name: 'Ed25519' }, false, ['sign'])
-        .then(function (sk) {
-          return crypto.subtle.sign('Ed25519', sk, new TextEncoder().encode(canonical(d)));
-        })
-        .then(function (sig) {
-          return { op: 'openpay-note', d: d, sig: b64(sig) };
-        });
-    });
   }
 
   // ---------- rail ladder ----------
@@ -105,7 +39,7 @@
   function pickRail(vpa, phone) {
     var net = netKind();
     if (net === 'online') return 'intent';
-    if (state.carrier === 'jio') return phone ? 'ivr' : 'nonote';
+    if (state.carrier === 'jio') return phone ? 'ivr' : 'none';
     return vpa ? 'ussd' : (phone ? 'ivr' : 'none');
   }
 
@@ -113,8 +47,7 @@
     intent: 'UPI Intent · needs data · hands off to your UPI app',
     ussd: 'USSD *99# · needs signal · you finish the carrier menu',
     ivr: 'IVR 123Pay · needs signal · the dialer keys it in',
-    nonote: 'Jio has no USSD and the 123Pay call needs a phone number. Add one, or write a Note.',
-    none: 'Add a UPI ID or phone first.'
+    none: 'No rail here yet. Add a UPI ID or a phone number for the 123Pay call.'
   };
 
   function railLink(rail, vpa, name, amt, phone) {
@@ -138,20 +71,17 @@
   // ---------- i18n ----------
 
   var HI = {
-    tab_pay: 'भुगतान', tab_notes: 'नोट', tab_verify: 'जाँच', tab_history: 'इतिहास', tab_settings: 'सेटिंग्स',
+    tab_pay: 'भुगतान', tab_history: 'इतिहास', tab_settings: 'सेटिंग्स',
     lbl_payee: 'प्राप्तकर्ता का नाम', lbl_vpa: 'UPI ID', lbl_phone: 'या फ़ोन, 123Pay कॉल के लिए',
-    lbl_amt: 'रुपये में रक़म', lbl_from: 'आपका नाम, प्राप्तकर्ता को दिखेगा', lbl_to: 'प्राप्तकर्ता का नाम',
-    lbl_nvpa: 'प्राप्तकर्ता की UPI ID, चुकता करने के लिए', lbl_namt: 'रक़म (रुपये), अधिकतम 2000',
+    lbl_amt: 'रुपये में रक़म', lbl_from: 'आपका नाम, प्राप्तकर्ता को दिखेगा',
     btn_scan: 'UPI QR स्कैन', btn_contact: 'संपर्क चुनें', btn_balance: 'बैलेंस *99*3#',
     first99_s: '*99# पहली बार?',
     first99_p: 'एक बार <a href="tel:*99%23">*99#</a> डायल करें। अपने बैंक का शॉर्ट नाम भेजें, जैसे SBI के लिए SBIN या HDFC के लिए HDFC, या IFSC के पहले चार अक्षर। खाता जोड़ें, फिर पूछे जाने पर डेबिट कार्ड से अपना UPI PIN सेट करें। यही एक सेटअप आगे के हर *99# भुगतान को खोल देता है। आपका PIN कैरियर मेन्यू पर रहता है, इस पेज पर कभी नहीं।',
-    btn_create: 'नोट बनाएँ', btn_copy: 'नोट टेक्स्ट कॉपी करें', btn_share: 'साझा करें', h_open: 'खुले नोट',
-    btn_scanqr: 'QR स्कैन करें', btn_paste: 'इसके बजाय पेस्ट करें', btn_verify: 'जाँचें', h_received: 'प्राप्त',
     btn_export: 'टेक्स्ट में निर्यात', lbl_lang: 'भाषा',
     lbl_elder: 'बड़ा टेक्स्ट मोड', lbl_elder_sub: 'पढ़ने में आसानी के लिए हर स्क्रीन बड़ी',
-    lbl_backup: 'बैकअप और पुनर्स्थापना', lbl_backup_sub: 'ब्राउज़र स्टोरेज मिट सकता है। एक्सपोर्ट में आपकी कुंजी, नोट और इतिहास सुरक्षित रहते हैं।',
+    lbl_backup: 'बैकअप और पुनर्स्थापना', lbl_backup_sub: 'ब्राउज़र स्टोरेज मिट सकता है। एक्सपोर्ट में आपका इतिहास और सेटिंग्स सुरक्षित रहते हैं।',
     btn_export_json: 'बैकअप निर्यात करें', btn_import_json: 'बैकअप पुनर्स्थापित करें',
-    lbl_key: 'इस ब्राउज़र की साइनिंग कुंजी', btn_keycopy: 'पब्लिक की कॉपी करें', btn_wipe: 'सब मिटाएँ',
+    btn_wipe: 'सब मिटाएँ', lbl_wipe_h: 'इस ब्राउज़र को साफ़ करें',
     set_foot: 'OpenPay वेब सब कुछ सिर्फ़ इसी ब्राउज़र में रखता है। कोई सर्वर नहीं, कोई खाता नहीं।',
     tab_recharge: 'रिचार्ज',
     rc_eyebrow: 'रिचार्ज हैंडऑफ़', rc_title: 'रिचार्ज, बिना पैसे रखे।', rc_badge: 'कोई वॉलेट नहीं · कोई सर्वर नहीं',
@@ -203,23 +133,6 @@
     payerName = $('setName').value.trim();
     LS.set('name', payerName);
   });
-  if (payerName) $('nFrom').value = payerName;
-  $('nFrom').addEventListener('input', function () {
-    LS.set('name', $('nFrom').value.trim());
-  });
-
-  function refreshKeyFp() {
-    if (!state.key) { $('keyFp').textContent = t('created on first note', 'पहले नोट पर बनेगी'); return; }
-    $('keyFp').textContent = state.key.pub.slice(0, 24) + ' · ed25519';
-  }
-  $('keyCopy').onclick = function () {
-    ensureKey().then(function () {
-      refreshKeyFp();
-      navigator.clipboard.writeText(state.key.pub)
-        .then(function () { toast(t('Public key copied', 'पब्लिक की कॉपी हुई')); });
-    });
-  };
-
   $('backupBtn').onclick = function () {
     var dump = {};
     Object.keys(localStorage).forEach(function (k) {
@@ -250,7 +163,7 @@
     r.readAsText(f);
   });
   $('wipeBtn').onclick = function () {
-    if (!confirm(t('Wipe key, notes and history from this browser?', 'इस ब्राउज़र से कुंजी, नोट और इतिहास मिटाएँ?'))) return;
+    if (!confirm(t('Wipe your name and history from this browser?', 'इस ब्राउज़र से आपका नाम और इतिहास मिटाएँ?'))) return;
     Object.keys(localStorage).forEach(function (k) {
       if (k.indexOf('op_') === 0) localStorage.removeItem(k);
     });
@@ -267,19 +180,11 @@
     var shared = (q.get('text') || '') + ' ' + (q.get('url') || '') + ' ' + (q.get('title') || '');
     shared = shared.trim();
     if (shared) {
-      if (shared.indexOf('openpay-note') !== -1) {
-        switchTab('verify');
-        $('notePaste').classList.remove('hidden');
-        $('pasteVerify').classList.remove('hidden');
-        $('notePaste').value = shared;
-        setTimeout(function () { verifyNoteText(shared); }, 300);
-        return;
-      }
       var f = parseUpi(shared);
       if (f) { autofill(f); return; }
     }
     var h = (location.hash || '').replace('#', '');
-    if (['pay', 'recharge', 'notes', 'verify', 'history', 'settings'].indexOf(h) !== -1) switchTab(h);
+    if (['pay', 'recharge', 'history', 'settings'].indexOf(h) !== -1) switchTab(h);
   }
 
   // ---------- recent payees ----------
@@ -330,9 +235,8 @@
       $('payBtn').classList.remove('dead');
     } else {
       $('payBtn').removeAttribute('href');
-      $('payBtn').textContent = rail === 'nonote' ? 'Write a Note instead' : 'Choose a rail';
-      $('payBtn').classList.toggle('dead', rail !== 'nonote');
-      $('payBtn').onclick = rail === 'nonote' ? function () { switchTab('notes'); } : null;
+      $('payBtn').textContent = 'Choose a rail';
+      $('payBtn').classList.add('dead');
     }
     $('netline').firstChild.textContent =
       'net: ' + netKind() + ' · carrier: ';
@@ -347,219 +251,6 @@
     save();
     rememberPayee(name, vpa, phone);
   }
-
-  // ---------- notes tab ----------
-
-  function openPaise() {
-    return state.issued.filter(function (n) { return !n.settledAt; })
-      .reduce(function (a, n) { return a + n.d.amountPaise; }, 0);
-  }
-
-  function renderOpenNotes() {
-    $('noteOpenLine').textContent = 'Rs ' + rupees(openPaise()) + ' of Rs 10,000 open';
-    var box = $('openNotes');
-    box.innerHTML = '';
-    state.issued.slice(0, 30).forEach(function (n) {
-      var row = document.createElement('div');
-      row.className = 'hrow';
-      var left = document.createElement('div');
-      var b = document.createElement('strong');
-      b.textContent = 'Rs ' + rupees(n.d.amountPaise) + ' to ' + n.d.to +
-        (n.settledAt ? ' · settled' : ' · ' + new Date(n.d.expiresEpoch).toLocaleTimeString());
-      var sub = document.createElement('span');
-      sub.className = 'mono dim';
-      sub.textContent = n.d.serial;
-      left.appendChild(b); left.appendChild(sub);
-      var act = document.createElement('span');
-      if (!n.settledAt && n.d.vpa) {
-        var pay = document.createElement('a');
-        pay.className = 'linklike';
-        pay.textContent = t('settle', 'चुकता');
-        pay.href = 'upi://pay?pa=' + encodeURIComponent(n.d.vpa) +
-          '&pn=' + encodeURIComponent(n.d.to) +
-          '&am=' + (n.d.amountPaise / 100) + '&cu=INR&tn=' + encodeURIComponent('OpenPay ' + n.d.serial);
-        act.appendChild(pay);
-        act.appendChild(document.createTextNode(' · '));
-      }
-      var mk = document.createElement('button');
-      mk.className = 'linklike';
-      mk.textContent = n.settledAt ? t('hide', 'हटाएँ') : t('mark settled', 'चुकता दर्ज करें');
-      mk.onclick = function () {
-        if (n.settledAt) { row.remove(); return; }
-        n.settledAt = Date.now(); save(); renderOpenNotes();
-      };
-      act.appendChild(mk);
-      row.appendChild(left); row.appendChild(act);
-      box.appendChild(row);
-    });
-  }
-
-  var expMinutes = 30;
-
-  function createNote() {
-    var from = $('nFrom').value.trim() || 'OpenPay payer';
-    var to = $('nTo').value.trim();
-    var vpa = $('nVpa').value.trim();
-    var amt = Number($('nAmt').value);
-    if (!to || !vpa || !amt || amt <= 0) { toast('Name, UPI ID and amount are needed'); return; }
-    if (amt > 2000) { toast('Notes cap at Rs 2,000 each'); return; }
-    if (openPaise() + amt * 100 > 1000000) { toast('Rs 10,000 open at once is the cap'); return; }
-    var d = {
-      v: 1, from: from, payerKey: '', to: to, vpa: vpa, phone: '',
-      amountPaise: Math.round(amt * 100), serial: serial(), nonce: nonce(),
-      expiresEpoch: Date.now() + expMinutes * 60000, memo: ''
-    };
-    signNote(d).then(function (env) {
-      state.issued.unshift({ d: env.d, issuedAt: Date.now(), envelope: env, settledAt: null });
-      state.seen.push(env.d.serial);
-      save();
-      renderOpenNotes();
-      showQr(env);
-    }).catch(function (e) { toast('This browser cannot sign Ed25519 notes'); });
-  }
-
-  function showQr(env) {
-    var qr = qrcode(0, 'M');
-    qr.addData(JSON.stringify(env));
-    qr.make();
-    $('qrbox').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2 });
-    $('qrserial').textContent = env.d.serial + ' · expires ' + new Date(env.d.expiresEpoch).toLocaleTimeString();
-    $('qrwrap').classList.remove('hidden');
-    $('noteCopy').onclick = function () {
-      navigator.clipboard.writeText(JSON.stringify(env)).then(function () { toast('Note text copied'); });
-    };
-    $('noteShare').onclick = function () {
-      if (navigator.share) navigator.share({ text: JSON.stringify(env) }).catch(function () {});
-      else { $('noteCopy').click(); }
-    };
-  }
-
-  // ---------- verify tab ----------
-
-  function verdictHtml(ok, title, pairs, foot) {
-    var h = '<div class="vres ' + (ok ? 'ok' : 'bad') + '"><div class="vhead">' + title + '</div>';
-    pairs.forEach(function (p) {
-      h += '<div class="vrow"><span>' + p[0] + '</span><strong>' + p[1] + '</strong></div>';
-    });
-    h += '<p class="vfoot">' + (foot || '') + '</p></div>';
-    return h;
-  }
-
-  function verifyNoteText(text) {
-    var env;
-    try { env = JSON.parse(text.trim()); } catch (e) {
-      $('verifyResult').innerHTML = verdictHtml(false, 'Not a Note', [['Reason', 'not valid JSON']], ''); return;
-    }
-    if (!env || env.op !== 'openpay-note' || !env.d || !env.sig) {
-      $('verifyResult').innerHTML = verdictHtml(false, 'Not a Note', [['Reason', 'missing fields']], ''); return;
-    }
-    var d = env.d;
-    var pairs = [
-      ['From', d.from || '?'], ['To', d.to || '?'],
-      ['Amount', 'Rs ' + rupees(Number(d.amountPaise) || 0)], ['Serial', d.serial || '?'],
-      ['Expires', d.expiresEpoch ? new Date(Number(d.expiresEpoch)).toLocaleString() : '?']
-    ];
-    var known = !!state.pinned[d.payerKey];
-    var blocked = state.blocked.indexOf(d.payerKey) !== -1;
-    if (known) pairs.push(['Payer', 'known']);
-    if (blocked) pairs.push(['Payer', 'BLOCKED']);
-
-    crypto.subtle.importKey('raw', unb64(d.payerKey), { name: 'Ed25519' }, false, ['verify'])
-      .then(function (k) {
-        return crypto.subtle.verify('Ed25519', k, unb64(env.sig),
-          new TextEncoder().encode(canonical(d)));
-      })
-      .then(function (sigOk) {
-        if (!sigOk) {
-          $('verifyResult').innerHTML = verdictHtml(false, 'Signature does not match. Refuse.', pairs, ''); return;
-        }
-        if (blocked) {
-          $('verifyResult').innerHTML = verdictHtml(false, 'Blacklisted payer. Refuse.', pairs, ''); return;
-        }
-        if (state.seen.indexOf(d.serial) !== -1) {
-          $('verifyResult').innerHTML = verdictHtml(false, 'Duplicate serial, already seen.', pairs, ''); return;
-        }
-        if (Number(d.amountPaise) <= 0 || Number(d.amountPaise) > 200000) {
-          $('verifyResult').innerHTML = verdictHtml(false, 'Amount outside note limits.', pairs, ''); return;
-        }
-        if (Date.now() >= Number(d.expiresEpoch)) {
-          $('verifyResult').innerHTML = verdictHtml(false, 'Note expired.', pairs, ''); return;
-        }
-        state.seen.push(d.serial);
-        state.receivables.unshift({ d: d, at: Date.now(), known: known });
-        save();
-        renderReceivables();
-        var first = !known && Number(d.amountPaise) > 50000;
-        $('verifyResult').innerHTML = verdictHtml(!first,
-          first ? 'New payer, above Rs 500. Your call.' : 'Verified. Signature checks out.',
-          pairs,
-          first ? 'Notes are promissory notes, not money. Accept like a first time customer, or refuse.' :
-            'Recorded in Received below. Pin the payer to trust this key next time.');
-        if (!known) {
-          var btn = document.createElement('button');
-          btn.className = 'btn btn-ghost btn-sm';
-          btn.textContent = 'Pin this payer';
-          btn.onclick = function () {
-            state.pinned[d.payerKey] = d.from; save();
-            $('verifyResult').appendChild(document.createTextNode(' pinned'));
-          };
-          $('verifyResult').querySelector('.vres').appendChild(btn);
-        }
-      })
-      .catch(function (e) {
-        $('verifyResult').innerHTML = verdictHtml(false, 'Could not verify', [['Reason', String(e && e.message || e)]], '');
-      });
-  }
-
-  function renderReceivables() {
-    var box = $('receivables');
-    box.innerHTML = '';
-    state.receivables.slice(0, 50).forEach(function (r) {
-      var row = document.createElement('div');
-      row.className = 'hrow';
-      var left = document.createElement('div');
-      var b = document.createElement('strong');
-      b.textContent = 'Rs ' + rupees(r.d.amountPaise) + ' from ' + r.d.from + (r.known ? ' · known' : '');
-      var sub = document.createElement('span');
-      sub.className = 'mono dim';
-      sub.textContent = new Date(r.at).toLocaleString() + ' · ' + r.d.serial;
-      left.appendChild(b); left.appendChild(sub);
-      var act = document.createElement('button');
-      act.className = 'linklike warn';
-      act.textContent = 'block';
-      act.onclick = function () {
-        state.blocked.push(r.d.payerKey); save();
-        act.textContent = 'blocked';
-      };
-      row.appendChild(left); row.appendChild(act);
-      box.appendChild(row);
-    });
-  }
-
-  // camera scan where the browser allows it
-  function startScan() {
-    if (!('BarcodeDetector' in window)) { toast('This browser cannot scan, paste instead'); $('pasteBtn').click(); return; }
-    var video = $('scanVideo');
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-      .then(function (stream) {
-        video.srcObject = stream;
-        video.classList.remove('hidden');
-        video.play();
-        var det = new BarcodeDetector({ formats: ['qr_code'] });
-        var timer = setInterval(function () {
-          det.detect(video).then(function (codes) {
-            if (codes.length) {
-              clearInterval(timer);
-              stream.getTracks().forEach(function (t) { t.stop(); });
-              video.classList.add('hidden');
-              verifyNoteText(codes[0].rawValue);
-            }
-          }).catch(function () {});
-        }, 400);
-      })
-      .catch(function () { toast('Camera refused, paste instead'); $('pasteBtn').click(); });
-  }
-
 
   // ---------- QR autofill, contacts, balance ----------
 
@@ -930,8 +621,6 @@
     document.querySelectorAll('.pane').forEach(function (p) { p.classList.add('hidden'); });
     $('pane-' + name).classList.remove('hidden');
     if (name === 'history') renderHistory();
-    if (name === 'notes') renderOpenNotes();
-    if (name === 'verify') renderReceivables();
     if (name === 'recharge') renderRecharge();
   }
 
@@ -958,24 +647,6 @@
   });
   if (state.carrier) $('carrierBtn').textContent = state.carrier === 'jio' ? 'Jio' : 'not Jio';
 
-  $('expChips').querySelectorAll('.chip').forEach(function (c) {
-    c.addEventListener('click', function () {
-      $('expChips').querySelectorAll('.chip').forEach(function (x) { x.classList.remove('on'); });
-      c.classList.add('on');
-      expMinutes = Number(c.dataset.min);
-    });
-  });
-
-  $('noteBtn').addEventListener('click', createNote);
-  $('scanBtn').addEventListener('click', startScan);
-  $('pasteBtn').addEventListener('click', function () {
-    $('notePaste').classList.remove('hidden');
-    $('pasteVerify').classList.remove('hidden');
-    $('scanVideo').classList.add('hidden');
-    $('notePaste').focus();
-  });
-  $('pasteVerify').addEventListener('click', function () { verifyNoteText($('notePaste').value); });
-
   window.addEventListener('online', refreshPay);
   window.addEventListener('offline', refreshPay);
 
@@ -992,8 +663,6 @@
   routeIncomingSafe();
   applyLang();
   applyElder();
-  refreshKeyFp();
   renderPayees();
   refreshPay();
-  renderOpenNotes();
 })();

@@ -2,30 +2,28 @@
 
 UPI payments that work with zero signal.
 
-OpenPay is an open source Android app and web app for India. You never pick a rail: the app reads your network and carrier and hands the payment to the strongest option that still works.
+OpenPay is one installable PWA for India. Install it from the browser, then it works offline. Set your carrier once, and the app hands each payment to the strongest rail that still works.
 
 | Rail | Needs | Limit | Notes |
 |---|---|---|---|
 | UPI Intent | Data | Your bank's limit | Hands off to any installed UPI app |
 | USSD *99# | Signal | Rs 5,000 | Airtel, Vi, BSNL. Jio carries no USSD |
 | IVR · UPI 123Pay | Signal | Rs 10,000 | The Jio path, keyed in with dial tones |
-| OpenPay Note | Nothing | Rs 2,000 each | A signed promissory note, settled later |
 
-## A Note is a promissory note
+UPI Intent is a `upi://pay` deep link into any installed UPI app. USSD dials `*99*1*3#` and you finish the carrier menu. IVR keys the 123Pay line (080 4516 3666) with the dialer. The app composes the instruction and hands it over. Your bank app, the carrier menu or the IVR does the rest.
 
-The kirana shop already solved this: udhaar goes in the khata book, both sides trust the record, it is settled later. A Note is the same slip, digital. The payer's phone signs the amount, payee, serial and expiry with an Ed25519 key that never leaves the phone. The payee verifies the signature, expiry and cap fully offline, in the app or in [any browser](https://sahilwasgood.github.io/openpay/verify.html). Replay by serial is remembered in the app and the web app. The bare verify page checks the signature but cannot remember serials across visits, so use the app or web app for replay checks. With signal back, one tap settles over normal UPI. No money is held, ever. Strangers are capped at Rs 500 with explicit accept, blocked keys are refused on sight.
+## Recharge, composed in the browser
 
-## Recharge, composed on your phone
+A recharge is not a payment. With no data, OpenPay builds the exact bank SMS or opens the dialer for a USSD or IVR path, and you send or confirm it on the handset. The bank or operator moves the money from your account or prepaid balance to the operator. OpenPay never holds it. Codes, operators, limits and sources are in [docs/RECHARGE.md](docs/RECHARGE.md). A browser cannot send SMS or run a USSD session, so the app hands off with `sms:` and `tel:` links and you finish on the phone.
 
-A recharge is not a payment. With no data, OpenPay builds the exact bank SMS or opens the dialer for a USSD or IVR path, and you send or confirm it on the handset. The bank or operator moves the money from your account or prepaid balance to the operator. OpenPay never holds it. Codes, operators, limits and sources are in [docs/RECHARGE.md](docs/RECHARGE.md). A website cannot send SMS or run a USSD session, so the web app hands off with `sms:` and `tel:` links and you finish on the phone.
+## Offline, local, no server
 
-There is no server behind it. The rules that pick a path and build the message are the domain/rules layer, pure code on your device, what a conventional app would put in a backend. A server would break the no INTERNET permission and no accounts promise, and a collection and settlement flow would make OpenPay an unlicensed payment aggregator. OpenPay only composes the instruction you send.
+- The app makes no network calls. It builds `upi://`, `tel:` and `sms:` links. No fetch, no API, no telemetry.
+- After install it works offline. The service worker caches the app shell and all state lives in your browser.
+- No server, no accounts, no analytics, no tracking.
+- No money is held. Every path moves money directly from your bank account or prepaid balance to the payee or operator.
 
-## Trust, in the manifest
-
-- No internet permission. The app cannot reach any server. Check the manifest, not the marketing.
-- Ledger encrypted with an Android Keystore key. Bank SMS close a payment only inside a six minute window, matched by sender, debit wording and exact amount.
-- Open source, Apache 2.0. One release APK per version, signed by CI.
+There is no backend server. The rules that pick a path and build the handoff are pure code in the app, what a conventional app would put in a backend. A server would break the promise above, and a collection and settlement flow would make OpenPay an unlicensed payment aggregator. OpenPay only composes the instruction you send.
 
 ## Fees
 
@@ -33,21 +31,22 @@ Person to person UPI is free, and every OpenPay payment is person to person: zer
 
 ## Install
 
-- Android, the product: F-Droid via [IzzyOnDroid](https://apt.izzysoft.de/fdroid/) is the distribution path being submitted (submission file: `docs/izzyondroid-submission.md`), it installs cleanly on phones where Play Protect blocks sideloads. Until it is listed, the signed APK from [Releases](https://github.com/sahilwasgood/openpay/releases) works where sideloading is allowed: one file per version named `OpenPay-vX.Y.Z.apk`, SHA-256 in the notes. Play Protect either offers More details, Install anyway, or blocks outright depending on device. If an OpenPay from before v0.4.0 is installed, uninstall it first, the signing key changed.
-- Web, the product with no download: [sahilwasgood.github.io/openpay/app.html](https://sahilwasgood.github.io/openpay/app.html) pays through the same rails (UPI deep links, `tel:` USSD and 123Pay), QR scan autofill, contacts, recent payees, writes and verifies Notes with a WebCrypto key, settles notes by UPI link, takes shared note text straight into Verify (Android share menu), English and Hindi, elder mode, backup and restore, and installs as an app that works offline. Browsers cannot read bank SMS, so payment confirmation there is manual. The Android app adds automatic SMS confirmation and the encrypted keystore.
+Open [sahilwasgood.github.io/openpay/app.html](https://sahilwasgood.github.io/openpay/app.html) in a browser and use the browser's install option (Add to Home screen or Install app). Launch it like any other app. There is no store listing and no file to sideload. After the first load it works offline.
+
+Pay by scanning a UPI QR, typing a VPA or phone number, or picking a contact where the browser allows it. The Pay tab picks the rail, Recharge builds the bank SMS or dial handoff, History keeps a local record you mark paid or pending yourself (browsers cannot read bank SMS), and Settings holds English and Hindi, elder mode and backup and restore. All state is in your browser.
 
 ## Fork it
 
-Kotlin and Compose, one framework free site, 48 tests, CI that signs and releases on every tag. [CONTRIBUTING.md](CONTRIBUTING.md) is the whole map, `docs/ARCHITECTURE.md` is the system, `CLAUDE.md` makes any coding agent productive in this repo in minutes. Fork it and ship your first change in an evening.
+Plain HTML, CSS and JavaScript, one service worker, no framework and no build step. Pages deploys the site on every change under `site/`. [CONTRIBUTING.md](CONTRIBUTING.md) is the whole map, `docs/ARCHITECTURE.md` is the system, `CLAUDE.md` makes any coding agent productive in this repo in minutes. Fork it and ship your first change in an evening.
 
 ## Repo layout
 
-- `android/` the app
-- `site/` the site and PWA
+- `site/` the PWA and the site
 - `docs/ARCHITECTURE.md` the system map
 - `docs/RECHARGE.md` every recharge path, code and limit
 - `RESEARCH.md` the UPI research this is built on
 - `PRODUCT.md` the product spec
+- `AUTONOMOUS/PROJECT_STATUS.md` task board and decisions
 
 ## License
 

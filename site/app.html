@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OpenPay</title>
-<meta name="description" content="Pay with the strongest rail that still works: UPI intent, USSD, IVR, or a signed promissory note. In your browser, offline capable.">
+<meta name="description" content="Pay with the strongest rail that still works: UPI intent, USSD, or 123Pay IVR. An installable web app, no download needed.">
 <link rel="icon" href="icons/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0D0F0E">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=15">
+<link rel="stylesheet" href="styles.css?v=16">
 </head>
 <body class="webapp">
 
@@ -22,7 +22,6 @@
     </a>
     <nav class="nav-links" aria-label="Sections">
       <a href="index.html">About</a>
-      <a href="verify.html">Verifier</a>
     </nav>
     <div class="nav-cta">
       <button class="btn btn-primary btn-sm" id="installEntry" type="button" hidden>Install</button>
@@ -37,8 +36,6 @@
     <div class="tabs" role="tablist">
       <button class="tab on" data-tab="pay" type="button" data-i="tab_pay">Pay</button>
       <button class="tab" data-tab="recharge" type="button" data-i="tab_recharge">Recharge</button>
-      <button class="tab" data-tab="notes" type="button" data-i="tab_notes">Notes</button>
-      <button class="tab" data-tab="verify" type="button" data-i="tab_verify">Verify</button>
       <button class="tab" data-tab="history" type="button" data-i="tab_history">History</button>
       <button class="tab" data-tab="settings" type="button" data-i="tab_settings">Settings</button>
     </div>
@@ -176,55 +173,6 @@
       </div>
     </div>
 
-    <!-- NOTES -->
-    <div class="pane hidden" id="pane-notes">
-      <p class="app-note">A Note is a promissory note, a digital khata slip: signed by this browser's key, checked offline, honoured over UPI later. Max Rs 2,000 each, Rs 10,000 open.</p>
-
-      <label class="f-label" for="nFrom" data-i="lbl_from">Your name, shown to the payee</label>
-      <input id="nFrom" type="text" placeholder="Sahil">
-      <label class="f-label" for="nTo" data-i="lbl_to">Payee name</label>
-      <input id="nTo" type="text" placeholder="Meera's Chai Stall">
-      <label class="f-label" for="nVpa" data-i="lbl_nvpa">Payee UPI ID, for settling</label>
-      <input id="nVpa" type="text" autocapitalize="none" placeholder="meera@okhdfcbank">
-      <label class="f-label" for="nAmt" data-i="lbl_namt">Amount, rupees, max 2000</label>
-      <input id="nAmt" type="number" inputmode="numeric" min="1" max="2000" placeholder="45">
-      <div class="chips" id="expChips">
-        <button class="chip on" data-min="30" type="button">30 min</button>
-        <button class="chip" data-min="60" type="button">1 hour</button>
-        <button class="chip" data-min="360" type="button">6 hours</button>
-        <button class="chip" data-min="1440" type="button">24 hours</button>
-      </div>
-      <button class="btn btn-primary btn-block" id="noteBtn" type="button" data-i="btn_create">Create Note</button>
-      <p class="app-line mono" id="noteOpenLine"></p>
-
-      <div class="qrwrap hidden" id="qrwrap">
-        <div id="qrbox" class="qrbox"></div>
-        <p class="app-note" id="qrserial"></p>
-        <div class="row-gap">
-          <button class="btn btn-ghost btn-sm" id="noteCopy" type="button" data-i="btn_copy">Copy note text</button>
-          <button class="btn btn-ghost btn-sm" id="noteShare" type="button" data-i="btn_share">Share</button>
-        </div>
-      </div>
-
-      <h3 class="app-h" data-i="h_open">Open notes</h3>
-      <div id="openNotes"></div>
-    </div>
-
-    <!-- VERIFY -->
-    <div class="pane hidden" id="pane-verify">
-      <p class="app-note">Merchant mode. Scan a customer's Note, or paste the text. Signature, expiry, the Rs 2,000 cap and replay by serial are checked on this device.</p>
-      <div class="row-gap">
-        <button class="btn btn-primary" id="scanBtn" type="button" data-i="btn_scanqr">Scan QR</button>
-        <button class="btn btn-ghost" id="pasteBtn" type="button" data-i="btn_paste">Paste instead</button>
-      </div>
-      <video id="scanVideo" class="scanvideo hidden" playsinline></video>
-      <textarea id="notePaste" class="hidden" rows="6" placeholder='Paste the text that starts with {"op":"openpay-note" ...'></textarea>
-      <button class="btn btn-primary btn-block hidden" id="pasteVerify" type="button" data-i="btn_verify">Verify</button>
-      <div id="verifyResult"></div>
-      <h3 class="app-h" data-i="h_received">Received</h3>
-      <div id="receivables"></div>
-    </div>
-
     <!-- SETTINGS -->
     <div class="pane hidden" id="pane-settings">
       <label class="f-label" for="setName" data-i="lbl_from">Your name, shown to the payee</label>
@@ -246,7 +194,7 @@
 
       <div class="setrow col">
         <strong data-i="lbl_backup">Backup and restore</strong>
-        <span data-i="lbl_backup_sub">Browser storage can be cleared by the browser. Export keeps your key, notes and history.</span>
+        <span data-i="lbl_backup_sub">Browser storage can be cleared by the browser. Export keeps your history and settings.</span>
         <div class="row-gap">
           <button class="btn btn-ghost btn-sm" id="backupBtn" type="button" data-i="btn_export_json">Export backup</button>
           <button class="btn btn-ghost btn-sm" id="restoreBtn" type="button" data-i="btn_import_json">Restore backup</button>
@@ -255,10 +203,8 @@
       </div>
 
       <div class="setrow col">
-        <strong data-i="lbl_key">This browser's signing key</strong>
-        <span class="mono dim" id="keyFp"></span>
+        <strong data-i="lbl_wipe_h">Clear this browser</strong>
         <div class="row-gap">
-          <button class="btn btn-ghost btn-sm" id="keyCopy" type="button" data-i="btn_keycopy">Copy public key</button>
           <button class="btn btn-ghost btn-sm warn" id="wipeBtn" type="button" data-i="btn_wipe">Wipe everything</button>
         </div>
       </div>
@@ -284,7 +230,7 @@
   </div>
 </footer>
 
-<script src="vendor/qrcode.js"></script>
-<script src="webapp.js?v=14" defer></script>
+<script src="app.js?v=16" defer></script>
+<script src="webapp.js?v=16" defer></script>
 </body>
 </html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Space Grotesk";src:url("fonts/SpaceGrotesk-Bold.ttf") format("truetype");font-weight:700}
+@font-face{font-family:"Space Grotesk";src:url("fonts/SpaceGrotesk-Medium.ttf") format("truetype");font-weight:500}
+@font-face{font-family:"Inter";src:url("fonts/Inter-Regular.ttf") format("truetype");font-weight:400}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#0B0F14}
+#root{width:100%;height:100%;position:relative;overflow:hidden;color:#E7EDF5;font-family:"Space Grotesk",sans-serif;background:radial-gradient(circle at 50% 30%,#14202B 0%,#0B0F14 62%)}
+.orb{position:absolute;border-radius:50%;pointer-events:none}
+.orb-a{width:1000px;height:1000px;left:-280px;top:-240px;background:radial-gradient(circle,rgba(52,211,153,.26),rgba(52,211,153,0) 68%)}
+.orb-b{width:900px;height:900px;right:-300px;top:620px;background:radial-gradient(circle,rgba(59,130,246,.22),rgba(59,130,246,0) 68%)}
+.scene{position:absolute;left:0;right:0;top:168px;height:1162px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 92px;gap:36px}
+.glass{position:relative;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:42px;box-shadow:0 30px 80px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);overflow:hidden}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,0) 46%)}
+.card-inner{position:relative;padding:54px 48px;display:flex;flex-direction:column;align-items:center;gap:30px;width:100%}
+.kicker{font-family:"Inter",sans-serif;font-size:23px;letter-spacing:.34em;text-transform:uppercase;color:#34D399}
+.h1{font-size:104px;font-weight:700;letter-spacing:-.035em;line-height:1.04}
+.sub{font-family:"Inter",sans-serif;font-size:30px;line-height:1.42;color:#A8B8CC}
+.chips{display:flex;flex-direction:column;gap:14px;align-items:center}
+.chip{font-family:"Inter",sans-serif;font-size:25px;color:#E7EDF5;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);border-radius:999px;padding:14px 30px;min-width:420px}
+.brand{display:flex;align-items:center;gap:22px;font-size:42px;font-weight:700}
+.dot{width:18px;height:18px;border-radius:50%;background:#34D399}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="11" data-width="1080" data-height="1920" data-fps="30">
+<div class="orb orb-a clip" id="glowa" data-start="0" data-duration="11" data-track-index="0"></div>
+<div class="orb orb-b clip" id="glowb" data-start="0" data-duration="11" data-track-index="0"></div>
+<div class="scene clip" id="scene1" data-start="0.0" data-duration="3.67" data-track-index="1">
+<div class="glass" id="card1"><div class="card-inner">
+<div class="kicker" id="k1">Trust</div>
+<div class="h1" id="h1">Nothing<br>to leak.</div>
+<div class="sub" id="s1">No server, no account, no store permission.</div>
+
+</div></div>
+</div>
+<div class="scene clip" id="scene2" data-start="3.67" data-duration="3.67" data-track-index="1">
+<div class="glass" id="card2"><div class="card-inner">
+<div class="kicker" id="k2">One PWA</div>
+<div class="h1" id="h2">Install once.<br>Open offline.</div>
+<div class="sub" id="s2">Android, iOS or desktop. The same app in your browser.</div>
+<div class="chips" id="chips1"><div class="chip">No APK</div><div class="chip">No F-Droid</div><div class="chip">No Play Protect</div></div>
+</div></div>
+</div>
+<div class="scene clip" id="scene3" data-start="7.33" data-duration="3.67" data-track-index="1">
+<div class="glass" id="card3"><div class="card-inner">
+<div class="kicker" id="k3">OpenPay</div>
+<div class="h1" id="h3">Pay even with<br>zero signal.</div>
+<div class="sub" id="s3">Open source · Apache 2.0 · Built for low signal</div>
+
+</div></div>
+</div>
+</div>
+<script>
+const tl = gsap.timeline({paused:true});
+tl.fromTo("#glowa",{scale:.9,opacity:.7},{scale:1.12,opacity:1,duration:5.5,ease:"sine.inOut",yoyo:true,repeat:1},0);
+tl.fromTo("#glowb",{scale:.9,opacity:.6},{scale:1.1,opacity:1,duration:5.5,ease:"sine.inOut",yoyo:true,repeat:1},0);
+tl.fromTo("#card1",{opacity:0,y:70,scale:.96},{opacity:1,y:0,scale:1,duration:.7,ease:"power3.out"},0.25);
+tl.fromTo("#k1",{opacity:0,y:24},{opacity:1,y:0,duration:.45,ease:"power2.out"},0.45);
+tl.to("#scene1",{opacity:0,duration:.45,ease:"power1.in"},3.22);
+tl.fromTo("#card2",{opacity:0,y:70,scale:.96},{opacity:1,y:0,scale:1,duration:.7,ease:"power3.out"},3.92);
+tl.fromTo("#k2",{opacity:0,y:24},{opacity:1,y:0,duration:.45,ease:"power2.out"},4.12);
+tl.fromTo("#chips1",{opacity:0,y:30},{opacity:1,y:0,duration:.5,ease:"power2.out"},4.67);
+tl.to("#scene2",{opacity:0,duration:.45,ease:"power1.in"},6.89);
+tl.fromTo("#card3",{opacity:0,y:70,scale:.96},{opacity:1,y:0,scale:1,duration:.7,ease:"power3.out"},7.58);
+tl.fromTo("#k3",{opacity:0,y:24},{opacity:1,y:0,duration:.45,ease:"power2.out"},7.78);
+window.__timelines["main"] = tl;
+tl.seek(0);
+</script>
+</body>
+</html>

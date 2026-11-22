@@ -1,55 +1,39 @@
 # Forking OpenPay
 
-OpenPay is built to be forked. The whole map, start to finish:
+OpenPay is built to be forked. The whole map, start to finish.
 
 ## What you are forking
 
-- `android/` the app. Kotlin 2.0, Jetpack Compose, minSdk 29, no internet permission, everything local.
-- `site/` the site and PWA. Plain HTML, one CSS file, one JS file, one service worker. No framework, no build step.
-- `.github/workflows/` CI. Tests and a debug APK on every push, a signed release APK published on every `v*` tag, the site deploys to Pages on every change under `site/`.
+- `site/` the PWA and the site. Plain HTML, one CSS file, one JS file, one service worker. No framework, no build step.
+- `.github/workflows/deploy-site.yml` Pages deploy on every push that touches `site/`. No other CI.
 - `docs/ARCHITECTURE.md` the system map. Read it first.
 - `RESEARCH.md` and `PRODUCT.md` the reasoning behind every feature.
 
 ## Your first evening
 
 1. Fork, clone, open the folder in your editor with its AI agent. The agent should read `CLAUDE.md` and `docs/ARCHITECTURE.md` first. That is the entire onboarding.
-2. Build and test:
+2. Preview locally:
    ```
-   cd android
-   ./gradlew test assembleDebug
+   cd site
+   python3 -m http.server 8000
    ```
-   JDK 17 or newer, Android SDK with platform 34.
-3. Install `android/app/build/outputs/apk/debug/app-debug.apk` on a phone with an Indian SIM.
-4. Change one small thing, push, watch CI go green. That is the whole loop.
-
-## Signing your fork
-
-CI signs release builds from repo secrets. Set four secrets in your fork (Settings, Secrets and variables, Actions):
-
-- `OPENPAY_KEYSTORE_BASE64`: `base64 -w0 your-release.keystore`
-- `OPENPAY_STORE_PASSWORD`, `OPENPAY_KEY_PASSWORD`: make them the same value, Android packaging rejects PKCS12 keystores with split passwords
-- `OPENPAY_KEY_ALIAS`
-
-Generate a keystore once:
-
-```
-keytool -genkeypair -keystore release.keystore -alias openpay -keyalg RSA -keysize 2048 -validity 10000
-```
-
-Keep the keystore and passwords out of git, forever. Lose them and you can never update your published app.
+   Open `http://localhost:8000/app.html`. There is no compiler and no package install.
+3. Try Pay with a test VPA and a carrier setting, then Recharge with the SBI Quick path. Nothing is sent from the app, so no SIM or bank account is needed to see the handoffs.
+4. Change one small thing, push, watch the Pages deploy go green. That is the whole loop.
 
 ## Publishing your fork's site
 
-Pages runs from the `site` workflow on every push that touches `site/`. In your fork, enable Pages (Settings, Pages, Source: GitHub Actions). Done.
+Pages runs from `deploy-site.yml` on every push that touches `site/`. In your fork, enable Pages (Settings, Pages, Source: GitHub Actions). Done. Two rapid pushes can cancel each other in the `pages` concurrency group; if the site did not update, re-run the deploy with one push.
 
 ## House rules that keep the project small
 
-- No internet permission in the app. This is the product's core claim. Nothing that needs the network in the app itself is ever acceptable.
-- Every money rule that can be pure Kotlin lives in `android/.../rails/` or `android/.../notes/` and gets unit tests. UI files call them, they do not re-implement them.
-- English literals are the translation keys in `ui/Lang.kt`. Missing Hindi falls back to English, it can never break.
-- Copy rules everywhere (app, site, docs): no em dashes, no filler, no claims the code does not make. Use the middle dot · as a separator.
-- One build step only (`gradle`), one deploy path only (Actions). If a change adds a tool, it needs a better reason than taste.
+- The app makes no network calls. It builds `upi://`, `tel:` and `sms:` links. Nothing that needs a fetch, an API or a backend in the app is ever acceptable.
+- Rail and recharge rules live as pure functions in `site/webapp.js`, under the path builders. Event handlers call them, they do not re-implement them.
+- English literals are the translation keys, Hindi lives in the `HI` map, and `data-i` attributes are the hooks. Missing Hindi falls back to English, it can never break.
+- Copy rules everywhere (app, site, docs): no em dashes, no en dashes, no filler, no claims the code does not make. Use the middle dot · as a separator.
+- One deploy path only (Actions to Pages). If a change adds a tool or a build step, it needs a better reason than taste.
+- All state stays in the browser. No cloud profiles, no analytics, no accounts.
 
 ## Where things are
 
-See `docs/ARCHITECTURE.md` for the full map: the rail ladder, Notes, confirmation truth, the spending log, the guards, and every file that matters.
+See `docs/ARCHITECTURE.md` for the full map: the rail ladder, confirmation truth, the recharge handoff, the local record, and every file that matters.

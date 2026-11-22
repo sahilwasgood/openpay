@@ -1,14 +1,14 @@
 # OpenPay Research: Offline UPI Payments in India
 
-Compiled 2026-10-23. Sources inline. Covers the two reference repos, their fork networks, the official UPI framework, community sentiment, and the competitive landscape.
+Compiled 2026-10-23. Sources inline. Covers the two reference repos, the official UPI framework, community sentiment, and the competitive landscape. Recharge addendum checked 2026-11-22.
 
 ## TL;DR
 
 1. Both reference repos are USSD/IVR wrappers: real payer-side apps, no payee side, no offline value transfer. Flowpay is alive (Oct 2026), OffPayApp is dead (June 2026). Neither has shipped an APK.
-2. The official rails for no-data payments exist and work (*99# USSD, UPI 123Pay IVR, UPI Lite, Lite X NFC) but adoption is near zero because the UX is clunky and awareness is low.
+2. The official rails for no-data payments exist and work (USSD *99#, UPI 123Pay IVR, UPI Lite, Lite X NFC) but adoption is near zero because the UX is clunky and awareness is low.
 3. The top user pain is not "no internet" in isolation; it is pending and double debited payments with no recourse visibility, plus merchant side trust (fake screenshots, dead soundboxes).
-4. Nobody ships consumer side offline queuing: a signed payment intent exchanged between two phones that settles automatically when connectivity returns. Square proved the merchant side of this model with offline card mode. That is the white space.
-5. An indie team cannot become a UPI app (TPAP requires PSP bank sponsorship, 5 to 9 months, NPCI certification). The pragmatic route is orchestration: UPI intents when online, carrier rails (USSD, IVR) when not, and deferred settlement for true zero signal.
+4. Nobody ships a clean consumer PWA that just orchestrates the existing rails, composes the recharge handoff, and is honest about what is pending. That is the opening.
+5. An indie team cannot become a UPI app (TPAP requires PSP bank sponsorship, 5 to 9 months, NPCI certification). The pragmatic route is an installable PWA that builds UPI intents and dial or SMS handoffs, with no server and no money held.
 
 ---
 
@@ -80,17 +80,17 @@ Read: the USSD wrapper idea keeps being reinvented every few months and dying. T
 - **Soundboxes** (Paytm/PhonePe/BharatPe): voice confirmation of online UPI; payer still needs data. Proof that merchants adopt single purpose, dead simple devices.
 - **PayNearby/AePS**: Aadhaar biometric agent cash network; ₹10,000/txn; RBI tightened agent KYC Jan 2026.
 - **Digital Rupee**: rail without a product; shrinking circulation.
-- **Global analogues**: Square/Shopify POS offline mode (pre-authorized offline card queuing with merchant set caps, auto clearing on reconnect) is the proven model to mirror on the consumer side; London OMNY deferred risk based transit settlement; Lightning custodial vouchers and Cashu ecash for offline tokens; M-Pesa for USSD native UX at national scale.
+- **Global analogues**: Square/Shopify POS offline mode (queued offline card payments with merchant caps and auto clearing on reconnect), London OMNY deferred risk based transit settlement, Lightning custodial vouchers and Cashu ecash for offline tokens, and M-Pesa for USSD native UX at national scale.
 
 ## 7. White space (what nobody ships)
 
-1. **Graceful degradation.** UPI today is binary: works or errors. No app walks a fallback ladder (intent → USSD → IVR → deferred) automatically.
-2. **Consumer offline queuing.** A signed payment intent passed payer to payee via QR/NFC, verified offline, settled with one tap over UPI when either side reconnects. RBI's small value offline framework is the legal backdrop; nobody has built the consumer version.
-3. **Offline merchant verification.** Cryptographic vouchers kill the fake screenshot problem; TTS voice confirmation kills the soundbox dependence. No open source product does both.
-4. **Pending payment justice.** Every stuck transaction app shows a spinner; none explains T+1/T+5 rights or automates escalation.
-5. **Trust posture as a feature.** Both repos proved the pitch (no INTERNET permission, no server) dies without distribution and polish. Neither shipped an APK or a language beyond English.
+1. **Graceful degradation.** UPI today is binary: works or errors. No app walks a fallback ladder (intent to USSD to IVR) and tells you what each rail needs.
+2. **Pending payment clarity.** Every stuck transaction app shows a spinner; none explains T+1/T+5 rights or gives the user a plain local record of what they handed off.
+3. **Recharge without data.** Recharge needs no VPA and no app on the operator side. The bank SMS and USSD or IVR paths exist but are buried in bank menus. Nothing composes the exact instruction for the user to send from their own handset.
+4. **Trust posture as a feature.** Both repos proved the pitch dies without distribution and polish. A PWA removes the install barrier: no store, no APK, no sideloading. No server, no accounts and no network calls are checkable properties, not marketing.
+5. **Local first history.** No cloud profile, no analytics, all state in the browser, an export the user controls.
 
-The conclusion: OpenPay should not be "another USSD wrapper". It should be the complete ladder plus deferred settlement plus merchant verification, in a package simple enough for a shopkeeper and a parent.
+The conclusion: OpenPay should not be "another USSD wrapper". It should be the full rail ladder and the recharge handoff in an installable PWA, honest about confirmation and simple enough for a shopkeeper and a parent.
 
 ## 8. Recharge without data (checked 2026-11-22)
 
@@ -98,4 +98,4 @@ Recharge is not a UPI payment. The bank SMS paths need only signal. SBI Quick re
 
 The other live paths: UPI 123Pay IVR 08045163666 has a Mobile Recharge menu through a biller, bank -> UPI -> operator, no wallet, and the menu varies by bank. Bharat Connect postpaid covers all major operators, but prepaid data packs only BSNL and MTNL. Operator self service needs no bank money: Vi `*199#`, Airtel `*121#` or `*567*3#`, BSNL `*123#` with STV and RC, MTNL `*444#`, Jio app or IVR only. Two old paths are dead: the Vi plus Paytm `@paytm` VPA, with Paytm retiring handles on 1 Aug 2024, and ICICI SMS recharge, stopped 9 Mar 2023. Full table, sources, liveness and verification gaps in [docs/RECHARGE.md](docs/RECHARGE.md).
 
-The architecture stays local. What a conventional app would call a backend is here the domain/rules layer, pure on-device code that picks the path and formats the handoff. A server would break the no INTERNET permission and no accounts promise, and a collection and settlement flow would make OpenPay an unlicensed payment aggregator. OpenPay composes the instruction, the user sends it, and the money moves bank or prepaid balance to operator directly.
+The architecture stays local. What a conventional app would call a backend is here the rules layer, pure on-device code that picks the path and formats the handoff. A server would break the no accounts and no network calls promise, and a collection and settlement flow would make OpenPay an unlicensed payment aggregator. OpenPay composes the instruction, the user sends it, and the money moves bank or prepaid balance to operator directly.

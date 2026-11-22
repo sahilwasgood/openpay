@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OpenPay · UPI that works with zero signal</title>
-<meta name="description" content="OpenPay picks the strongest rail that still works: UPI intent, USSD, IVR, or a signed offline Note you settle with one tap. Open source, no internet permission, no accounts.">
+<meta name="description" content="OpenPay is an installable web app for India. UPI intent, USSD and IVR when the signal is weak, plus offline recharge handoff. No server, no account, no APK.">
 <meta property="og:title" content="OpenPay · UPI that works with zero signal">
-<meta property="og:description" content="One payment, four rails. Works with data, with signal only, or with nothing at all.">
+<meta property="og:description" content="One payment, three rails that still work. Install it from the browser, no APK needed.">
 <link rel="icon" href="icons/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="OpenPay">
-<link rel="stylesheet" href="styles.css?v=15">
+<link rel="stylesheet" href="styles.css?v=16">
 </head>
 <body>
 
@@ -30,9 +30,7 @@
     </a>
     <nav class="nav-links" aria-label="Sections">
       <a href="#ladder">How it works</a>
-      <a href="#notes">Notes</a>
-      <a href="#media">Watch</a>
-      <a href="#merchant">Merchant</a>
+      <a href="#recharge">Recharge</a>
       <a href="#trust">Trust</a>
       <a href="#faq">FAQ</a>
     </nav>
@@ -40,7 +38,7 @@
       <a class="gh" href="https://github.com/sahilwasgood/openpay" aria-label="GitHub repository">
         <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
       </a>
-      <a class="btn btn-primary btn-sm" href="https://github.com/sahilwasgood/openpay/releases">Download</a>
+      <a class="btn btn-primary btn-sm" href="app.html">Open the app</a>
     </div>
   </div>
 </header>
@@ -50,39 +48,27 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow">Open source · Android · India</p>
+      <p class="eyebrow">Open source · PWA · India</p>
       <h1>Pay even with zero signal.</h1>
-      <p class="lede">OpenPay hands every payment to the strongest rail that still works. UPI intent when you have data, USSD or IVR when you only have signal, and a signed offline Note when you have nothing. It confirms, or it tells you exactly what happens next.</p>
+      <p class="lede">OpenPay is one web app you install from your browser. No APK, no shop, no account. With data it hands off to your UPI app. With signal only it opens the carrier menu or the 123Pay call. It confirms, or it tells you exactly what happens next.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="app.html">Open the web app</a>
-        <a class="btn btn-ghost" href="https://github.com/sahilwasgood/openpay/releases">Android APK</a>
+        <a class="btn btn-primary" href="app.html">Open the app</a>
+        <a class="btn btn-ghost" href="#ladder">See how it works</a>
       </div>
-      <p class="meta"><span>Open source</span><span>Apache 2.0</span><span class="net" id="netchip">Your network: online</span></p>
+      <p class="meta">Works offline after the first load · Your data stays in your browser</p>
     </div>
-    <div class="phone" aria-hidden="true">
-      <div class="phone-notch"></div>
-      <div class="phone-screen">
-        <div class="p-status"><span>12:47</span><span class="p-sig"><i></i><i></i><i class="off"></i><i class="off"></i><em>LTE</em></span></div>
-        <div class="p-head">
-          <svg class="mark-s" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="currentColor"/></svg>
-          OpenPay
+    <div class="hero-art" aria-hidden="true">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="p-head"><span class="mark-s"></span><span>OpenPay</span><span class="p-status">online</span></div>
+          <div class="p-payee"><div class="p-ava"></div><div><div class="dim">Paying</div><div>Meera's Chai</div></div><div class="p-amount">₹45</div></div>
+          <div class="p-rail"><span class="p-rail-t">UPI intent</span><span class="chip">Data</span></div>
+          <div class="p-rail"><span class="p-rail-t">USSD · *99#</span><span class="chip">Signal</span></div>
+          <div class="p-rail"><span class="p-rail-t">IVR · 123Pay</span><span class="chip">Signal</span></div>
+          <div class="p-actions"><div class="p-btn">Pay ₹45</div></div>
+          <div class="p-foot">PIN stays with the UPI app or carrier menu</div>
         </div>
-        <div class="p-payee">
-          <div class="p-ava">M</div>
-          <div><strong>Meera's Chai Stall</strong><span>meera@okhdfcbank</span></div>
-        </div>
-        <div class="p-amount">₹45</div>
-        <div class="p-note">Four cutting chai</div>
-        <div class="p-rail">
-          <span class="p-rail-t">Best rail right now</span>
-          <ul>
-            <li class="on"><b>USSD</b><span>*99#</span><i>active</i></li>
-            <li><b>IVR</b><span>123Pay</span><i>standby</i></li>
-            <li><b>Note</b><span>offline</span><i>standby</i></li>
-            <li class="dim"><b>Intent</b><span>needs data</span><i>off</i></li>
-          </ul>
-        </div>
-        <div class="p-pay">Pay ₹45</div>
       </div>
     </div>
   </div>
@@ -91,319 +77,220 @@
 <section class="section" id="ladder">
   <div class="wrap">
     <p class="eyebrow">The rail ladder</p>
-    <h2>One payment. Four rails.</h2>
-    <p class="sub">You never pick a rail. OpenPay reads your network and your carrier, then starts the payment on the best option that still works. Switch the state to watch it decide.</p>
-
-    <div class="board">
-      <div class="seg" id="netseg" data-state="signal" role="group" aria-label="Network state">
-        <button type="button" data-state="full">Full network</button>
-        <button type="button" data-state="signal" aria-pressed="true">Signal only</button>
-        <button type="button" data-state="offline">Zero signal</button>
-      </div>
-      <p class="board-status" aria-live="polite">Picks: <strong id="raillabel">USSD, or IVR on Jio</strong></p>
-    </div>
-
-    <div class="rails" id="railboard" data-state="signal">
+    <h2>Three rails, one decision.</h2>
+    <p class="sub">OpenPay looks at what the phone has right now and hands the payment to the strongest rail that still works. You can change the state below to watch it decide.</p>
+    <div class="rails" data-state="full">
       <article class="rail rail-intent">
-        <div class="rail-ico">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M12 7v6.5m0 0 2.3-2.3M12 13.5 9.7 11.2"/></svg>
-        </div>
+        <div class="rail-ico">↗</div>
         <h3>UPI Intent</h3>
         <p class="needs"><span>Data</span></p>
-        <p>Hands off to any UPI app on your phone with the payee and amount filled in. Your bank does the rest.</p>
-        <p class="limit">Your bank's UPI limit</p>
+        <p>Hands off to any installed UPI app with the payee and amount filled in. Your bank does the rest.</p>
+        <p class="limit">Your bank's limit</p>
       </article>
       <article class="rail rail-ussd">
-        <div class="rail-ico">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="1.8"/><circle cx="12" cy="6" r="1.8"/><circle cx="18" cy="6" r="1.8"/><circle cx="6" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="18" cy="12" r="1.8"/><circle cx="8" cy="18.5" r="1.8"/><circle cx="16" cy="18.5" r="1.8"/></svg>
-        </div>
+        <div class="rail-ico">*#</div>
         <h3>USSD · *99#</h3>
-        <p class="needs"><span>Signal</span><span class="warn">Not on Jio</span></p>
-        <p>NPCI's menu over the SIM signaling channel. No data, no app. Works on Airtel, Vi and BSNL.</p>
+        <p class="needs"><span>Signal, not Jio</span></p>
+        <p>NPCI's menu over the SIM signalling channel. No data, no app. Works on Airtel, Vi and BSNL.</p>
         <p class="limit">₹5,000 per payment</p>
       </article>
       <article class="rail rail-ivr">
-        <div class="rail-ico">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l1.5 4.5L8 10a12 12 0 0 0 6 6l1.5-2.5L20 15v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2Z"/><path d="M15.5 4.5a5 5 0 0 1 4 4M15.5 8.5a1 1 0 0 1 1 1"/></svg>
-        </div>
+        <div class="rail-ico">☎</div>
         <h3>IVR · UPI 123Pay</h3>
         <p class="needs"><span>Signal</span></p>
-        <p>Jio carries no USSD, so OpenPay dials the 123Pay line and keys in the details with tones. No menus to walk.</p>
+        <p>Jio carries no USSD, so OpenPay opens the 123Pay line and keys in the details with tones.</p>
         <p class="limit">₹10,000 per payment</p>
       </article>
-      <article class="rail rail-note">
-        <div class="rail-ico">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v14.5L15.5 16 13 17.5 10.5 16 8 17.5 6 16Z"/><path d="m9 8.5 2 2 4-4"/></svg>
-        </div>
-        <h3>OpenPay Note</h3>
-        <p class="needs"><span>Nothing</span></p>
-        <p>A voucher signed on your phone and verified on theirs with zero signal. One tap settles it over UPI when either phone reconnects.</p>
-        <p class="limit">₹2,000 per Note</p>
-      </article>
     </div>
-  </div>
-</section>
-
-
-<section class="section" id="devs">
-  <div class="wrap dev-cta">
-    <p class="eyebrow">For developers</p>
-    <h2>Fork it. Your agent can ship a build tonight.</h2>
-    <p class="sub">Kotlin and Compose, one static site, 48 tests, CI that signs and releases on every tag. The <a href="https://github.com/sahilwasgood/openpay/blob/main/CONTRIBUTING.md">forking guide</a> is the whole map.</p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="https://github.com/sahilwasgood/openpay/fork">Fork on GitHub</a>
-      <a class="btn btn-ghost" href="https://github.com/sahilwasgood/openpay/blob/main/docs/ARCHITECTURE.md">Read the map</a>
-    </div>
-  </div>
-</section>
-
-<section class="section section-tint" id="notes">
-  <div class="wrap wrap-narrow">
-    <p class="eyebrow">The fourth rail</p>
-    <h2>A Note is a promissory note.</h2>
-    <p class="sub">You met this instrument in school banking: under the Negotiable Instruments Act, 1881, a promissory note is a written, unconditional promise, signed by the maker, to pay a certain sum to a certain person. India runs on its informal twin every day: udhaar written in the kirana's khata book, trusted on both sides, settled later. An OpenPay Note is both at once, digital.</p>
-    <div class="note-map">
-      <div class="note-map-row"><span>Maker, the signer</span><strong>Your phone's key, never leaves it</strong></div>
-      <div class="note-map-row"><span>Payee</span><strong>Name and UPI ID in the note</strong></div>
-      <div class="note-map-row"><span>Certain sum</span><strong>The amount, locked under the signature</strong></div>
-      <div class="note-map-row"><span>Written and signed</span><strong>Ed25519 signature over every field</strong></div>
-      <div class="note-map-row"><span>Settled later</span><strong>One tap over normal UPI, with your PIN</strong></div>
-    </div>
-    <div class="notes-steps">
-      <div class="notes-step"><span>1</span><div><strong>Write it, offline.</strong> No signal needed. Your phone signs the payee, the amount, a serial number and an expiry, then shows a QR.</div></div>
-      <div class="notes-step"><span>2</span><div><strong>Check it, offline.</strong> The payee scans. Signature, expiry, the Rs 2,000 cap and replay by serial, all verified on their phone. Zero network on either side.</div></div>
-      <div class="notes-step"><span>3</span><div><strong>Honour it, online.</strong> Later, with signal, one tap opens your usual UPI app with payee and amount prefilled.</div></div>
-    </div>
-    <p class="sub">Forged screenshots cannot pass, because nothing visual is trusted. The app and the web app remember serials, so the same slip cannot be spent twice there. The receiver does not even need the app: any browser can check a Note's signature and expiry on the <a href="verify.html">verify page</a>, loaded once and offline forever after. That bare page does not remember serials across visits, so replay checks need the app or web app.</p>
-  </div>
-</section>
-
-<section class="section section-tint" id="merchant">
-  <div class="wrap two-col">
-    <div>
-      <p class="eyebrow">Merchant mode</p>
-      <h2>For the counter. No soundbox, no fake screenshots.</h2>
-      <p class="sub">A customer with no signal taps Pay and hands you a Note. Your phone checks the signature offline, locks the amount, and reads it back out loud. When your connection returns, one tap settles each Note over UPI.</p>
-      <ul class="ticks">
-        <li><strong>Verify offline.</strong> Ed25519 signatures checked on the device. No server, no data.</li>
-        <li><strong>Hear it.</strong> Voice readback replaces the soundbox.</li>
-        <li><strong>One tap to settle.</strong> Open a Note and tap Settle, or use Settle all open notes, which confirms them one at a time.</li>
-      </ul>
-    </div>
-    <div class="receipt" aria-hidden="true">
-      <div class="r-head">
-        <span>OpenPay Note</span>
-        <span class="r-sig"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="m4.5 12.5 5 5 10-11"/></svg> verified</span>
+    <style>
+      .board .seg { padding: 9px 18px; background: transparent; border: 1px solid var(--line-2); color: var(--ink-2); font: 500 14px var(--font-display); cursor: pointer; }
+      .board .seg[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+    </style>
+    <div class="board" id="board">
+      <div class="board-status">
+        <button class="seg" type="button" data-net="online">Data</button>
+        <button class="seg" type="button" data-net="signal">Signal</button>
+        <button class="seg" type="button" data-net="none">Nothing</button>
+        <button class="seg" type="button" data-carrier="jio">On Jio</button>
       </div>
-      <div class="r-row"><span>Pay to</span><strong>Meera's Chai Stall</strong></div>
-      <div class="r-row"><span>Amount</span><strong class="r-amt">₹45.00</strong></div>
-      <div class="r-row"><span>Serial</span><span class="mono">NB7F-04A1</span></div>
-      <div class="r-row"><span>Nonce</span><span class="mono">9C22E610</span></div>
-      <div class="r-row"><span>Expires</span><span class="mono">18 Oct 2026, 21:04</span></div>
-      <div class="r-row"><span>Signature</span><span class="mono">ed25519 · 64B</span></div>
-      <div class="r-foot">Settle over UPI with a tap · replay proof in the app</div>
+      <p class="board-copy" id="boardCopy">With data, OpenPay builds a UPI link and hands it to your UPI app.</p>
     </div>
   </div>
 </section>
 
-<section class="section" id="media">
+<section class="section section-tint" id="recharge">
   <div class="wrap">
-    <p class="eyebrow">Watch it</p>
-    <h2>Thirty seconds, two shapes.</h2>
-    <p class="sub">The brand reel and the promissory note story, portrait for the phone, landscape for the big screen. Rendered from source in <a href="https://github.com/sahilwasgood/openpay/tree/main/brand">brand/videos</a>.</p>
-    <div class="vidgrid">
-      <video src="videos/openpay-reel-9x16.mp4" controls preload="none"></video>
-      <video src="videos/openpay-notes-9x16.mp4" controls preload="none"></video>
-      <video src="videos/openpay-reel-16x9.mp4" controls preload="none"></video>
-      <video src="videos/openpay-notes-16x9.mp4" controls preload="none"></video>
+    <p class="eyebrow">Offline recharge</p>
+    <h2>Buy a data pack with zero data.</h2>
+    <p class="sub">OpenPay does not process the payment. It composes the exact SMS or opens the dialer, and you confirm it in your own phone app. Your bank pays the operator, not OpenPay.</p>
+    <div class="rc-stage">
+      <div class="rc-head">
+        <div>
+          <p class="rc-eyebrow">Recharge handoff</p>
+          <h3 class="rc-title">Money goes to the operator. Not to us.</h3>
+        </div>
+        <span class="rc-badge">No wallet · No server</span>
+      </div>
+      <p class="rc-intro">Four ways in, one rule: every message or call is yours to send. OpenPay never holds money and never becomes the merchant.</p>
+      <div class="rc-grid">
+        <div class="glass rc-card">
+          <h4 class="rc-card-h">Bank SMS</h4>
+          <p class="rc-mini">SBI Quick composes the two-step MOBRC and MOBACC messages, with the daily cap shown before you send. Axis composes a single MOBILE message for any number, no internet needed.</p>
+          <p class="rc-mini">SBI Quick: ₹700 a day, ₹1,000 a month, your own registered mobile only.</p>
+        </div>
+        <div class="glass rc-card">
+          <h4 class="rc-card-h">Voice and operator menus</h4>
+          <p class="rc-mini">UPI 123Pay opens the voice line for a Mobile Recharge menu, paid from your bank over UPI. Operator menus spend existing balance or a voucher, not bank money.</p>
+          <p class="rc-mini">Jio has no USSD. Use the 123Pay call or the operator's own app.</p>
+        </div>
+      </div>
+      <p class="rc-mini">A website cannot run USSD or send SMS by itself. That is why the last tap is always yours.</p>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="app.html#recharge">Try the recharge handoff</a>
+      <a class="btn btn-ghost" href="https://github.com/sahilwasgood/openpay/blob/main/docs/RECHARGE.md">Read the codes and sources</a>
     </div>
   </div>
 </section>
 
-<section class="section section-dark" id="trust">
+<section class="section" id="watch">
+  <div class="wrap">
+    <p class="eyebrow">Watch</p>
+    <h2>Four short films. All portrait.</h2>
+    <p class="sub">Made for the phone in your hand. The same liquid glass surfaces as the app, no APK, no server.</p>
+    <style>
+      .vidgrid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .vidgrid.four video { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 18px; background: #0B0F14; }
+      @media (max-width: 900px) { .vidgrid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    </style>
+    <div class="vidgrid four">
+      <video src="videos/openpay-pay-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="Pay with zero signal"></video>
+      <video src="videos/openpay-recharge-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="Offline recharge handoff"></video>
+      <video src="videos/openpay-ivr-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="UPI 123Pay voice line"></video>
+      <video src="videos/openpay-trust-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="No server, no APK"></video>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="trust">
   <div class="wrap">
     <p class="eyebrow">Trust</p>
-    <h2>Nothing to hide, by design.</h2>
+    <h2>Nothing to leak, nothing to install from a store.</h2>
     <div class="trust-grid">
       <div class="trust">
-        <h3>No internet permission</h3>
-        <p class="code">android.permission.INTERNET · absent</p>
-        <p>The app cannot reach a server, so it cannot leak. Settlement rides the UPI apps already on your phone.</p>
+        <h3>No server</h3>
+        <p class="code">no network calls</p>
+        <p>The app makes no requests. Payee details, history and settings stay in this browser.</p>
       </div>
       <div class="trust">
         <h3>No accounts</h3>
         <p class="code">signup flow · none</p>
-        <p>No phone number, no cloud, no profile. Install and pay.</p>
+        <p>No phone number, no cloud, no profile. Open it and pay.</p>
       </div>
       <div class="trust">
-        <h3>Encrypted on device</h3>
-        <p class="code">AES-256-GCM · keys in Android Keystore</p>
-        <p>Every record lives in a local encrypted vault. Export anytime as CSV.</p>
-      </div>
-      <div class="trust">
-        <h3>Signed, not screenshotted</h3>
-        <p class="code">Ed25519 · every note, every receipt</p>
-        <p>Merchants hold proof, not pictures. The fake screenshot economy dies at the counter.</p>
+        <h3>No APK</h3>
+        <p class="code">install from the browser</p>
+        <p>One PWA for Android, iOS and desktop. Add it to the home screen once and it opens offline.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="limits">
+<section class="section section-pale" id="limits">
   <div class="wrap">
     <p class="eyebrow">The honest numbers</p>
     <h2>Limits, in the open.</h2>
     <div class="limits">
-      <div class="limit-row"><span>UPI Intent</span><span>Your bank's limit, typically ₹1,00,000 a day. ₹5,00,000 for hospitals and taxes.</span></div>
-      <div class="limit-row"><span>USSD · *99#</span><span>₹5,000 per payment. NPCI's cap on the channel.</span></div>
+      <div class="limit-row"><span>UPI Intent</span><span>Your bank's limit, typically ₹1,00,000 a day.</span></div>
+      <div class="limit-row"><span>USSD · *99#</span><span>₹5,000 per payment. Not available on Jio.</span></div>
       <div class="limit-row"><span>IVR · 123Pay</span><span>₹10,000 per payment. Raised by RBI in Oct 2024.</span></div>
-      <div class="limit-row"><span>OpenPay Notes</span><span>₹2,000 per Note, ₹10,000 open at once. Small by design, until trust grows.</span></div>
+      <div class="limit-row"><span>SBI Quick recharge</span><span>₹700 a day, ₹1,000 a month.</span></div>
     </div>
   </div>
 </section>
 
-<section class="section" id="mdr">
-  <div class="wrap two-col">
-    <div>
-      <p class="eyebrow">The new fee</p>
-      <h2>The Rs 2,000 line, explained.</h2>
-      <p class="sub">From Oct 15, 2026, UPI charges large merchants 0.4% on person to merchant payments above Rs 2,000, capped at Rs 300. The customer pays nothing, ever. Person to person transfers stay free. Small merchants are exempt.</p>
-      <ul class="ticks">
-        <li><strong>Will splitting Rs 10,000 into 5-6 parts save tax?</strong> No. MDR is not tax. Income tax looks at total receipts, not transaction size, and hiding turnover is evasion, not planning.</li>
-        <li><strong>Does splitting save the payer money?</strong> No. The payer pays zero MDR either way. The fee comes out of the merchant's proceeds.</li>
-        <li><strong>Does splitting even work?</strong> No. NPCI prohibits splitting one purchase into smaller payments and applies the MDR to the total value received for a single invoice. It monitors for it.</li>
-        <li><strong>Person to person is free, always.</strong> That is exactly what OpenPay payments are: push payments to a personal UPI ID. Zero MDR through this app, any amount. Small merchants are exempt from MDR anyway; only large merchants pay it, on their side.</li>
-      </ul>
-      <p class="sub">Genuine personal transfers stay free. For recurring payments, the legitimate automation rail is UPI Autopay mandates.</p>
-    </div>
-    <div class="mdr-calc">
-      <p class="mdr-label">Merchant fee calculator</p>
-      <div class="mdr-row">
-        <input id="mdrAmount" type="number" min="0" step="100" placeholder="10000" inputmode="numeric">
-        <span>Rs</span>
-      </div>
-      <div class="mdr-out">
-        <div class="mdr-line"><span>Merchant fee</span><strong id="mdrFee">Rs 40</strong></div>
-        <div class="mdr-line"><span>You pay</span><strong>Rs 0, always</strong></div>
-        <div class="mdr-line"><span>Person to person, any amount</span><strong>Rs 0</strong></div>
-      </div>
-      <div class="mdr-split">
-        <label for="mdrParts">If it were cut into</label>
-        <select id="mdrParts">
-          <option value="0">one payment</option>
-          <option value="2">2 parts</option>
-          <option value="3">3 parts</option>
-          <option value="6">6 parts</option>
-        </select>
-      </div>
-      <div class="mdr-warn" id="mdrWarn" hidden>
-        All parts land under Rs 2,000. That is prohibited structuring: NPCI applies the fee to the total received for one invoice and monitors for exactly this. Nothing is saved, by anyone.
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section section-pale" id="faq">
+<section class="section" id="faq">
   <div class="wrap wrap-narrow">
     <p class="eyebrow">FAQ</p>
     <h2>Questions people actually ask.</h2>
     <div class="faq">
       <details open>
+        <summary>Is there an APK?</summary>
+        <p>No. OpenPay is a PWA. Open app.html in your browser, tap Install or Add to Home Screen, and it works like an app. There is nothing to sideload and no store permission to fight.</p>
+      </details>
+      <details>
         <summary>Does it work on Jio?</summary>
-        <p>Yes. Jio's all IP network carries no USSD, so OpenPay moves to the UPI 123Pay phone line and enters the details with dial tones. Same money, same rails, no menus.</p>
+        <p>Jio's all IP network carries no USSD, so OpenPay opens the UPI 123Pay phone line and enters the details with dial tones. For a data pack, use the recharge handoff: the 123Pay voice menu or your operator's own app.</p>
       </details>
       <details>
-        <summary>What if the payee does not have the OpenPay app?</summary>
-        <p>With any signal at all, the USSD and IVR rails pay any UPI user, no app needed on their side. With zero signal, they check a Note in any browser at the <a href="verify.html">verify page</a>: the payer shares the Note as text, the payee pastes it, and the signature and expiry are checked on their device. The bare page does not remember serials across visits, so replay checks need the app or web app. Loading the page once is enough, it keeps working offline afterwards. 60 KB over 2G or a shared hotspot is all the setup a shop needs, once.</p>
+        <summary>Can I buy a data pack with no data and no balance?</summary>
+        <p>Yes, if you have money in your bank. SBI Quick and Axis Bank both accept an SMS recharge that debits your account and credits the operator. OpenPay writes the message for you. You send it from your own phone.</p>
       </details>
       <details>
-        <summary>What if the payer never settles a Note?</summary>
-        <p>Same thing that happens when someone does not pay their khata: the shop holds proof and decides. A verified Note is a signed, timestamped admission of the exact amount, so there is no arguing. The merchant can block that payer's key with one tap and every future Note from them is refused on sight. First notes from strangers are capped at Rs 500 with an explicit accept, known payers go up to Rs 2,000, so the worst case is the same credit a kirana store extends on trust, minus the forgery and the arguing.</p>
+        <summary>Who gets the money?</summary>
+        <p>The operator. In the bank SMS and UPI 123Pay paths your bank debits you and the operator is credited. OpenPay is never the payee and never holds a balance.</p>
       </details>
       <details>
-        <summary>Does it track my spending?</summary>
-        <p>Optionally, and only on your phone. With your permission the app reads your own bank debit SMS and builds a private monthly spending log. There is no internet permission, so that data physically cannot leave the device. Off by default it is not: it is on, clearly labelled, and one switch turns it off.</p>
-      </details>
-      <details>
-        <summary>Can I split a bill?</summary>
-        <p>Yes. The Split tab cuts a total into fair shares down to the paisa and signs one Note per person for the same UPI ID. Show each QR, and they verify offline like any Note.</p>
+        <summary>Does the web app see my bank SMS?</summary>
+        <p>No. Browsers cannot read SMS, so you mark a payment confirmed when your bank message arrives. Nothing is sent anywhere to check it.</p>
       </details>
       <details>
         <summary>Is OpenPay a wallet?</summary>
-        <p>No. It never holds money and never touches your funds. Online, your bank app pays. Offline, a Note is a promise that settles through your bank app later.</p>
+        <p>No. It never holds money. Your bank app pays online, and the recharge handoff only writes the instruction you send yourself.</p>
       </details>
       <details>
-        <summary>What does it cost?</summary>
-        <p>The app is free and open source. Person to person UPI is free. Shops already pay MDR above ₹2,000 like any UPI payment. OpenPay takes nothing.</p>
-      </details>
-      <details>
-        <summary>When can I install it?</summary>
-        <p>Three ways. The <a href="app.html">web app</a> pays, writes and verifies Notes, works offline once installed, no download needed: open it and tap Install in its header. The Android app carries the same rails plus bank SMS confirmation: one APK per version on Releases, F-Droid listing via IzzyOnDroid in submission for phones where Play Protect blocks sideloads. And the bare <a href="verify.html">verify page</a> checks any Note's signature and expiry in any browser, though replay checks need the app or web app.</p>
-      </details>
-      <details>
-        <summary>Play Protect flags the APK. Is something wrong?</summary>
-        <p>Play Protect cannot vouch for a certificate it has never seen, and ours is the project's own open source key. Some devices offer More details, Install anyway; some block outright with no continue option. If yours blocks: that device needs a store. F-Droid listing via IzzyOnDroid is the path being submitted, it installs OpenPay without Play Protect in the way, and the SHA-256 in each release note verifies any APK in between.</p>
-      </details>
-      <details>
-        <summary>The APK refuses to install.</summary>
-        <p>If an older OpenPay is already installed, uninstall it first. Releases before v0.4.0 were signed with a different key, and Android correctly refuses to mix signatures for one app. Your ledger stays on the phone only, so uninstalling loses it: settle or export first if that matters to you.</p>
-      </details>
-      <details>
-        <summary>Why not iOS?</summary>
-        <p>Apple does not let an app dial USSD or IVR sessions. A typing companion for iPhone is planned. The full ladder needs Android.</p>
+        <summary>Does it work offline?</summary>
+        <p>After the first load, yes. The interface, your history and the recharge instructions are cached in your browser. The handoff still needs a mobile signal because it uses SMS, USSD or a voice call, not mobile data.</p>
       </details>
     </div>
   </div>
 </section>
 
-
 </main>
 
 <footer class="footer">
   <div class="wrap footer-in">
-    <div class="footer-brand">
-      <a class="brand" href="#top">
-        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="47 16" stroke-dashoffset="-8" stroke-linecap="round"/><circle cx="16" cy="16" r="3.5" fill="currentColor"/></svg>
-        <span>OpenPay</span>
-      </a>
-      <p>Made for India's dead zones.</p>
-    </div>
-    <nav class="footer-links" aria-label="Footer">
+    <div class="footer-brand"><span class="mark-s"></span> OpenPay</div>
+    <div class="footer-links">
+      <a href="app.html">Open the app</a>
       <a href="https://github.com/sahilwasgood/openpay">GitHub</a>
-      <a href="https://sahilwasgood.github.io/openpay/">Web app</a>
-      <a href="https://github.com/sahilwasgood/openpay/releases">Releases</a>
-      <a href="#faq">FAQ</a>
-      <a href="https://github.com/sahilwasgood/openpay/blob/main/LICENSE">License</a>
-    </nav>
-  </div>
-  <div class="wrap footer-note">
-    <p>OpenPay is not a bank and not a PSP. Payments settle on NPCI's UPI rails through your bank. *99# and UPI 123Pay are NPCI services.</p>
+      <a href="https://github.com/sahilwasgood/openpay/blob/main/docs/RECHARGE.md">Recharge sources</a>
+    </div>
+    <p class="footer-note">Open source · No server · No APK · Built for low signal</p>
   </div>
 </footer>
-<script src="app.js?v=14" defer></script>
 
+<script src="app.js?v=16" defer></script>
 <script>
 (function () {
-  var amount = document.getElementById('mdrAmount');
-  var parts = document.getElementById('mdrParts');
-  var fee = document.getElementById('mdrFee');
-  var warn = document.getElementById('mdrWarn');
-  if (!amount) return;
-  function fmt(p) {
-    if (p === 0) return 'Rs 0';
-    return 'Rs ' + (p % 100 === 0 ? String(p / 100) : (p / 100).toFixed(2));
+  var rails = document.querySelector('.rails');
+  var copy = document.getElementById('boardCopy');
+  if (!rails || !copy) return;
+  var net = 'online';
+  var jio = false;
+  function render() {
+    rails.setAttribute('data-state', net === 'online' ? 'full' : 'signal');
+    copy.textContent = net === 'online'
+      ? 'With data, OpenPay builds a UPI link and hands it to your UPI app.'
+      : net === 'none'
+        ? 'With no network at all there is no rail to dial. Open a browser window again when you have a signal.'
+        : jio
+          ? 'Jio carries no USSD, so OpenPay opens the UPI 123Pay voice line and keys in the details.'
+          : 'With signal only, OpenPay opens the *99# carrier menu on Airtel, Vi or BSNL.';
+    document.querySelectorAll('.board .seg').forEach(function (b) {
+      var on = b.dataset.net === net || (b.dataset.carrier === 'jio' && jio);
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
   }
-  function update() {
-    var paise = Math.round((parseFloat(amount.value) || 0) * 100);
-    var merchantFee = paise > 200000 ? Math.min(paise * 4 / 1000, 30000) : 0;
-    fee.textContent = fmt(Math.round(merchantFee));
-    var n = parseInt(parts.value, 10);
-    var dodging = n > 1 && paise > 200000 && Math.floor(paise / n) <= 200000;
-    warn.hidden = !dodging;
-  }
-  amount.addEventListener('input', update);
-  parts.addEventListener('change', update);
-  update();
+  document.querySelectorAll('.board .seg').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.dataset.net) { net = b.dataset.net; jio = false; }
+      else { net = 'signal'; jio = !jio; }
+      render();
+    });
+  });
+  render();
 })();
 </script>
 </body>

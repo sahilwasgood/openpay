@@ -2,7 +2,7 @@
   "id": "./",
   "name": "OpenPay",
   "short_name": "OpenPay",
-  "description": "Pay with the strongest rail that still works: UPI intent, USSD, IVR, or a signed promissory note. Offline capable, open source.",
+  "description": "Pay with the strongest rail that still works: UPI intent, USSD, or 123Pay IVR. An installable open-source web app, no download needed.",
   "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
@@ -53,13 +53,6 @@
       "label": "Switch network state, watch the rail decision"
     },
     {
-      "src": "screenshots/mobile-notes.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "What a Note is, in plain words"
-    },
-    {
       "src": "screenshots/mobile-mdr.png",
       "sizes": "390x844",
       "type": "image/png",
@@ -67,25 +60,11 @@
       "label": "The merchant fee calculator"
     },
     {
-      "src": "screenshots/mobile-verify.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Verify a Note in any browser"
-    },
-    {
       "src": "screenshots/desktop.png",
       "sizes": "1440x900",
       "type": "image/png",
       "form_factor": "wide",
       "label": "OpenPay on the desktop"
-    },
-    {
-      "src": "screenshots/desktop-verify.png",
-      "sizes": "1440x900",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "The browser verifier"
     }
   ],
   "lang": "en",
@@ -99,14 +78,6 @@
     }
   },
   "shortcuts": [
-    {
-      "name": "Verify a Note",
-      "url": "./app.html#verify"
-    },
-    {
-      "name": "Write a Note",
-      "url": "./app.html#notes"
-    },
     {
       "name": "Pay",
       "url": "./app.html#pay"
