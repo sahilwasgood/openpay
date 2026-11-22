@@ -33,7 +33,7 @@ No server backend, by design. A server would break the no network calls and no-a
 
 ## Pages deploy
 
-An earlier Pages deploy failed because two rapid pushes hit the `pages` concurrency group with `cancel-in-progress: true`; one run cancelled the other's artifact upload. Fixed by setting `cancel-in-progress: false`, then pushing once (commit 5870c05). Push deploy 45057467658 and manual deploy 45057489709 both succeeded. Cache-busted fetches of `sw.js` and `app.html` from the live domain return the new v16 PWA-only build; uncached edge responses can still show the previous version for a short TTL.
+The `pages` concurrency group no longer cancels in progress. Deploy 45058522137 still failed with the GitHub Actions transient "Found 0 artifacts" error; the next push deploy 45059375080 succeeded and published commits a20ce82 and 4fb93e6. A cache-busted fetch of the live `sw.js` confirms `openpay-v18`. If a deploy fails this way, re-run the workflow or push once more rather than changing the site.
 
 ## Resource note
 
