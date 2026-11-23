@@ -133,6 +133,7 @@
     $('langEn').classList.toggle('on', lang === 'en');
     $('langHi').classList.toggle('on', lang === 'hi');
     LS.set('lang', lang);
+    $('carrierBtn').textContent = carrierLabel();
     renderRecharge();
     renderPayees();
     renderHistory();
@@ -400,7 +401,7 @@
       row.className = 'hrow';
       var left = document.createElement('div');
       var b = document.createElement('strong');
-      b.textContent = 'Rs ' + rupees(p.paise) + ' · ' + (p.name || p.vpa || p.phone);
+      b.textContent = t('Rs ', '₹ ') + rupees(p.paise) + ' · ' + (p.name || p.vpa || p.phone);
       var sub = document.createElement('span');
       sub.className = 'mono dim';
       sub.textContent = dateLabel(p.at) + ' · ' + railText(p.rail) + ' · ' + stateLabel(p.state);
@@ -698,12 +699,15 @@
     );
   });
 
+  function carrierLabel() {
+    return state.carrier === 'jio' ? 'Jio' : t('not Jio', 'Jio नहीं');
+  }
   $('carrierBtn').addEventListener('click', function () {
     state.carrier = state.carrier === 'jio' ? 'other' : 'jio';
-    $('carrierBtn').textContent = state.carrier === 'jio' ? 'Jio' : 'not Jio';
+    $('carrierBtn').textContent = carrierLabel();
     save(); refreshPay();
   });
-  if (state.carrier) $('carrierBtn').textContent = state.carrier === 'jio' ? 'Jio' : 'not Jio';
+  $('carrierBtn').textContent = carrierLabel();
 
   window.addEventListener('online', refreshPay);
   window.addEventListener('offline', refreshPay);

@@ -45,7 +45,9 @@ def main():
             tab(pg, 'settings')
             pg.evaluate("document.getElementById('langHi').click()")
             assert pg.evaluate('document.documentElement.lang') == 'hi'
+            assert pg.locator('#carrierBtn').text_content() == 'Jio नहीं'
             pg.evaluate("document.getElementById('langEn').click()")
+            assert pg.locator('#carrierBtn').text_content() == 'not Jio'
             assert pg.evaluate('document.documentElement.lang') == 'en'
             tab(pg, 'pay')
 

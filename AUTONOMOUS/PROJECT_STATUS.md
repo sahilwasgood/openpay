@@ -44,6 +44,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-32 | Locale-aware dates | COMPLETED | History and export dates use hi-IN or en-IN according to language; Chrome renders Latin digits for hi-IN, so no digit assertion is possible |
 | OP-33 | Translate remaining toasts | COMPLETED | Five hardcoded English toasts now use t() with Hindi strings, verified in browser |
 | OP-34 | Translate Pay rail labels | COMPLETED | Rail action texts, empty button label and net/carrier line follow language, one unit test added, 23 tests pass |
+| OP-35 | Final string audit | COMPLETED | Carrier toggle and history Rs prefix now translated, carrier label follows language switch, smoke test asserts both languages |
 
 ## Architecture decision
 
