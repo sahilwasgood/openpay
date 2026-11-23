@@ -11,13 +11,15 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0D0F0E">
+<meta name="color-scheme" content="light dark">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="OpenPay">
-<link rel="stylesheet" href="styles.css?v=33">
+<link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
+<a class="skip" href="#top">Skip to content</a>
 
 <header class="nav">
   <div class="wrap nav-in">
@@ -99,10 +101,6 @@
         <p class="limit">₹10,000 per payment</p>
       </article>
     </div>
-    <style>
-      .board .seg { padding: 9px 18px; background: transparent; border: 1px solid var(--line-2); color: var(--ink-2); font: 500 14px var(--font-display); cursor: pointer; }
-      .board .seg[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-    </style>
     <div class="board" id="board">
       <div class="board-status">
         <button class="seg" type="button" data-net="online">Data</button>
@@ -110,7 +108,7 @@
         <button class="seg" type="button" data-net="none">Nothing</button>
         <button class="seg" type="button" data-carrier="jio">On Jio</button>
       </div>
-      <p class="board-copy" id="boardCopy">With data, OpenPay builds a UPI link and hands it to your UPI app.</p>
+      <p class="board-copy" id="boardCopy" aria-live="polite">With data, OpenPay builds a UPI link and hands it to your UPI app.</p>
     </div>
   </div>
 </section>
@@ -146,25 +144,6 @@
     <div class="cta-row">
       <a class="btn btn-primary" href="app.html#recharge">Try the recharge handoff</a>
       <a class="btn btn-ghost" href="https://github.com/sahilwasgood/openpay/blob/main/docs/RECHARGE.md">Read the codes and sources</a>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="watch">
-  <div class="wrap">
-    <p class="eyebrow">Watch</p>
-    <h2>Four short films. All portrait.</h2>
-    <p class="sub">Made for the phone in your hand. The same liquid glass surfaces as the app, no APK, no server.</p>
-    <style>
-      .vidgrid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-      .vidgrid.four video { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 18px; background: #0B0F14; }
-      @media (max-width: 900px) { .vidgrid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    </style>
-    <div class="vidgrid four">
-      <video src="videos/openpay-pay-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="Pay with zero signal"></video>
-      <video src="videos/openpay-recharge-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="Offline recharge handoff"></video>
-      <video src="videos/openpay-ivr-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="UPI 123Pay voice line"></video>
-      <video src="videos/openpay-trust-9x16.mp4" poster="icons/icon-192.png" muted loop playsinline controls preload="metadata" aria-label="No server, no APK"></video>
     </div>
   </div>
 </section>
@@ -257,7 +236,7 @@
   </div>
 </footer>
 
-<script src="app.js?v=33" defer></script>
+<script src="app.js?v=34" defer></script>
 <script>
 (function () {
   var rails = document.querySelector('.rails');

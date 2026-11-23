@@ -148,7 +148,7 @@
 
   var elder = LS.get('elder', false);
   function applyElder() {
-    document.body.classList.toggle('elder', elder);
+    document.documentElement.classList.toggle('elder', elder);
     $('elderBtn').textContent = elder ? t('On', 'चालू') : t('Off', 'बंद');
     $('elderBtn').classList.toggle('on', elder);
     LS.set('elder', elder);

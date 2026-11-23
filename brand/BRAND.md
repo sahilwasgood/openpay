@@ -45,7 +45,7 @@ Stroke based, 1.7 weight, round caps, single color. Filled shapes only for the b
 ## Applications in this repo
 
 - Site and PWA: `site/styles.css` is the token source of truth. The liquid glass surface is reusable as `.glass` and uses the `--glass-*` tokens.
-- Videos: `brand/videos/` holds four portrait HyperFrames projects, all 1080 by 1920. Each `index.html` is a self-contained composition; regenerate with `bunx --bun hyperframes@0.8.181 render --resolution portrait --quality looks`. Outputs are copied to `brand/final/` and `site/videos/`.
+- Videos: paused. The four portrait HyperFrames source projects remain in `brand/videos/` for a later pass. No rendered films ship in the site; the Watch section was removed while the UI and branding are corrected.
 
 ## Copy rules
 

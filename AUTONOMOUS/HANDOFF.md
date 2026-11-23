@@ -8,7 +8,7 @@ Stable state as of 2026-11-22. This is a PWA-only project. There is no Android a
 - Pay tab: UPI intent, USSD `*99#` handoff, UPI 123Pay IVR handoff.
 - Recharge tab: handoff builders for SBI Quick SMS, Axis SMS, UPI 123Pay voice and operator self-service menus.
 - Local history, recent payees, QR paste autofill, share-target autofill, English and Hindi, elder mode, backup, restore and wipe.
-- Four portrait liquid glass films in `brand/videos/` and `site/videos/`.
+- No videos ship for now. The Watch section and rendered films were removed; the four portrait HyperFrames source projects remain in `brand/videos/` for a later pass.
 
 ## Run and verify
 

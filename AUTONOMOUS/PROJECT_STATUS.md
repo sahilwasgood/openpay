@@ -45,6 +45,8 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-33 | Translate remaining toasts | COMPLETED | Five hardcoded English toasts now use t() with Hindi strings, verified in browser |
 | OP-34 | Translate Pay rail labels | COMPLETED | Rail action texts, empty button label and net/carrier line follow language, one unit test added, 23 tests pass |
 | OP-35 | Final string audit | COMPLETED | Carrier toggle and history Rs prefix now translated, carrier label follows language switch, smoke test asserts both languages |
+| OP-36 | Token-first UI redesign | COMPLETED | Material 3 colour roles, one rem type scale, sentence-case labels, bottom tab bar, real glass only on the control layer, focus and reduced-motion/transparency fallbacks |
+| OP-37 | Remove videos for now | COMPLETED | Watch section and rendered MP4s removed, HyperFrames sources kept for later |
 
 ## Architecture decision
 
@@ -56,7 +58,7 @@ The "Found 0 artifacts" failure was traced: `upload-pages-artifact` succeeds, th
 
 ## Final verification
 
-All four live portrait videos return HTTP 200 from the Pages domain. No landscape or note video references remain. `node --test tests/*.test.js` reports 23 pass and 0 fail, and `python3 tests/browser-smoke.py` passes. Manifest and every service-worker shell entry resolve on disk. Live service worker is v33.
+No videos ship in the site. `node --test tests/*.test.js` reports 23 pass and 0 fail, and `python3 tests/browser-smoke.py` passes. Manifest and every service-worker shell entry resolve on disk. Live service worker was v33 before the redesign.
 
 ## Resource note
 

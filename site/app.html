@@ -9,10 +9,12 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0D0F0E">
+<meta name="color-scheme" content="light dark">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=33">
+<link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body class="webapp">
+<a class="skip" href="#top">Skip to content</a>
 
 <header class="nav">
   <div class="wrap nav-in">
@@ -42,7 +44,7 @@
 
     <!-- PAY -->
     <div class="pane" id="pane-pay">
-      <p class="app-line mono" id="netline">net: checking · carrier: <button class="linklike" id="carrierBtn" type="button">set</button></p>
+      <p class="app-line mono" id="netline" aria-live="polite">net: checking · carrier: <button class="linklike" id="carrierBtn" type="button">set</button></p>
 
       <div class="row-gap tight">
         <button class="btn btn-ghost btn-sm" id="qrScanBtn" type="button" data-i="btn_scan">Scan UPI QR</button>
@@ -69,7 +71,7 @@
       <label class="f-label" for="pAmt" data-i="lbl_amt">Amount, rupees</label>
       <input id="pAmt" type="number" inputmode="numeric" min="1" placeholder="45">
 
-      <div class="railbox" id="railbox"></div>
+      <div class="railbox" id="railbox" aria-live="polite"></div>
 
       <a class="btn btn-primary btn-block" id="payBtn" href="#">Choose a rail</a>
       <p class="app-note">Your PIN is typed in the UPI app, on the carrier menu, or on the call keypad. This page never sees it.</p>
@@ -162,7 +164,7 @@
 
           <section class="glass rc-card rc-out">
             <h3 class="rc-card-h" data-i="rc_handoff_h">2 · Handoff</h3>
-            <div id="rcOutput"></div>
+            <div id="rcOutput" aria-live="polite"></div>
           </section>
         </div>
 
@@ -230,7 +232,7 @@
   </div>
 </footer>
 
-<script src="app.js?v=33" defer></script>
-<script src="webapp.js?v=33" defer></script>
+<script src="app.js?v=34" defer></script>
+<script src="webapp.js?v=34" defer></script>
 </body>
 </html>
