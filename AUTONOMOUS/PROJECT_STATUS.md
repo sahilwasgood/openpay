@@ -50,6 +50,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-38 | Contrast guard | COMPLETED | tests/contrast.test.js checks 13 colour pairs in both themes, all >=4.5:1, 49 tests pass |
 | OP-39 | Tab ARIA state | COMPLETED | Tabs expose role, aria-selected and aria-controls, smoke test asserts selected state |
 | OP-40 | Tabpanel semantics | COMPLETED | All four panes now declare role=tabpanel and aria-labelledby, smoke test asserts the pairing |
+| OP-41 | No stale pages when online | COMPLETED | SW script uses updateViaCache none, update() on online/focus, network-first fetch with cache reload/no-store, one-time reload on controller change, HTML version marker; 54 tests pass and a controlled SW picked up changed HTML despite max-age=600 |
 
 ## Architecture decision
 

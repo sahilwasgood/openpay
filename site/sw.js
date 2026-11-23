@@ -5,7 +5,7 @@
    Offline, the cache answers. Each deploy ships a new CACHE id and the old
    cache is deleted only after the new one is fully written. */
 
-const CACHE = 'openpay-v36';
+const CACHE = 'openpay-v37';
 
 const SHELL = [
   './',
@@ -45,8 +45,11 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
+  // Online: always go to the network and bypass the browser HTTP cache.
+  // Offline: fall back to the versioned cache written on the last visit.
+  const init = req.mode === 'navigate' ? { cache: 'reload' } : { cache: 'no-store' };
   e.respondWith(
-    fetch(req)
+    fetch(req, init)
       .then((res) => {
         if (res && res.status === 200) {
           const copy = res.clone();

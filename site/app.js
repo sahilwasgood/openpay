@@ -2,7 +2,28 @@
 
 (function () {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(function () {});
+    var hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(function () {});
+
+    function checkForUpdate() {
+      navigator.serviceWorker.getRegistration().then(function (reg) {
+        if (reg) reg.update().catch(function () {});
+      }).catch(function () {});
+    }
+    window.addEventListener('online', checkForUpdate);
+    window.addEventListener('focus', checkForUpdate);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) checkForUpdate();
+    });
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      // The first install takes control without needing a reload.
+      if (!hadController) { hadController = true; return; }
+      try {
+        if (sessionStorage.getItem('op_fresh_reloaded')) return;
+        sessionStorage.setItem('op_fresh_reloaded', '1');
+      } catch (e) {}
+      location.reload();
+    });
   }
 
   var deferred = null;
