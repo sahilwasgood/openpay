@@ -67,12 +67,21 @@
       var u = 'upi://pay?pa=' + encodeURIComponent(vpa) +
         '&pn=' + encodeURIComponent(name || 'Payee') +
         '&am=' + amt + '&cu=INR';
-      return { href: u, text: 'Pay Rs ' + amt + ' by UPI' };
+      return {
+        href: u,
+        text: lang === 'hi' ? '₹' + amt + ' UPI से भुगतान करें' : 'Pay Rs ' + amt + ' by UPI'
+      };
     }
-    if (rail === 'ussd') return { href: 'tel:*99*1*3%23', text: 'Dial *99*1*3#' };
+    if (rail === 'ussd') return {
+      href: 'tel:*99*1*3%23',
+      text: lang === 'hi' ? '*99*1*3# डायल करें' : 'Dial *99*1*3#'
+    };
     if (rail === 'ivr') {
       if (!Number.isInteger(Number(amt))) return null;
-      return { href: 'tel:08045163666,,1,' + phone + ',,' + amt + ',,1', text: 'Call 123Pay, keyed in' };
+      return {
+        href: 'tel:08045163666,,1,' + phone + ',,' + amt + ',,1',
+        text: lang === 'hi' ? '123Pay कॉल, नंबर दबेगा' : 'Call 123Pay, keyed in'
+      };
     }
     return null;
   }
@@ -259,11 +268,11 @@
       $('payBtn').classList.remove('dead');
     } else {
       $('payBtn').removeAttribute('href');
-      $('payBtn').textContent = 'Choose a rail';
+      $('payBtn').textContent = t('Choose a rail', 'रास्ता चुनें');
       $('payBtn').classList.add('dead');
     }
     $('netline').firstChild.textContent =
-      'net: ' + netKind() + ' · carrier: ';
+      t('net: ', 'नेट: ') + netKind() + ' · ' + t('carrier: ', 'कैरियर: ');
   }
 
   function recordPayment(rail, name, vpa, phone, amt) {

@@ -17,7 +17,7 @@ if (from < 0 || to < 0 || to < from) {
     assert.fail('missing @rail-start / @rail-end markers');
   });
 } else {
-  const sandbox = { encodeURIComponent };
+  const sandbox = { encodeURIComponent, t: (en) => en, lang: 'en' };
   vm.createContext(sandbox);
   vm.runInContext(source.slice(from + START.length, to) + '\nthis.railLink = railLink;', sandbox);
   const railLink = sandbox.railLink;
@@ -31,5 +31,13 @@ if (from < 0 || to < 0 || to < from) {
   test('UPI intent link still allows paise', () => {
     const link = railLink('intent', 'meera@okhdfcbank', 'Meera', '45.50', '');
     assert.equal(link.href, 'upi://pay?pa=meera%40okhdfcbank&pn=Meera&am=45.50&cu=INR');
+  });
+
+  test('rail link labels follow the selected language', () => {
+    sandbox.lang = 'hi';
+    assert.match(railLink('intent', 'a@ybl', 'A', '45', '').text, /भुगतान/);
+    assert.match(railLink('ussd', '', 'A', '45', '').text, /डायल/);
+    sandbox.lang = 'en';
+    assert.match(railLink('intent', 'a@ybl', 'A', '45', '').text, /Pay Rs/);
   });
 }
