@@ -25,9 +25,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install Playwright
-        run: pip install playwright
-      - name: Verify system Chrome
-        run: google-chrome --version
+      - name: Install Playwright and its browser
+        run: |
+          pip install playwright
+          playwright install chromium
       - name: Run browser smoke
         run: python3 tests/browser-smoke.py
