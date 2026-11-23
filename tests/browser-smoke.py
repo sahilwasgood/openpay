@@ -73,6 +73,7 @@ def main():
             tab(pg, 'history')
             assert 'Test Shop' in pg.locator('#histList').inner_text()
             assert "Don't pay again" in pg.locator('#histList').inner_text()
+            assert 'auto-reverses by T+1' in pg.locator('#histList').inner_text()
             assert 'hands off to your UPI app' not in pg.locator('#histList').inner_text()
 
             # History labels are translated too

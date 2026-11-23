@@ -56,6 +56,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-44 | Layout and accessibility smoke guards | COMPLETED | 320px pages have no horizontal overflow, forced colours plus reduced motion render four tabs without page errors |
 | OP-45 | Keyboard tab navigation | COMPLETED | Roving tabindex plus Arrow/Home/End handling on the tab list, smoke test asserts ArrowRight moves selection and focus |
 | OP-46 | Pending payment guidance | COMPLETED | Pending history rows explain not to re-pay and the T+1/T+5 timeline, short rail labels prevent action-button wrapping, smoke test asserts both |
+| OP-47 | Precise pending timeline | COMPLETED | Wording now distinguishes payee-not-credited T+1 from merchant-confirmation T+5, sources recorded in docs/PENDING.md |
 
 ## Architecture decision
 

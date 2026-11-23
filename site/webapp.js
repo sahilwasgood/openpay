@@ -415,8 +415,8 @@
         var note = document.createElement('p');
         note.className = 'app-note';
         note.textContent = t(
-          "Your bank has the request. Don't pay again. Unconfirmed UPI debits reverse by T+1, and refunds must arrive by T+5.",
-          'आपके बैंक को अनुरोध मिल गया है। दोबारा भुगतान न करें। पुष्टि न हुए UPI डेबिट T+1 तक वापस होते हैं, और रिफंड T+5 तक आना चाहिए।'
+          "Your bank has the request. Don't pay again. If the payee was not credited, the bank auto-reverses by T+1. Merchant confirmation failures are refunded by T+5.",
+          'आपके बैंक को अनुरोध मिल गया है। दोबारा भुगतान न करें। यदि प्राप्तकर्ता को राशि नहीं मिली, बैंक T+1 तक स्वतः वापस करता है। व्यापारी पुष्टि न मिलने पर T+5 तक रिफंड मिलता है।'
         );
         left.appendChild(note);
       }
