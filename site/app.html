@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#0D0F0E">
 <meta name="color-scheme" content="light dark">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=35">
+<link rel="stylesheet" href="styles.css?v=36">
 </head>
 <body class="webapp">
 <a class="skip" href="#top">Skip to content</a>
@@ -36,14 +36,14 @@
   <div class="wrap wrap-narrow">
 
     <div class="tabs" role="tablist">
-      <button class="tab on" role="tab" aria-selected="true" aria-controls="pane-pay" data-tab="pay" type="button" data-i="tab_pay">Pay</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="pane-recharge" data-tab="recharge" type="button" data-i="tab_recharge">Recharge</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="pane-history" data-tab="history" type="button" data-i="tab_history">History</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="pane-settings" data-tab="settings" type="button" data-i="tab_settings">Settings</button>
+      <button class="tab on" id="tab-pay" role="tab" aria-selected="true" aria-controls="pane-pay" data-tab="pay" type="button" data-i="tab_pay">Pay</button>
+      <button class="tab" id="tab-recharge" role="tab" aria-selected="false" aria-controls="pane-recharge" data-tab="recharge" type="button" data-i="tab_recharge">Recharge</button>
+      <button class="tab" id="tab-history" role="tab" aria-selected="false" aria-controls="pane-history" data-tab="history" type="button" data-i="tab_history">History</button>
+      <button class="tab" id="tab-settings" role="tab" aria-selected="false" aria-controls="pane-settings" data-tab="settings" type="button" data-i="tab_settings">Settings</button>
     </div>
 
     <!-- PAY -->
-    <div class="pane" id="pane-pay">
+    <div class="pane" role="tabpanel" aria-labelledby="tab-pay" id="pane-pay">
       <p class="app-line mono" id="netline" aria-live="polite">net: checking · carrier: <button class="linklike" id="carrierBtn" type="button">set</button></p>
 
       <div class="row-gap tight">
@@ -78,7 +78,7 @@
     </div>
 
     <!-- RECHARGE -->
-    <div class="pane hidden" id="pane-recharge">
+    <div class="pane hidden" role="tabpanel" aria-labelledby="tab-recharge" id="pane-recharge">
       <div class="rc-stage">
         <header class="rc-head">
           <div>
@@ -176,7 +176,7 @@
     </div>
 
     <!-- SETTINGS -->
-    <div class="pane hidden" id="pane-settings">
+    <div class="pane hidden" role="tabpanel" aria-labelledby="tab-settings" id="pane-settings">
       <label class="f-label" for="setName" data-i="lbl_from">Your name, shown to the payee</label>
       <input id="setName" type="text" placeholder="Sahil">
 
@@ -214,7 +214,7 @@
     </div>
 
     <!-- HISTORY -->
-    <div class="pane hidden" id="pane-history">
+    <div class="pane hidden" role="tabpanel" aria-labelledby="tab-history" id="pane-history">
       <p class="app-note">Browsers cannot read your bank SMS, so nothing here confirms on its own. Mark payments paid when your bank's SMS arrives. Everything stays in this browser.</p>
       <div id="histList"></div>
       <div class="row-gap">
@@ -232,7 +232,7 @@
   </div>
 </footer>
 
-<script src="app.js?v=35" defer></script>
-<script src="webapp.js?v=35" defer></script>
+<script src="app.js?v=36" defer></script>
+<script src="webapp.js?v=36" defer></script>
 </body>
 </html>
