@@ -99,6 +99,12 @@ def main():
             assert 'hidden' not in (pg.locator('#rcCapWarn').get_attribute('class') or '')
             assert not any('MOBRC' in b for b in pg.locator('#rcOutput .rc-code').all_text_contents())
 
+            # Arrow keys move between tabs as a proper ARIA tab list does
+            pg.evaluate("document.querySelector('.tab[data-tab=\\\"recharge\\\"]').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}))")
+            pg.wait_for_timeout(100)
+            assert pg.locator('.tab[data-tab="history"]').get_attribute('aria-selected') == 'true'
+            assert pg.evaluate('document.activeElement.dataset.tab') == 'history'
+
             # Share target with a UPI link inside a sentence
             shared = 'Pay me: upi://pay?pa=share@ybl&pn=Share&am=77'
             share = browser.new_page()

@@ -678,6 +678,7 @@
       var active = t.dataset.tab === name;
       t.classList.toggle('on', active);
       t.setAttribute('aria-selected', active ? 'true' : 'false');
+      t.setAttribute('tabindex', active ? '0' : '-1');
     });
     document.querySelectorAll('.pane').forEach(function (p) { p.classList.add('hidden'); });
     $('pane-' + name).classList.remove('hidden');
@@ -685,8 +686,21 @@
     if (name === 'recharge') renderRecharge();
   }
 
-  document.querySelectorAll('.tab').forEach(function (t) {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  tabs.forEach(function (t) {
     t.addEventListener('click', function () { switchTab(t.dataset.tab); });
+    t.addEventListener('keydown', function (e) {
+      var i = tabs.indexOf(t);
+      var next = null;
+      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      else if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      else if (e.key === 'Home') next = tabs[0];
+      else if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (!next) return;
+      e.preventDefault();
+      switchTab(next.dataset.tab);
+      next.focus();
+    });
   });
 
   ['pName', 'pVpa', 'pPhone', 'pAmt'].forEach(function (id) {
