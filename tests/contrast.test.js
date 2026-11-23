@@ -42,6 +42,21 @@ const bodyPairs = [
   ['glass-signal', 'glass-stage']
 ];
 
+test('every light-dark() declaration has a plain fallback', () => {
+  const lines = css.split('\n');
+  let checked = 0;
+  lines.forEach((line, i) => {
+    if (!line.includes('light-dark(')) return;
+    const prop = line.slice(0, line.indexOf('light-dark(')).match(/([\w-]+):\s*$/);
+    assert.ok(prop, `no property found for ${line.trim()}`);
+    const before = (lines[i - 1] || '') + ' ' + line.split('light-dark(')[0];
+    assert.match(before, new RegExp(prop[1] + ':\\s*(?!light-dark\\()[^;]+;'),
+      `missing fallback for ${prop[1]}`);
+    checked += 1;
+  });
+  assert.ok(checked > 10, 'expected to check several light-dark declarations');
+});
+
 for (const [fg, bg] of bodyPairs) {
   for (const [name, index] of [['light', 0], ['dark', 1]]) {
     test(`${fg} on ${bg} meets 4.5:1 in ${name}`, () => {

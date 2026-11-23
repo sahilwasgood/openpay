@@ -25,35 +25,61 @@
   color-scheme: light dark;
 
   /* Brand + M3 roles */
+  --primary: #0E7C46;
   --primary: light-dark(#0E7C46, #72D69B);
+  --on-primary: #FFFFFF;
   --on-primary: light-dark(#FFFFFF, #05371E);
+  --primary-container: #C8F0D7;
   --primary-container: light-dark(#C8F0D7, #145134);
+  --on-primary-container: #05371E;
   --on-primary-container: light-dark(#05371E, #C8F0D7);
+  --secondary: #4B6357;
   --secondary: light-dark(#4B6357, #A8C7B4);
+  --on-secondary: #FFFFFF;
   --on-secondary: light-dark(#FFFFFF, #10251B);
+  --secondary-container: #DDE9E0;
   --secondary-container: light-dark(#DDE9E0, #244736);
+  --tertiary: #2E6B6B;
   --tertiary: light-dark(#2E6B6B, #86C7C7);
+  --error: #B3261E;
   --error: light-dark(#B3261E, #F2B8B5);
+  --error-container: #F9DEDC;
   --error-container: light-dark(#F9DEDC, #8C1D18);
+  --on-error-container: #410E0B;
   --on-error-container: light-dark(#410E0B, #F9DEDC);
 
   /* Surfaces */
+  --background: #FAFAF7;
   --background: light-dark(#FAFAF7, #0D0F0E);
+  --on-background: #141814;
   --on-background: light-dark(#141814, #E4E7E2);
+  --surface: #FFFFFF;
   --surface: light-dark(#FFFFFF, #151816);
+  --surface-low: #F5F5F0;
   --surface-low: light-dark(#F5F5F0, #1A1E1B);
+  --surface-container: #F0F0EA;
   --surface-container: light-dark(#F0F0EA, #20251F);
+  --surface-high: #E9E9E2;
   --surface-high: light-dark(#E9E9E2, #292E28);
+  --on-surface: #141814;
   --on-surface: light-dark(#141814, #E4E7E2);
+  --on-surface-variant: #4B524D;
   --on-surface-variant: light-dark(#4B524D, #B9C4BD);
+  --outline: #767F78;
   --outline: light-dark(#767F78, #8A938C);
+  --outline-variant: #D6D4C9;
   --outline-variant: light-dark(#D6D4C9, #3A413C);
 
   /* Status */
+  --success: #0B5E34;
   --success: light-dark(#0B5E34, #6EE7A8);
+  --success-bg: #E4F2E8;
   --success-bg: light-dark(#E4F2E8, #173E2A);
+  --pending: #8A5A00;
   --pending: light-dark(#8A5A00, #F3C77A);
+  --pending-bg: #F6ECD9;
   --pending-bg: light-dark(#F6ECD9, #4A3716);
+  --focus: #0B5E34;
   --focus: light-dark(#0B5E34, #72D69B);
 
   /* Glass: layered backdrop, low frost, asymmetric rim */
@@ -132,6 +158,7 @@ p { margin-bottom: var(--sp-3); }
 /* Navigation: glass belongs here */
 .nav {
   position: sticky; top: 0; z-index: 50;
+  background: rgb(255 255 255/.72);
   background: light-dark(rgb(255 255 255/.72), rgb(18 22 20/.72));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
   backdrop-filter: blur(var(--glass-blur)) saturate(160%);
@@ -268,7 +295,7 @@ p { margin-bottom: var(--sp-3); }
 /* Web app shell */
 body.webapp { background: var(--background); }
 .webapp-body { padding: var(--sp-6) 0 calc(96px + env(safe-area-inset-bottom)); }
-.tabbar, .tabs { position: fixed; inset-inline: 0; bottom: 0; z-index: 60; display: grid; grid-template-columns: repeat(4, 1fr); min-height: 64px; padding-bottom: env(safe-area-inset-bottom); background: light-dark(rgb(255 255 255/.82), rgb(18 22 20/.82)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%); backdrop-filter: blur(var(--glass-blur)) saturate(170%); border-top: 1px solid var(--outline-variant); box-shadow: inset 0 1px 0 var(--glass-rim-top); }
+.tabbar, .tabs { position: fixed; inset-inline: 0; bottom: 0; z-index: 60; display: grid; grid-template-columns: repeat(4, 1fr); min-height: 64px; padding-bottom: env(safe-area-inset-bottom); background: rgb(255 255 255/.82); background: light-dark(rgb(255 255 255/.82), rgb(18 22 20/.82)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%); backdrop-filter: blur(var(--glass-blur)) saturate(170%); border-top: 1px solid var(--outline-variant); box-shadow: inset 0 1px 0 var(--glass-rim-top); }
 .tab { min-height: 56px; border: 0; background: none; color: var(--on-surface-variant); font-weight: 600; font-size: var(--text-small); position: relative; }
 .tab[aria-selected="true"], .tab.on { color: var(--primary); }
 .tab[aria-selected="true"]::before, .tab.on::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 32px; height: 3px; border-radius: 0 0 3px 3px; background: var(--primary); }
