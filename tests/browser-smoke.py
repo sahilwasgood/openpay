@@ -117,6 +117,22 @@ def main():
             home.wait_for_timeout(100)
             assert '123Pay' in home.locator('#boardCopy').inner_text()
 
+            # Narrow screens must not scroll sideways; accessibility modes must not break.
+            for page_url in (APP, HOME):
+                narrow = browser.new_page(viewport={'width': 320, 'height': 700})
+                narrow.goto(page_url, wait_until='load')
+                assert narrow.evaluate('document.documentElement.scrollWidth') <= 320
+                narrow.close()
+            ctx = browser.new_context(viewport={'width': 390, 'height': 844},
+                                      forced_colors='active', reduced_motion='reduce')
+            forced = ctx.new_page()
+            forced_errors = []
+            forced.on('pageerror', lambda e: forced_errors.append(str(e)))
+            forced.goto(APP, wait_until='load')
+            assert forced.locator('.tab').count() == 4
+            assert not forced_errors, forced_errors[:2]
+            ctx.close()
+
             assert not errors, errors[:3]
         finally:
             browser.close()
