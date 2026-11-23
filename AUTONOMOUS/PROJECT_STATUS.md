@@ -52,6 +52,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-40 | Tabpanel semantics | COMPLETED | All four panes now declare role=tabpanel and aria-labelledby, smoke test asserts the pairing |
 | OP-41 | No stale pages when online | COMPLETED | SW script uses updateViaCache none, update() on online/focus, network-first fetch with cache reload/no-store, one-time reload on controller change, HTML version marker; 54 tests pass and a controlled SW picked up changed HTML despite max-age=600 |
 | OP-42 | light-dark() fallback guard | COMPLETED | Plain fallbacks precede every light-dark() declaration for older browsers, regression test added, 55 tests pass |
+| OP-43 | color-mix() fallback guard | COMPLETED | Plain fallbacks precede all five color-mix rules, regression test added, 56 tests pass |
 
 ## Architecture decision
 

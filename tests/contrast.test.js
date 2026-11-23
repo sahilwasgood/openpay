@@ -57,6 +57,19 @@ test('every light-dark() declaration has a plain fallback', () => {
   assert.ok(checked > 10, 'expected to check several light-dark declarations');
 });
 
+test('every color-mix() rule has a plain fallback', () => {
+  const lines = css.split('\n');
+  let checked = 0;
+  lines.forEach((line, i) => {
+    if (!line.includes('color-mix(')) return;
+    const previous = (lines[i - 1] || '').trim();
+    assert.ok(previous && !previous.includes('color-mix('),
+      `missing fallback before: ${line.trim().slice(0, 70)}`);
+    checked += 1;
+  });
+  assert.ok(checked > 3, 'expected several color-mix rules');
+});
+
 for (const [fg, bg] of bodyPairs) {
   for (const [name, index] of [['light', 0], ['dark', 1]]) {
     test(`${fg} on ${bg} meets 4.5:1 in ${name}`, () => {
