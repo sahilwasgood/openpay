@@ -27,7 +27,7 @@ The Node suite has 56 tests over the marked pure blocks in `site/webapp.js`: `@r
 - True offline reload verified over local HTTP with a controlled service worker.
 - No external asset requests; fonts are vendored in `site/fonts/` and cached by the service worker.
 - Pages deploys succeed; the recurring "Found 0 artifacts" failure was an API metadata race, fixed with a 20-second wait in `deploy-site.yml`.
-- Online visits always fetch fresh HTML and assets; the service worker cache is only an offline fallback. Live service worker was `openpay-v39` at the last check.
+- Online visits always fetch fresh HTML and assets; the service worker cache is only an offline fallback. Both CI jobs run on every push: `node-tests` and `browser-smoke`. Live service worker was `openpay-v40` at the last check.
 
 ## Remaining blockers
 
