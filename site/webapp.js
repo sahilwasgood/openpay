@@ -60,6 +60,11 @@
       ? (RAILHI[rail] || RAILHI.none)
       : (RAILTXT[rail] || RAILTXT.none);
   }
+  function railShort(rail) {
+    var en = { intent: 'UPI', ussd: 'USSD *99#', ivr: '123Pay' };
+    var hi = { intent: 'UPI', ussd: 'USSD *99#', ivr: '123Pay' };
+    return lang === 'hi' ? (hi[rail] || '') : (en[rail] || '');
+  }
 
   // @rail-start
   function railLink(rail, vpa, name, amt, phone) {
@@ -404,8 +409,17 @@
       b.textContent = t('Rs ', '₹ ') + rupees(p.paise) + ' · ' + (p.name || p.vpa || p.phone);
       var sub = document.createElement('span');
       sub.className = 'mono dim';
-      sub.textContent = dateLabel(p.at) + ' · ' + railText(p.rail) + ' · ' + stateLabel(p.state);
+      sub.textContent = dateLabel(p.at) + ' · ' + railShort(p.rail) + ' · ' + stateLabel(p.state);
       left.appendChild(b); left.appendChild(sub);
+      if (p.state === 'pending') {
+        var note = document.createElement('p');
+        note.className = 'app-note';
+        note.textContent = t(
+          "Your bank has the request. Don't pay again. Unconfirmed UPI debits reverse by T+1, and refunds must arrive by T+5.",
+          'आपके बैंक को अनुरोध मिल गया है। दोबारा भुगतान न करें। पुष्टि न हुए UPI डेबिट T+1 तक वापस होते हैं, और रिफंड T+5 तक आना चाहिए।'
+        );
+        left.appendChild(note);
+      }
       var act = document.createElement('button');
       act.className = 'linklike';
       act.textContent = stateAction(p.state);

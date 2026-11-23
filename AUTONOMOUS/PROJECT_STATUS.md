@@ -55,6 +55,7 @@ OpenPay is a single installable PWA. The Android app, APK, F-Droid and Play Prot
 | OP-43 | color-mix() fallback guard | COMPLETED | Plain fallbacks precede all five color-mix rules, regression test added, 56 tests pass |
 | OP-44 | Layout and accessibility smoke guards | COMPLETED | 320px pages have no horizontal overflow, forced colours plus reduced motion render four tabs without page errors |
 | OP-45 | Keyboard tab navigation | COMPLETED | Roving tabindex plus Arrow/Home/End handling on the tab list, smoke test asserts ArrowRight moves selection and focus |
+| OP-46 | Pending payment guidance | COMPLETED | Pending history rows explain not to re-pay and the T+1/T+5 timeline, short rail labels prevent action-button wrapping, smoke test asserts both |
 
 ## Architecture decision
 

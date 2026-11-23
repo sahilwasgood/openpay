@@ -72,6 +72,8 @@ def main():
             assert len(pg.evaluate("localStorage.getItem('op_payments')") or '') > 2
             tab(pg, 'history')
             assert 'Test Shop' in pg.locator('#histList').inner_text()
+            assert "Don't pay again" in pg.locator('#histList').inner_text()
+            assert 'hands off to your UPI app' not in pg.locator('#histList').inner_text()
 
             # History labels are translated too
             tab(pg, 'settings')

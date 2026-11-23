@@ -323,6 +323,7 @@ body.webapp { background: var(--background); }
 .hrow { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-4); background: var(--surface); border: 1px solid var(--outline-variant); border-radius: var(--r-md); }
 .hrow strong, .mdr-line { font-variant-numeric: tabular-nums; }
 .hrow span { display: block; font-size: var(--text-meta); color: var(--on-surface-variant); margin-top: 4px; }
+.hrow .linklike { white-space: nowrap; flex: none; }
 .setrow { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); padding: var(--sp-3) 0; border-bottom: 1px solid var(--outline-variant); }
 .setrow strong { display: block; font-size: var(--text-body); }
 .setrow span { display: block; font-size: var(--text-small); color: var(--on-surface-variant); }
