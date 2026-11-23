@@ -52,11 +52,11 @@ No server backend, by design. A server would break the no network calls and no-a
 
 ## Pages deploy
 
-The "Found 0 artifacts" failure was traced: `upload-pages-artifact` succeeds, then `deploy-pages` queries artifact metadata before GitHub's API has caught up. A 20 second pause between those steps fixes it. Deploy 45067654947 then succeeded and the live `sw.js` confirms `openpay-v23`. This replaces the earlier cancellation-race theory.
+The "Found 0 artifacts" failure was traced: `upload-pages-artifact` succeeds, then `deploy-pages` queries artifact metadata before GitHub's API has caught up. A 20 second pause between those steps fixes it. Deploy 45067654947 then succeeded, and every later push deploy has passed. The latest live `sw.js` confirms `openpay-v33`. This replaces the earlier cancellation-race theory.
 
 ## Final verification
 
-All four live portrait videos return HTTP 200 from the Pages domain. No landscape or note video references remain. `node --test tests/*.test.js` reports 14 pass and 0 fail. Manifest and every service-worker shell entry resolve on disk. Live service worker is v21.
+All four live portrait videos return HTTP 200 from the Pages domain. No landscape or note video references remain. `node --test tests/*.test.js` reports 23 pass and 0 fail, and `python3 tests/browser-smoke.py` passes. Manifest and every service-worker shell entry resolve on disk. Live service worker is v33.
 
 ## Resource note
 

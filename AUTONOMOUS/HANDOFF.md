@@ -18,7 +18,7 @@ python3 tests/browser-smoke.py
 cd site && python3 -m http.server 8000
 ```
 
-The Node suite has 22 tests over the marked pure blocks in `site/webapp.js`: `@recharge-core-start`, `@parse-upi-start`, `@rail-start`. Keep those markers. The browser smoke test uses system Chrome when present and skips otherwise.
+The Node suite has 23 tests over the marked pure blocks in `site/webapp.js`: `@recharge-core-start`, `@parse-upi-start`, `@rail-start`. Keep those markers. The browser smoke test uses system Chrome when present and skips otherwise.
 
 ## Verified
 
@@ -27,7 +27,7 @@ The Node suite has 22 tests over the marked pure blocks in `site/webapp.js`: `@r
 - True offline reload verified over local HTTP with a controlled service worker.
 - No external asset requests; fonts are vendored in `site/fonts/` and cached by the service worker.
 - Pages deploys succeed; the recurring "Found 0 artifacts" failure was an API metadata race, fixed with a 20-second wait in `deploy-site.yml`.
-- Live service worker was `openpay-v26` at the last check.
+- Live service worker was `openpay-v33` at the last check.
 
 ## Remaining blockers
 
