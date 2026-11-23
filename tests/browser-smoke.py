@@ -74,6 +74,10 @@ def main():
             assert 'Test Shop' in pg.locator('#histList').inner_text()
             assert "Don't pay again" in pg.locator('#histList').inner_text()
             assert 'auto-reverses by T+1' in pg.locator('#histList').inner_text()
+            pg.evaluate("document.querySelector('#histList .hrow > div').click()")
+            pg.wait_for_timeout(100)
+            assert any('still pending' in x for x in pg.locator('.wtoast').all_text_contents())
+            assert 'hidden' in (pg.locator('#pane-pay').get_attribute('class') or '')
             assert 'hands off to your UPI app' not in pg.locator('#histList').inner_text()
 
             # History labels are translated too

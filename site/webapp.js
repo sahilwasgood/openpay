@@ -429,6 +429,11 @@
       };
       left.style.cursor = 'pointer';
       left.onclick = function () {
+        if (p.state === 'pending') {
+          toast(t('Payment still pending. Check your bank SMS before paying again.',
+            'भुगतान अभी लंबित है। दोबारा भुगतान करने से पहले अपने बैंक का SMS देखें।'));
+          return;
+        }
         $('pName').value = p.name || '';
         $('pVpa').value = p.vpa || '';
         $('pPhone').value = p.phone || '';
