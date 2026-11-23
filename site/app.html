@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#0D0F0E">
 <meta name="color-scheme" content="light dark">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="styles.css?v=34">
+<link rel="stylesheet" href="styles.css?v=35">
 </head>
 <body class="webapp">
 <a class="skip" href="#top">Skip to content</a>
@@ -36,10 +36,10 @@
   <div class="wrap wrap-narrow">
 
     <div class="tabs" role="tablist">
-      <button class="tab on" data-tab="pay" type="button" data-i="tab_pay">Pay</button>
-      <button class="tab" data-tab="recharge" type="button" data-i="tab_recharge">Recharge</button>
-      <button class="tab" data-tab="history" type="button" data-i="tab_history">History</button>
-      <button class="tab" data-tab="settings" type="button" data-i="tab_settings">Settings</button>
+      <button class="tab on" role="tab" aria-selected="true" aria-controls="pane-pay" data-tab="pay" type="button" data-i="tab_pay">Pay</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="pane-recharge" data-tab="recharge" type="button" data-i="tab_recharge">Recharge</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="pane-history" data-tab="history" type="button" data-i="tab_history">History</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="pane-settings" data-tab="settings" type="button" data-i="tab_settings">Settings</button>
     </div>
 
     <!-- PAY -->
@@ -232,7 +232,7 @@
   </div>
 </footer>
 
-<script src="app.js?v=34" defer></script>
-<script src="webapp.js?v=34" defer></script>
+<script src="app.js?v=35" defer></script>
+<script src="webapp.js?v=35" defer></script>
 </body>
 </html>

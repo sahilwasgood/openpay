@@ -675,7 +675,9 @@
 
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(function (t) {
-      t.classList.toggle('on', t.dataset.tab === name);
+      var active = t.dataset.tab === name;
+      t.classList.toggle('on', active);
+      t.setAttribute('aria-selected', active ? 'true' : 'false');
     });
     document.querySelectorAll('.pane').forEach(function (p) { p.classList.add('hidden'); });
     $('pane-' + name).classList.remove('hidden');

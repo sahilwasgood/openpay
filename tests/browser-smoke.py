@@ -84,6 +84,8 @@ def main():
 
             # Recharge handoff and cap guard
             tab(pg, 'recharge')
+            assert pg.locator('.tab[data-tab="recharge"]').get_attribute('aria-selected') == 'true'
+            assert pg.locator('.tab[data-tab="pay"]').get_attribute('aria-selected') == 'false'
             pg.fill('#rcNumber', '9876543210')
             pg.fill('#rcAmt', '199')
             pg.fill('#rcAcct', '12345678901')
